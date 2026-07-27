@@ -1,7 +1,8 @@
 import { LockKeyhole, Moon, Plus, Search, Settings, Sparkles, Sun } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { EntryLogo } from '../../components/common/entry-logo';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '../../components/ui/dialog';
-import { cn, entryInitials } from '../../lib/utils';
+import { cn } from '../../lib/utils';
 import { useVaultStore } from '../../stores/vault-store';
 
 export function CommandPalette() {
@@ -86,12 +87,7 @@ export function CommandPalette() {
                     setOverlay(null);
                   }}
                 >
-                  <span
-                    className="command-avatar"
-                    style={{ '--entry-accent': entry.accent } as React.CSSProperties}
-                  >
-                    {entryInitials(entry.title)}
-                  </span>
+                  <EntryLogo entry={entry} size="command" />
                   <span>{entry.title}</span>
                   <span className="ml-auto text-xs text-[var(--text-muted)]">Abrir</span>
                 </button>

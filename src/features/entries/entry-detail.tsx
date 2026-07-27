@@ -12,9 +12,10 @@ import {
   Trash2,
 } from 'lucide-react';
 import { useState } from 'react';
+import { EntryLogo } from '../../components/common/entry-logo';
 import type { VaultEntry } from '../../domain/entities/entry';
 import { evaluatePasswordStrength } from '../../domain/services/password';
-import { cn, entryInitials } from '../../lib/utils';
+import { cn } from '../../lib/utils';
 import { useVaultStore } from '../../stores/vault-store';
 import { CopyButton } from '../../components/common/copy-button';
 import { Button } from '../../components/ui/button';
@@ -60,12 +61,7 @@ export function EntryDetail() {
   return (
     <section className="detail-panel" aria-labelledby="entry-detail-title">
       <div className="detail-heading">
-        <span
-          className="detail-avatar"
-          style={{ '--entry-accent': entry.accent } as React.CSSProperties}
-        >
-          {entryInitials(entry.title)}
-        </span>
+        <EntryLogo entry={entry} size="detail" />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             {renderTypeIcon(entry)}

@@ -1,6 +1,7 @@
 import { ListFilter, SearchX, SlidersHorizontal, Star } from 'lucide-react';
+import { EntryLogo } from '../../components/common/entry-logo';
 import { filterEntries } from '../../domain/services/entry-search';
-import { cn, entryInitials, formatRelativeDate } from '../../lib/utils';
+import { cn, formatRelativeDate } from '../../lib/utils';
 import { useVaultStore } from '../../stores/vault-store';
 
 const filterLabels = {
@@ -84,12 +85,7 @@ export function EntryList() {
               aria-selected={selectedEntryId === entry.id}
               tabIndex={0}
             >
-              <span
-                className="entry-avatar"
-                style={{ '--entry-accent': entry.accent } as React.CSSProperties}
-              >
-                {entryInitials(entry.title)}
-              </span>
+              <EntryLogo entry={entry} />
               <span className="entry-row-copy">
                 <span className="entry-title-line">
                   <strong>{entry.title}</strong>
