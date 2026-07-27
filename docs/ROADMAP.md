@@ -2,7 +2,7 @@
 
 ## M0 — Product shell
 
-Navigable interface, mock data, architectural boundaries, tests and documentation. **Current milestone.**
+Navigable interface, mock data, architectural boundaries, design system, tests and documentation. **Current milestone.**
 
 ## M1 — Experimental KDBX core
 

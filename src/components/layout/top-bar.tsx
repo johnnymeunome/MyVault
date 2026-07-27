@@ -38,7 +38,7 @@ export function TopBar() {
                 <span className="vault-dot" data-color={vault.color} />
                 <span>{vault.fileName}</span>
                 {vault.id === activeVaultId && (
-                  <span className="ml-auto text-[var(--accent-bright)]">Ativo</span>
+                  <span className="ml-auto text-[var(--brand-blue-strong)]">Ativo</span>
                 )}
               </DropdownMenu.Item>
             ))}

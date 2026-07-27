@@ -98,6 +98,16 @@ button {
 .top-brand {
   min-width: 0;
 }
+.brand-mark {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 1px solid var(--brand-blue-border);
+  border-radius: 10px;
+  color: var(--brand-blue-strong);
+  background: var(--brand-blue-soft);
+}
 .vault-switcher {
   min-width: 0;
   justify-content: flex-start;
@@ -107,8 +117,8 @@ button {
   height: 9px;
   flex: 0 0 auto;
   border-radius: 3px;
-  background: #aeb2b4;
-  box-shadow: 0 0 0 3px rgba(174, 178, 180, 0.1);
+  background: var(--brand-blue);
+  box-shadow: 0 0 0 3px var(--brand-blue-soft);
 }
 .vault-dot[data-color='emerald'] {
   background: #49c778;
@@ -219,8 +229,8 @@ kbd {
 }
 .nav-row.is-active {
   color: var(--text-primary);
-  background: var(--surface-active);
-  box-shadow: inset 2px 0 #aeb2b4;
+  background: var(--brand-blue-soft);
+  box-shadow: inset 2px 0 var(--brand-blue);
 }
 .count-badge {
   min-width: 22px;
@@ -262,8 +272,8 @@ kbd {
   display: grid;
   place-items: center;
   border-radius: 5px;
-  color: #e2e3e3;
-  background: rgba(255, 255, 255, 0.12);
+  color: var(--brand-blue-strong);
+  background: var(--brand-blue-soft);
 }
 .vault-icon.is-green {
   color: #c8f7d7;
@@ -347,9 +357,9 @@ kbd {
   background: var(--surface-hover);
 }
 .entry-row.is-selected {
-  border-color: var(--border-strong);
-  background: var(--accent-soft);
-  box-shadow: inset 2px 0 #aeb2b4;
+  border-color: var(--brand-blue-border);
+  background: var(--brand-blue-soft);
+  box-shadow: inset 2px 0 var(--brand-blue);
 }
 .entry-logo {
   display: grid;
@@ -559,7 +569,7 @@ kbd {
   align-items: center;
   gap: 6px;
   overflow: hidden;
-  color: var(--accent-bright);
+  color: var(--brand-blue-strong);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -595,7 +605,7 @@ kbd {
   gap: 11px;
 }
 .totp-value strong {
-  color: var(--accent-bright);
+  color: var(--brand-blue-strong);
   font-size: 20px;
   font-weight: 550;
   letter-spacing: 0.08em;
@@ -605,7 +615,7 @@ kbd {
   width: 25px;
   height: 25px;
   place-items: center;
-  border: 2px solid var(--accent);
+  border: 2px solid var(--brand-blue);
   border-radius: 50%;
   color: var(--text-secondary);
   font-size: 9px;
@@ -658,7 +668,7 @@ kbd {
   height: 4px;
   appearance: none;
   border-radius: 99px;
-  background: linear-gradient(to right, var(--accent) 0 50%, var(--surface-active) 50%);
+  background: linear-gradient(to right, var(--brand-blue) 0 50%, var(--surface-active) 50%);
 }
 .range::-webkit-slider-thumb {
   width: 13px;
@@ -666,13 +676,13 @@ kbd {
   appearance: none;
   border: 2px solid var(--surface-raised);
   border-radius: 50%;
-  background: var(--accent-bright);
-  box-shadow: 0 0 0 1px var(--accent);
+  background: var(--brand-blue-strong);
+  box-shadow: 0 0 0 1px var(--brand-blue);
 }
 input[type='checkbox'] {
   width: 14px;
   height: 14px;
-  accent-color: var(--accent);
+  accent-color: var(--brand-blue);
 }
 
 .status-bar {
@@ -837,7 +847,7 @@ input[type='checkbox'] {
   padding: 12px;
 }
 .settings-row > svg {
-  color: var(--accent-bright);
+  color: var(--brand-blue-strong);
 }
 .settings-row > div {
   min-width: 0;
@@ -873,7 +883,11 @@ input[type='checkbox'] {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(circle at 50% 32%, rgba(255, 255, 255, 0.08), transparent 35%);
+  background: radial-gradient(
+    circle at 50% 32%,
+    color-mix(in srgb, var(--brand-blue) 18%, transparent),
+    transparent 35%
+  );
 }
 .lock-card {
   position: relative;
@@ -893,10 +907,10 @@ input[type='checkbox'] {
   width: 58px;
   height: 58px;
   place-items: center;
-  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+  border: 1px solid var(--brand-blue-border);
   border-radius: 18px;
-  color: var(--accent-bright);
-  background: var(--accent-soft);
+  color: var(--brand-blue-strong);
+  background: var(--brand-blue-soft);
 }
 .lock-card h1 {
   font-size: 20px;
