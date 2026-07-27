@@ -61,7 +61,7 @@ export function PasswordGenerator({ compact = false }: { compact?: boolean }) {
     <section className={compact ? 'utility-card' : 'space-y-4'} aria-labelledby="generator-title">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <Sparkles size={16} className="text-[var(--accent-bright)]" />
+          <Sparkles size={16} className="text-[var(--brand-blue-strong)]" />
           <h2 id="generator-title" className="text-sm font-medium">
             Gerador de senhas
           </h2>

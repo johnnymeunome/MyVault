@@ -25,3 +25,5 @@ For security concerns, avoid opening a public issue containing sensitive details
 ## Pull requests
 
 Explain what changed, why it is useful, how it was tested and any effect on the future security boundary. Keep UI changes keyboard accessible and avoid introducing network calls or telemetry.
+
+Visual changes must follow [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md), reuse semantic tokens and be checked in both themes. New colors or interaction patterns require a documented rationale.

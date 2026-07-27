@@ -12,7 +12,7 @@
 
 **M0 · Product shell** — protótipo navegável com dados locais fictícios.
 
-[Preview](#preview-do-produto) · [Visão geral](#visão-geral) · [Funcionalidades](#funcionalidades) · [Executar](#como-executar) · [Arquitetura](#arquitetura) · [Roadmap](#roadmap) · [Contribuir](#como-contribuir)
+[Preview](#preview-do-produto) · [Visão geral](#visão-geral) · [Design](#sistema-de-design) · [Funcionalidades](#funcionalidades) · [Executar](#como-executar) · [Arquitetura](#arquitetura) · [Roadmap](#roadmap)
 
 </div>
 
@@ -25,7 +25,7 @@
 </p>
 
 <p align="center">
-  <sub>Interface local-first inspirada em ferramentas modernas de desenvolvimento — clique na imagem para ampliar.</sub>
+  <sub>Base neutra, superfícies azuladas e azul-aço para navegação e foco — clique na imagem para ampliar.</sub>
 </p>
 
 > [!WARNING]
@@ -110,11 +110,19 @@ MyVault é uma aplicação original em Tauri e React. **Não é um fork nem uma 
 | Build         | Vite 7                              |
 | Estilos       | Tailwind CSS 4 + tokens CSS         |
 | Componentes   | Radix primitives + padrão shadcn/ui |
-| Ícones        | Lucide React                        |
+| Ícones        | Lucide React + React Icons          |
 | Estado        | Zustand                             |
 | Testes        | Vitest + Testing Library            |
 | Qualidade     | ESLint + Prettier                   |
 | Núcleo nativo | Rust, ainda mínimo no M0            |
+
+## Sistema de design
+
+A identidade do MyVault combina a sobriedade e a densidade de ferramentas modernas de desenvolvimento com uma assinatura azul-aço própria. Superfícies neutras priorizam os dados; o azul identifica marca, navegação, foco e informação; verde, âmbar e vermelho permanecem reservados para estados semânticos.
+
+A inspiração no Codex acontece no nível de princípios visuais — hierarquia, temperatura de cor e organização desktop. O MyVault não reutiliza marca, ativos ou componentes proprietários do Codex.
+
+As regras de cores, tipografia, espaçamento, layout, componentes, logos, conteúdo de segurança e acessibilidade estão no [sistema de design completo](docs/DESIGN-SYSTEM.md).
 
 ## Como executar
 
@@ -266,6 +274,7 @@ Nenhuma versão será apresentada como pronta para produção antes de testes de
 
 - [ADR 001 — Tauri 2 com React](docs/DECISIONS/001-tauri-react.md)
 - [ADR 002 — Compatibilidade KDBX futura](docs/DECISIONS/002-kdbx-future-compatibility.md)
+- [ADR 003 — Linguagem visual inspirada no Codex](docs/DECISIONS/003-codex-inspired-visual-language.md)
 
 ## Como contribuir
 
