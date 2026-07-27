@@ -10,7 +10,7 @@
 [![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
-**M0 · Product shell** — protótipo navegável com dados locais fictícios.
+**M0 concluído · M1 especificado** — protótipo navegável; leitura KDBX ainda não implementada.
 
 [Preview](#preview-do-produto) · [Visão geral](#visão-geral) · [Design](#sistema-de-design) · [Funcionalidades](#funcionalidades) · [Executar](#como-executar) · [Arquitetura](#arquitetura) · [Roadmap](#roadmap)
 
@@ -49,7 +49,7 @@ MyVault é uma aplicação original em Tauri e React. **Não é um fork nem uma 
 
 ## Status do projeto
 
-| Área                      | Estado no M0           |
+| Área                      | Estado atual           |
 | ------------------------- | ---------------------- |
 | Interface desktop         | Implementada           |
 | Dados de demonstração     | Somente em memória     |
@@ -226,6 +226,18 @@ src-tauri/
 
 Detalhes adicionais estão em [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
+### Plano técnico do M1
+
+O próximo marco já possui limites verificáveis antes da implementação:
+
+- [especificação, contratos e critérios de aceite](docs/M1-SPEC.md);
+- [modelo de ameaças](docs/THREAT-MODEL.md);
+- [matriz de compatibilidade KDBX](docs/KDBX-COMPATIBILITY.md);
+- [decisão sobre o parser Rust](docs/DECISIONS/004-keepass-rs-read-only-spike.md);
+- [política de fixtures descartáveis](src-tauri/tests/fixtures/kdbx/README.md).
+
+O M1 será desktop, experimental e somente leitura. A UI receberá apenas resumos não secretos; senha, TOTP, notas, histórico e anexos não atravessarão o IPC.
+
 ## Segurança e privacidade
 
 O M0 é um protótipo visual e arquitetural. As senhas incluídas no bundle são fixtures obviamente fictícias, e qualquer valor editado permanece em memória JavaScript apenas até a página ser recarregada.
@@ -252,10 +264,10 @@ Leia [docs/SECURITY-NOTES.md](docs/SECURITY-NOTES.md) antes de trabalhar em qual
 ## Roadmap
 
 ```text
-M0  Product shell                      ✅ atual
+M0  Product shell                      ✅ concluído
  │   interface, mocks, arquitetura e testes
  ▼
-M1  Núcleo KDBX experimental           planejado
+M1  Núcleo KDBX experimental           ◀ especificado / próximo
  │   leitura de uma cópia de teste em modo somente leitura
  ▼
 M2  Escrita segura                     futuro
@@ -275,6 +287,7 @@ Nenhuma versão será apresentada como pronta para produção antes de testes de
 - [ADR 001 — Tauri 2 com React](docs/DECISIONS/001-tauri-react.md)
 - [ADR 002 — Compatibilidade KDBX futura](docs/DECISIONS/002-kdbx-future-compatibility.md)
 - [ADR 003 — Linguagem visual inspirada no Codex](docs/DECISIONS/003-codex-inspired-visual-language.md)
+- [ADR 004 — Biblioteca Rust para o spike KDBX somente leitura](docs/DECISIONS/004-keepass-rs-read-only-spike.md)
 
 ## Como contribuir
 
