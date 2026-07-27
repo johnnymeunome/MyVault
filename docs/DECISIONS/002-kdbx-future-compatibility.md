@@ -5,9 +5,9 @@
 
 ## Decision
 
-Vaulta will target interoperability with established KDBX files rather than inventing a proprietary vault format. No KDBX code is included in M0.
+MyVault will target interoperability with established KDBX files rather than inventing a proprietary vault format. No KDBX code is included in M0.
 
-Vaulta is an original Tauri/React application, **not a fork of KeePassXC**. Forking KeePassXC was considered but rejected for this product because its C++/Qt interface architecture and GPL inheritance would make a ground-up experience harder to isolate. Compatibility is pursued at the file-format boundary instead.
+MyVault is an original Tauri/React application, **not a fork of KeePassXC**. Forking KeePassXC was considered but rejected for this product because its C++/Qt interface architecture and GPL inheritance would make a ground-up experience harder to isolate. Compatibility is pursued at the file-format boundary instead.
 
 ## Rollout
 

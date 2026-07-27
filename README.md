@@ -1,11 +1,11 @@
-# Vaulta
+# MyVault
 
-[![CI](https://github.com/johnnymeunome/vaulta/actions/workflows/ci.yml/badge.svg)](https://github.com/johnnymeunome/vaulta/actions/workflows/ci.yml)
+[![CI](https://github.com/johnnymeunome/MyVault/actions/workflows/ci.yml/badge.svg)](https://github.com/johnnymeunome/MyVault/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-6366e8.svg)](LICENSE)
 
-Vaulta is an early-stage, local-first desktop password-manager concept. The current milestone (M0) is a navigable product shell with local mock data and no network calls.
+MyVault is an early-stage, local-first desktop password-manager concept. The current milestone (M0) is a navigable product shell with local mock data and no network calls.
 
-![Vaulta M0 interface](docs/references/vaulta-m0-preview.png)
+![MyVault M0 interface](docs/references/myvault-m0-preview.png)
 
 > **Do not store real credentials in this version.** Encryption, KDBX support, secure memory handling and production-grade clipboard protections have not been implemented.
 
@@ -57,4 +57,4 @@ M1 will experiment with opening a **copy** of a test KDBX file in read-only mode
 
 ## Contributing and license
 
-Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) before proposing security-sensitive changes. Vaulta is available under the [MIT License](LICENSE).
+Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) before proposing security-sensitive changes. MyVault is available under the [MIT License](LICENSE).

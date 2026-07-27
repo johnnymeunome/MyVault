@@ -1,7 +1,7 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Permissões mínimas do shell do Vaulta.",
+  "description": "Permissões mínimas do shell do MyVault.",
   "windows": ["main"],
   "permissions": ["core:default"]
 }

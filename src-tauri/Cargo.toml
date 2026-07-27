@@ -1,12 +1,12 @@
 [package]
-name = "vaulta"
+name = "myvault"
 version = "0.1.0"
-description = "Vaulta product shell"
-authors = ["Vaulta contributors"]
+description = "MyVault product shell"
+authors = ["MyVault contributors"]
 edition = "2021"
 
 [lib]
-name = "vaulta_lib"
+name = "myvault_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
