@@ -6,6 +6,7 @@
 
 ## Legenda
 
+- **Em validação:** fixture e teste implementados; CI do pull request ainda precisa confirmar.
 - **Planejado:** requisito do M1 ainda sem fixture executada.
 - **Verificado:** teste automatizado passou com fixture versionada.
 - **Bloqueado:** não será declarado como compatível até resolver a limitação indicada.
@@ -17,31 +18,31 @@ Nenhuma linha deve mudar para **Verificado** apenas porque a biblioteca declara 
 
 | Dimensão       | Variante              | Estado inicial | Fixture prevista                             |
 | -------------- | --------------------- | -------------- | -------------------------------------------- |
-| Formato        | KDBX 3.1              | Planejado      | `kdbx31-aes-aeskdf-password.kdbx`            |
-| Formato        | KDBX 4.0              | Planejado      | `kdbx40-aes-argon2d-password.kdbx`           |
-| Formato        | KDBX 4.1              | Planejado      | `kdbx41-aes-argon2id-password.kdbx`          |
-| Cifra externa  | AES-256               | Planejado      | fixtures 3.1, 4.0 e 4.1                      |
-| Cifra externa  | ChaCha20              | Planejado      | `kdbx41-chacha20-argon2id-password.kdbx`     |
-| KDF            | AES-KDF               | Planejado      | fixture 3.1                                  |
-| KDF            | Argon2d               | Planejado      | fixture 4.0                                  |
-| KDF            | Argon2id              | Planejado      | fixtures 4.1                                 |
-| Compressão     | nenhuma               | Planejado      | uma variante 4.1 dedicada ou gerada no teste |
-| Compressão     | GZip                  | Planejado      | fixtures padrão                              |
-| Cifra interna  | Salsa20               | Planejado      | fixture 3.1                                  |
-| Cifra interna  | ChaCha20              | Planejado      | fixtures 4.x                                 |
-| Chave composta | senha                 | Planejado      | todas as fixtures principais                 |
-| Chave composta | senha + arquivo-chave | Planejado      | `kdbx41-password-keyfile.kdbx`               |
+| Formato        | KDBX 3.1              | Em validação   | `kdbx31-aes-aeskdf-password.kdbx`              |
+| Formato        | KDBX 4.0              | Em validação   | fixtures `kdbx40-*`                            |
+| Formato        | KDBX 4.1              | Em validação   | `kdbx41-aes-aeskdf-password.kdbx`              |
+| Cifra externa  | AES-256               | Em validação   | fixtures 3.1, 4.0 e 4.1                        |
+| Cifra externa  | ChaCha20              | Em validação   | `kdbx40-chacha20-argon2id-password.kdbx`       |
+| KDF            | AES-KDF               | Em validação   | fixtures 3.1 e 4.1                             |
+| KDF            | Argon2d               | Em validação   | `kdbx40-aes-argon2d-password.kdbx`             |
+| KDF            | Argon2id              | Em validação   | fixtures 4.0 AES e ChaCha20                    |
+| Compressão     | nenhuma               | Planejado      | fixture dedicada ou gerada no teste            |
+| Compressão     | GZip                  | Em validação   | fixtures importadas                            |
+| Cifra interna  | Salsa20               | Em validação   | fixture 3.1                                    |
+| Cifra interna  | ChaCha20              | Em validação   | fixtures 4.x                                   |
+| Chave composta | senha                 | Em validação   | todas as fixtures principais                   |
+| Chave composta | senha + arquivo-chave | Em validação   | `kdbx40-password-keyfile.kdbx`                 |
 | Chave composta | challenge-response    | Fora do escopo | —                                            |
 
 ## Dados projetados para a UI
 
 | Recurso KDBX                   | Leitura pelo parser           | Retorno ao React no M1                                |
 | ------------------------------ | ----------------------------- | ----------------------------------------------------- |
-| nome do banco                  | Planejado                     | sim                                                   |
-| grupos e hierarquia            | Planejado                     | sim, com limites                                      |
-| título da entrada              | Planejado                     | sim                                                   |
-| usuário e URL                  | Planejado                     | sim, tratados como metadados potencialmente sensíveis |
-| favorito e data de atualização | Planejado                     | quando disponíveis                                    |
+| nome do banco                  | Em validação                  | sim                                                   |
+| grupos e hierarquia            | Em validação                  | sim, com limites                                      |
+| título da entrada              | Em validação                  | sim                                                   |
+| usuário e URL                  | Em validação                  | sim, tratados como metadados potencialmente sensíveis |
+| favorito e data de atualização | Em validação                  | quando disponíveis                                    |
 | senha                          | necessário para parse interno | **não**                                               |
 | TOTP                           | possível no formato           | **não**                                               |
 | notas e campos personalizados  | possível no formato           | **não**                                               |

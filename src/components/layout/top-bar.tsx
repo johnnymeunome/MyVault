@@ -1,5 +1,5 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { ChevronDown, LockKeyhole, Plus, Search } from 'lucide-react';
+import { ChevronDown, FolderOpen, LockKeyhole, Plus, Search } from 'lucide-react';
 import { Brand } from '../common/brand';
 import { Button } from '../ui/button';
 import { useVaultStore } from '../../stores/vault-store';
@@ -12,6 +12,7 @@ export function TopBar() {
   const setQuery = useVaultStore((state) => state.setQuery);
   const setOverlay = useVaultStore((state) => state.setOverlay);
   const setLocked = useVaultStore((state) => state.setLocked);
+  const readOnlySession = useVaultStore((state) => state.readOnlySession);
   const activeVault = vaults.find((vault) => vault.id === activeVaultId);
 
   return (
@@ -42,6 +43,11 @@ export function TopBar() {
                 )}
               </DropdownMenu.Item>
             ))}
+            <DropdownMenu.Separator className="my-1 h-px bg-[var(--border)]" />
+            <DropdownMenu.Item className="dropdown-item" onSelect={() => setOverlay('vault-open')}>
+              <FolderOpen size={15} />
+              <span>Abrir fixture KDBX…</span>
+            </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
@@ -57,7 +63,12 @@ export function TopBar() {
         <kbd>Ctrl K</kbd>
       </label>
 
-      <Button variant="primary" onClick={() => setOverlay('entry-create')}>
+      {readOnlySession && <span className="read-only-badge">Somente leitura</span>}
+      <Button
+        variant="primary"
+        onClick={() => setOverlay('entry-create')}
+        disabled={Boolean(readOnlySession)}
+      >
         <Plus size={16} />
         Novo item
       </Button>

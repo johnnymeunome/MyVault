@@ -165,7 +165,11 @@ Erros internos da biblioteca, mensagens do sistema operacional, stack traces e c
 Valores iniciais, revisáveis apenas por decisão documentada:
 
 - tamanho máximo do arquivo: **64 MiB**;
+- tamanho máximo do arquivo-chave: **1 MiB**;
 - custo de memória declarado pelo KDF: **512 MiB**;
+- iterações Argon2 declaradas pelo KDF: **100**;
+- rodadas AES-KDF declaradas: **10.000.000**;
+- tamanho máximo de um campo do cabeçalho externo: **1 MiB**;
 - profundidade máxima de grupos: **64**;
 - total máximo de grupos: **10.000**;
 - total máximo de entradas: **10.000**;

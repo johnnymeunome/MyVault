@@ -3,5 +3,5 @@
   "identifier": "default",
   "description": "Permissões mínimas do shell do MyVault.",
   "windows": ["main"],
-  "permissions": ["core:default"]
+  "permissions": ["core:default", "dialog:allow-open"]
 }

@@ -1,11 +1,23 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { useVaultStore } from '../stores/vault-store';
+import { mockEntries } from '../infrastructure/mocks/entries';
+import { mockGroups, mockVaults } from '../infrastructure/mocks/vaults';
 import { App } from './app';
 
 describe('main application flows', () => {
   beforeEach(() => {
-    useVaultStore.setState({ isLocked: false, overlay: null, theme: 'dark' });
+    useVaultStore.setState({
+      isLocked: false,
+      overlay: null,
+      theme: 'dark',
+      readOnlySession: null,
+      vaults: mockVaults,
+      groups: mockGroups,
+      entries: mockEntries,
+      activeVaultId: 'personal',
+      selectedEntryId: 'github',
+    });
   });
 
   it('locks and unlocks the prototype', () => {

@@ -44,6 +44,7 @@ export function EntryDetail() {
   const duplicateEntry = useVaultStore((state) => state.duplicateEntry);
   const trashEntry = useVaultStore((state) => state.trashEntry);
   const setOverlay = useVaultStore((state) => state.setOverlay);
+  const readOnlySession = useVaultStore((state) => state.readOnlySession);
   const [revealedEntryId, setRevealedEntryId] = useState<string | null>(null);
   const entry = entries.find((candidate) => candidate.id === selectedEntryId);
 
@@ -57,6 +58,7 @@ export function EntryDetail() {
   }
 
   const revealed = revealedEntryId === entry.id;
+  const safeUrl = entry.type === 'login' && /^https?:\/\//i.test(entry.url) ? entry.url : null;
 
   return (
     <section className="detail-panel" aria-labelledby="entry-detail-title">
@@ -79,13 +81,15 @@ export function EntryDetail() {
                   : 'Nota segura'}
           </p>
         </div>
-        <button
-          className={cn('icon-button', entry.favorite && 'is-favorite')}
-          aria-label={entry.favorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
-          onClick={() => toggleFavorite(entry.id)}
-        >
-          <Star size={17} fill={entry.favorite ? 'currentColor' : 'none'} />
-        </button>
+        {!readOnlySession && (
+          <button
+            className={cn('icon-button', entry.favorite && 'is-favorite')}
+            aria-label={entry.favorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+            onClick={() => toggleFavorite(entry.id)}
+          >
+            <Star size={17} fill={entry.favorite ? 'currentColor' : 'none'} />
+          </button>
+        )}
       </div>
 
       <dl className="detail-body">
@@ -95,8 +99,8 @@ export function EntryDetail() {
         {entry.type === 'login' && (
           <>
             <DetailRow label="URL">
-              {entry.url ? (
-                <a className="detail-link" href={entry.url} target="_blank" rel="noreferrer">
+              {safeUrl ? (
+                <a className="detail-link" href={safeUrl} target="_blank" rel="noreferrer">
                   {entry.url}
                   <ExternalLink size={13} />
                 </a>
@@ -107,40 +111,42 @@ export function EntryDetail() {
             <DetailRow label="Usuário">
               <span className="value-with-action">
                 <span className="truncate">{entry.username}</span>
-                <CopyButton value={entry.username} label="Usuário" compact />
+                {!readOnlySession && <CopyButton value={entry.username} label="Usuário" compact />}
               </span>
             </DetailRow>
-            <DetailRow label="Senha">
-              <div className="space-y-2">
-                <span className="value-with-action">
-                  <code className="tracking-[0.16em]">
-                    {revealed ? entry.password : '••••••••••••'}
-                  </code>
-                  <span className="flex gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="size-7 min-h-7"
-                      onClick={() => setRevealedEntryId(revealed ? null : entry.id)}
-                      aria-label={revealed ? 'Ocultar senha' : 'Mostrar senha'}
-                    >
-                      {revealed ? <EyeOff size={14} /> : <Eye size={14} />}
-                    </Button>
-                    <CopyButton value={entry.password} label="Senha" compact />
+            {!readOnlySession && (
+              <DetailRow label="Senha">
+                <div className="space-y-2">
+                  <span className="value-with-action">
+                    <code className="tracking-[0.16em]">
+                      {revealed ? entry.password : '••••••••••••'}
+                    </code>
+                    <span className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="size-7 min-h-7"
+                        onClick={() => setRevealedEntryId(revealed ? null : entry.id)}
+                        aria-label={revealed ? 'Ocultar senha' : 'Mostrar senha'}
+                      >
+                        {revealed ? <EyeOff size={14} /> : <Eye size={14} />}
+                      </Button>
+                      <CopyButton value={entry.password} label="Senha" compact />
+                    </span>
                   </span>
-                </span>
-                <span className="strength-meter">
-                  {[1, 2, 3, 4].map((segment) => (
-                    <i
-                      key={segment}
-                      data-active={segment <= evaluatePasswordStrength(entry.password).score}
-                    />
-                  ))}
-                  <small>{evaluatePasswordStrength(entry.password).label}</small>
-                </span>
-              </div>
-            </DetailRow>
-            {entry.totp && (
+                  <span className="strength-meter">
+                    {[1, 2, 3, 4].map((segment) => (
+                      <i
+                        key={segment}
+                        data-active={segment <= evaluatePasswordStrength(entry.password).score}
+                      />
+                    ))}
+                    <small>{evaluatePasswordStrength(entry.password).label}</small>
+                  </span>
+                </div>
+              </DetailRow>
+            )}
+            {!readOnlySession && entry.totp && (
               <DetailRow label="Código 2FA">
                 <span className="totp-value">
                   <strong>{entry.totp.mockCode}</strong>
@@ -186,16 +192,27 @@ export function EntryDetail() {
             <p className="leading-6">{entry.content}</p>
           </DetailRow>
         )}
-        <DetailRow label="Tags">
-          <span className="tag-list">
-            {entry.tags.map((tag) => (
-              <span key={tag.id}>{tag.label}</span>
-            ))}
-          </span>
-        </DetailRow>
-        <DetailRow label="Notas">
-          <p className="detail-note">{entry.notes || 'Nenhuma nota.'}</p>
-        </DetailRow>
+        {readOnlySession && (
+          <DetailRow label="Proteção">
+            <div className="read-only-notice">
+              Senha, TOTP, notas, histórico e anexos permaneceram no núcleo Rust.
+            </div>
+          </DetailRow>
+        )}
+        {!readOnlySession && (
+          <DetailRow label="Tags">
+            <span className="tag-list">
+              {entry.tags.map((tag) => (
+                <span key={tag.id}>{tag.label}</span>
+              ))}
+            </span>
+          </DetailRow>
+        )}
+        {!readOnlySession && (
+          <DetailRow label="Notas">
+            <p className="detail-note">{entry.notes || 'Nenhuma nota.'}</p>
+          </DetailRow>
+        )}
         <DetailRow label="Atualizado">
           <time>
             {new Date(entry.updatedAt).toLocaleString('pt-BR', {
@@ -206,24 +223,26 @@ export function EntryDetail() {
         </DetailRow>
       </dl>
 
-      <div className="detail-actions">
-        <Button
-          variant="secondary"
-          disabled={entry.type !== 'login'}
-          onClick={() => setOverlay('entry-edit')}
-        >
-          <Pencil size={15} />
-          Editar
-        </Button>
-        <Button variant="secondary" onClick={() => duplicateEntry(entry.id)}>
-          <RotateCw size={15} />
-          Duplicar
-        </Button>
-        <Button variant="danger" onClick={() => trashEntry(entry.id)}>
-          <Trash2 size={15} />
-          Excluir
-        </Button>
-      </div>
+      {!readOnlySession && (
+        <div className="detail-actions">
+          <Button
+            variant="secondary"
+            disabled={entry.type !== 'login'}
+            onClick={() => setOverlay('entry-edit')}
+          >
+            <Pencil size={15} />
+            Editar
+          </Button>
+          <Button variant="secondary" onClick={() => duplicateEntry(entry.id)}>
+            <RotateCw size={15} />
+            Duplicar
+          </Button>
+          <Button variant="danger" onClick={() => trashEntry(entry.id)}>
+            <Trash2 size={15} />
+            Excluir
+          </Button>
+        </div>
+      )}
     </section>
   );
 }

@@ -36,6 +36,8 @@ export function Sidebar() {
   const vaults = useVaultStore((state) => state.vaults);
   const activeVaultId = useVaultStore((state) => state.activeVaultId);
   const filter = useVaultStore((state) => state.filter);
+  const groups = useVaultStore((state) => state.groups);
+  const readOnlySession = useVaultStore((state) => state.readOnlySession);
   const setFilter = useVaultStore((state) => state.setFilter);
   const setActiveVault = useVaultStore((state) => state.setActiveVault);
   const vaultEntries = entries.filter((entry) => entry.vaultId === activeVaultId);
@@ -85,10 +87,33 @@ export function Sidebar() {
         ))}
       </div>
 
+      {readOnlySession && (
+        <>
+          <div className="sidebar-section-heading">
+            <span>Grupos KDBX</span>
+          </div>
+          <div className="kdbx-group-list" aria-label="Grupos da fixture KDBX">
+            {groups.map((group) => (
+              <div
+                key={group.id}
+                className="kdbx-group-row"
+                style={{ paddingLeft: `${String(8 + Math.min(group.depth ?? 0, 4) * 12)}px` }}
+                title={group.name}
+              >
+                <KeyRound size={13} />
+                <span className="truncate">{group.name || 'Grupo sem nome'}</span>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
       <div className="sidebar-spacer" />
       <div className="prototype-chip">
         <Archive size={14} />
-        <span>Dados somente em memória</span>
+        <span>
+          {readOnlySession ? 'Fixture KDBX · sem campos protegidos' : 'Dados somente em memória'}
+        </span>
       </div>
     </aside>
   );
