@@ -232,10 +232,9 @@ fn inspect_kdbx3_header(data: &[u8]) -> Result<(), VaultError> {
         offset = offset
             .checked_add(length)
             .ok_or(VaultError::FormatInvalid)?;
-        if field_type == 6 {
-            if field.len() != 8 || read_u64_from_slice(field)? > MAX_AES_KDF_ROUNDS {
-                return Err(VaultError::ResourceLimitExceeded);
-            }
+        if field_type == 6 && (field.len() != 8 || read_u64_from_slice(field)? > MAX_AES_KDF_ROUNDS)
+        {
+            return Err(VaultError::ResourceLimitExceeded);
         }
         if field_type == 0 {
             return Ok(());
@@ -339,7 +338,10 @@ fn take_slice(data: &[u8], offset: usize, length: usize) -> Result<&[u8], VaultE
 
 #[cfg(test)]
 mod tests {
-    use std::{fs, path::PathBuf};
+    use std::{
+        fs,
+        path::{Path, PathBuf},
+    };
 
     use keepass::{db::fields, Database};
     use sha2::{Digest, Sha256};
@@ -508,7 +510,7 @@ mod tests {
             .is_err());
     }
 
-    fn request(path: &PathBuf, password: &str, keyfile: Option<&PathBuf>) -> OpenKdbxRequest {
+    fn request(path: &Path, password: &str, keyfile: Option<&Path>) -> OpenKdbxRequest {
         OpenKdbxRequest {
             path: path.to_string_lossy().into_owned(),
             password: password.to_string(),
