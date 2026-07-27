@@ -1,6 +1,6 @@
-# Contributing to Vaulta
+# Contributing to MyVault
 
-Thanks for helping improve Vaulta. The project is currently at M0: a product shell that is **not safe for real credentials**.
+Thanks for helping improve MyVault. The project is currently at M0: a product shell that is **not safe for real credentials**.
 
 ## Development
 

@@ -1,3 +1,3 @@
 fn main() {
-    vaulta_lib::run();
+    myvault_lib::run();
 }

@@ -2,7 +2,7 @@
 
 ## Promise
 
-Vaulta aims to make ownership of local credential data feel clear, calm and modern. The product should communicate privacy and technical honesty without looking like an administration dashboard.
+MyVault aims to make ownership of local credential data feel clear, calm and modern. The product should communicate privacy and technical honesty without looking like an administration dashboard.
 
 ## M0 outcomes
 
