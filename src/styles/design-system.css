@@ -435,6 +435,20 @@
   background: var(--ds-surface-hover);
 }
 
+:root[data-theme='light'] .ds-button--secondary {
+  color: var(--ds-text-strong);
+  border-color: color-mix(in srgb, var(--ds-line-strong) 62%, var(--ds-line));
+  background: var(--ds-surface-raised);
+  box-shadow:
+    0 1px 1px rgba(24, 30, 28, 0.06),
+    0 2px 5px rgba(24, 30, 28, 0.04);
+}
+
+:root[data-theme='light'] .ds-button--secondary:hover {
+  border-color: var(--ds-line-strong);
+  background: #ffffff;
+}
+
 .ds-button--danger {
   color: var(--ds-danger);
 }
