@@ -10,7 +10,7 @@
 [![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
-**M0 concluído · M1 especificado** — protótipo navegável; leitura KDBX ainda não implementada.
+**M0 concluído · M1 com validação automatizada** — leitura KDBX experimental e somente de fixtures; aceite manual desktop pendente.
 
 [Preview](#preview-do-produto) · [Visão geral](#visão-geral) · [Design](#sistema-de-design) · [Funcionalidades](#funcionalidades) · [Executar](#como-executar) · [Arquitetura](#arquitetura) · [Roadmap](#roadmap)
 
@@ -29,39 +29,39 @@
 </p>
 
 > [!WARNING]
-> **Não use o MyVault para armazenar credenciais reais.** Este repositório está no marco M0: criptografia, leitura e escrita KDBX, proteção de memória e garantias nativas de clipboard ainda não foram implementadas.
+> **Não use o MyVault para armazenar credenciais reais.** O M1 abre apenas fixtures públicas e descartáveis em modo somente leitura. Escrita KDBX, recuperação, proteção de memória e auditoria independente ainda não foram implementadas.
 
 ## Visão geral
 
 MyVault é um projeto open source de portfólio que explora como um gerenciador de credenciais local pode combinar transparência técnica, propriedade dos dados e uma interface desktop contemporânea.
 
-O produto foi iniciado pela experiência e pela arquitetura — não pela criptografia. O marco atual entrega uma base visual funcional, totalmente mockada e sem persistência, pronta para receber no futuro um núcleo seguro em Rust e compatibilidade progressiva com arquivos KDBX.
+O produto foi iniciado pela experiência e pela arquitetura — não pela criptografia. O M0 entrega a base visual mockada; o M1 acrescenta um núcleo Rust experimental que abre fixtures KDBX em modo somente leitura e devolve à interface apenas uma projeção não secreta.
 
 Princípios do projeto:
 
 - **local-first:** nenhuma conta online, servidor, telemetria ou chamada externa;
 - **honestidade de segurança:** o aplicativo informa claramente o que ainda não protege;
 - **experiência desktop:** interface compacta, acessível e orientada a teclado;
-- **interoperabilidade futura:** compatibilidade KDBX em vez de um formato proprietário;
+- **interoperabilidade progressiva:** compatibilidade KDBX em vez de um formato proprietário;
 - **limites claros:** operações sensíveis deverão acontecer atrás de comandos Tauri restritos.
 
 MyVault é uma aplicação original em Tauri e React. **Não é um fork nem uma reimplementação visual do KeePassXC.**
 
 ## Status do projeto
 
-| Área                      | Estado atual           |
-| ------------------------- | ---------------------- |
-| Interface desktop         | Implementada           |
-| Dados de demonstração     | Somente em memória     |
-| Busca e filtros           | Implementados          |
-| Criação e edição          | Simuladas na sessão    |
-| Gerador de senhas         | Implementado e testado |
-| Bloqueio do cofre         | Simulado               |
-| Clipboard                 | Limpeza best-effort    |
-| Persistência              | Não implementada       |
-| Criptografia              | Não implementada       |
-| KDBX                      | Não implementado       |
-| Uso com credenciais reais | **Não recomendado**    |
+| Área                      | Estado atual                                      |
+| ------------------------- | ------------------------------------------------- |
+| Interface desktop         | Implementada                                      |
+| Dados de demonstração     | Somente em memória                                |
+| Busca e filtros           | Implementados                                     |
+| Criação e edição          | Simuladas apenas no modo mock                     |
+| Gerador de senhas         | Implementado e testado                            |
+| Bloqueio do cofre         | Simulado; encerra a sessão KDBX                   |
+| Clipboard                 | Limpeza best-effort apenas no modo mock           |
+| Persistência              | Não implementada                                  |
+| Criptografia              | Parser KDBX de terceiro, experimental             |
+| KDBX                      | Leitura experimental somente de fixtures públicas |
+| Uso com credenciais reais | **Não recomendado**                               |
 
 ## Funcionalidades
 
@@ -92,6 +92,17 @@ MyVault é uma aplicação original em Tauri e React. **Não é um fork nem uma 
 - contagem regressiva para limpeza best-effort;
 - tela de bloqueio e desbloqueio simulados.
 
+### KDBX M1 experimental
+
+- seleção de fixture por diálogo nativo do Tauri;
+- leitura KDBX 3.1, 4.0 e 4.1 com AES-256 ou ChaCha20;
+- derivação por AES-KDF, Argon2d e Argon2id;
+- abertura por senha ou senha com arquivo-chave;
+- sessão opaca mantida no processo Rust;
+- projeção allowlist de grupos e resumos de entradas, sem senha, TOTP, notas, histórico ou anexos;
+- fechamento da sessão ao bloquear, fechar o cofre ou descarregar a interface;
+- erros públicos fechados, sem caminhos locais ou mensagens internas.
+
 ### Qualidade
 
 - TypeScript em modo strict;
@@ -99,7 +110,7 @@ MyVault é uma aplicação original em Tauri e React. **Não é um fork nem uma 
 - testes de domínio, estado e fluxos principais;
 - ESLint e Prettier;
 - pipeline público de CI;
-- auditoria npm sem vulnerabilidades conhecidas no estado atual do lockfile.
+- auditorias npm e Cargo sem vulnerabilidades conhecidas no estado atual dos lockfiles.
 
 ## Stack
 
@@ -114,7 +125,7 @@ MyVault é uma aplicação original em Tauri e React. **Não é um fork nem uma 
 | Estado        | Zustand                             |
 | Testes        | Vitest + Testing Library            |
 | Qualidade     | ESLint + Prettier                   |
-| Núcleo nativo | Rust, ainda mínimo no M0            |
+| Núcleo nativo | Rust + `keepass` 0.13.17            |
 
 ## Sistema de design
 
@@ -156,7 +167,7 @@ Instale primeiro os [pré-requisitos do Tauri 2](https://v2.tauri.app/start/prer
 npm run tauri -- dev
 ```
 
-O shell Tauri está configurado, mas o núcleo Rust do M0 contém apenas limites e comandos demonstrativos.
+No aplicativo desktop, use **Abrir fixture KDBX** e selecione um arquivo de `src-tauri/tests/fixtures/kdbx`. As fixtures protegidas apenas por senha usam `demopass`; a fixture combinada também exige o arquivo-chave público disponível na mesma pasta. Esses dados são deliberadamente públicos e servem somente para teste.
 
 ## Comandos disponíveis
 
@@ -181,6 +192,10 @@ npm run lint
 npm run typecheck
 npm run test
 npm run build
+cd src-tauri
+cargo fmt --check
+cargo clippy --all-targets -- -D warnings
+cargo test --lib
 ```
 
 ## Atalhos
@@ -199,11 +214,12 @@ flowchart LR
     UI["React UI"] --> Store["Zustand stores"]
     Store --> Domain["Domínio e serviços puros"]
     Domain --> Mock["Repositórios mockados · M0"]
-    Domain -. futuro .-> Bridge["Comandos Tauri restritos"]
-    Bridge -. futuro .-> Core["Núcleo Rust / KDBX"]
+    Store --> Gateway["Gateway KDBX tipado"]
+    Gateway --> Bridge["Comandos Tauri restritos"]
+    Bridge --> Core["Serviço Rust somente leitura · M1"]
 ```
 
-O frontend não deve acessar diretamente filesystem, keychain ou outras APIs sensíveis. Essas capacidades serão expostas no futuro por comandos Tauri pequenos, tipados e explicitamente autorizados.
+O frontend não acessa diretamente filesystem, keychain ou outras APIs sensíveis. A leitura experimental é exposta por comandos Tauri pequenos, tipados e explicitamente autorizados.
 
 ```text
 src/
@@ -220,15 +236,15 @@ src-tauri/
 ├── capabilities/           # permissões mínimas do shell
 └── src/
     ├── commands/           # comandos expostos ao frontend
-    ├── security/           # limite reservado para segurança
-    └── vault/              # limite reservado para o cofre
+    ├── security/           # validações e limites de segurança
+    └── vault/              # serviço e sessão KDBX somente leitura
 ```
 
 Detalhes adicionais estão em [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
-### Plano técnico do M1
+### Implementação técnica do M1
 
-O próximo marco já possui limites verificáveis antes da implementação:
+O M1 foi implementado com limites verificáveis e documentação de suporte:
 
 - [especificação, contratos e critérios de aceite](docs/M1-SPEC.md);
 - [modelo de ameaças](docs/THREAT-MODEL.md);
@@ -236,28 +252,33 @@ O próximo marco já possui limites verificáveis antes da implementação:
 - [decisão sobre o parser Rust](docs/DECISIONS/004-keepass-rs-read-only-spike.md);
 - [política de fixtures descartáveis](src-tauri/tests/fixtures/kdbx/README.md).
 
-O M1 será desktop, experimental e somente leitura. A UI receberá apenas resumos não secretos; senha, TOTP, notas, histórico e anexos não atravessarão o IPC.
+O M1 é desktop, experimental e somente leitura. A UI recebe apenas resumos não secretos; senha, TOTP, notas, histórico e anexos não atravessam o IPC. A implementação e a validação automatizada estão concluídas; o fluxo interativo do Tauri no Windows ainda precisa de aceite manual.
 
 ## Segurança e privacidade
 
-O M0 é um protótipo visual e arquitetural. As senhas incluídas no bundle são fixtures obviamente fictícias, e qualquer valor editado permanece em memória JavaScript apenas até a página ser recarregada.
+O preview web do M0 continua mockado. No desktop, o M1 acrescenta leitura experimental de fixtures públicas e descartáveis. Valores mockados permanecem em memória JavaScript; a base KDBX fica no processo Rust durante a sessão, enquanto a senha efêmera é usada somente na abertura e não retorna pelo IPC.
 
-O que o M0 faz:
+O que a implementação atual faz:
 
 - não utiliza `localStorage`, IndexedDB ou banco de dados;
 - não envia telemetria nem realiza chamadas de rede;
 - não registra senhas em logs;
-- mantém a superfície Tauri no mínimo necessário;
+- abre a fixture com acesso somente leitura e aplica limites de tamanho e estrutura;
+- mantém a base KDBX em uma sessão opaca no processo Rust;
+- expõe ao frontend apenas campos não secretos em allowlist;
+- mantém a superfície Tauri restrita a comandos tipados;
 - isola o clipboard atrás de um gateway substituível.
 
-O que o M0 **não** garante:
+O que a implementação atual **não** garante:
 
 - confidencialidade dos valores em memória;
 - proteção contra malware ou captura de tela;
 - limpeza confiável do clipboard em todos os sistemas;
-- autenticação real por senha mestra;
-- integridade, criptografia ou recuperação de um cofre;
-- compatibilidade com arquivos KDBX.
+- escrita, recuperação ou backup de um cofre;
+- segurança para credenciais reais;
+- compatibilidade com todo arquivo produzido pelo ecossistema KDBX;
+- aceite manual completo do fluxo desktop no Windows;
+- auditoria de segurança independente.
 
 Leia [docs/SECURITY-NOTES.md](docs/SECURITY-NOTES.md) antes de trabalhar em qualquer funcionalidade sensível. Para reportar um problema de segurança, não publique credenciais ou detalhes exploráveis em uma issue pública; entre em contato com o mantenedor pelo [perfil no GitHub](https://github.com/johnnymeunome).
 
@@ -267,8 +288,8 @@ Leia [docs/SECURITY-NOTES.md](docs/SECURITY-NOTES.md) antes de trabalhar em qual
 M0  Product shell                      ✅ concluído
  │   interface, mocks, arquitetura e testes
  ▼
-M1  Núcleo KDBX experimental           ◀ especificado / próximo
- │   leitura de uma cópia de teste em modo somente leitura
+M1  Núcleo KDBX experimental           ◐ automação concluída
+ │   leitura de fixtures em modo somente leitura; aceite manual pendente
  ▼
 M2  Escrita segura                     futuro
  │   gravação atômica, backups e compatibilidade
@@ -313,6 +334,6 @@ Projeto de portfólio desenvolvido por [João Victor](https://github.com/johnnym
 
 <div align="center">
 
-**MyVault M0 — interface primeiro, segurança sem atalhos.**
+**MyVault M1 — leitura experimental, somente fixtures, segurança sem atalhos.**
 
 </div>

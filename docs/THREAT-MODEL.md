@@ -1,8 +1,8 @@
 # Modelo de ameaças — M1 KDBX somente leitura
 
-- **Status:** baseline para implementação
+- **Status:** revisado após a implementação e a validação automatizada
 - **Escopo:** marco M1
-- **Data:** 2026-07-27
+- **Data:** 2026-07-28
 
 ## Aviso
 
@@ -54,7 +54,7 @@ O preview web com mocks não abre KDBX e está fora do caminho nativo. No deskto
 
 | ID  | Ameaça                                                           | Impacto                           | Controles exigidos no M1                                                                                              | Risco residual                                                   |
 | --- | ---------------------------------------------------------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| T1  | KDBX malformado explora bug ou pânico no parser                  | crash ou execução indevida        | versão exata fixada; fixtures negativas; erros encapsulados; revisão de advisories; sem dados reais                   | biblioteca não auditada pelo projeto                             |
+| T1  | KDBX malformado explora bug ou pânico no parser                  | crash ou execução indevida        | versão exata fixada; fixtures negativas; erros encapsulados; `cargo audit`; sem dados reais                           | conjunto completo não passou por auditoria independente          |
 | T2  | KDF, compressão ou cardinalidade exaure CPU/memória              | negação de serviço                | limites de arquivo, memória KDF, profundidade, grupos e entradas; uma abertura por vez                                | alocação pode ocorrer antes de todos os limites serem aplicáveis |
 | T3  | senha ou arquivo-chave vazam pelo IPC, store ou UI               | exposição de segredo              | estado efêmero; nenhum log; limpeza do formulário; Rust usa wrappers com limpeza best-effort; testes de serialização  | strings e cópias internas não têm limpeza garantida              |
 | T4  | conteúdo secreto retorna por engano ao React                     | exposição no WebView/devtools     | DTO allowlist sem senha, TOTP, notas, campos, histórico ou anexos; testes de contrato                                 | títulos, usuários e URLs ainda podem ser sensíveis em uso real   |
@@ -113,6 +113,10 @@ Este modelo deve ser revisado quando houver:
 - nova permissão Tauri;
 - expansão para outro sistema operacional;
 - publicação de advisory relevante.
+
+## Revisão pós-implementação
+
+Em 2026-07-28, o contrato IPC, os limites do parser, as permissões Tauri, as projeções retornadas ao React e os testes de fixtures foram comparados com este modelo. Formatação, Clippy, testes Rust em Linux/Windows, testes frontend e auditorias npm/Rust passaram no PR do M1. A validação manual dos gatilhos de encerramento na janela Windows permanece como condição de aceite, e os riscos residuais acima continuam válidos.
 
 ## Referências
 

@@ -1,7 +1,7 @@
 # M1 — Núcleo KDBX experimental
 
-- **Status:** especificação aprovada para implementação
-- **Data:** 2026-07-27
+- **Status:** implementação e validação automatizada concluídas; aceite manual desktop pendente
+- **Data:** 2026-07-28
 - **Modo:** somente leitura
 - **Dados permitidos:** fixtures públicas e descartáveis
 
@@ -220,17 +220,20 @@ Esses limites reduzem risco, mas não provam proteção completa contra arquivos
 
 ## Critérios de aceite
 
-- [ ] todas as fixtures planejadas estão documentadas, versionadas e sem dados reais;
-- [ ] a matriz de leitura passa para os casos marcados como suportados;
-- [ ] o hash do arquivo de origem permanece inalterado em todos os testes;
-- [ ] nenhum comando de escrita ou feature de serialização KDBX está habilitado;
-- [ ] nenhum campo secreto aparece nos tipos serializáveis do IPC;
-- [ ] erros são tipados, redigidos e cobertos por testes;
+- [x] todas as fixtures do escopo implementado estão documentadas, versionadas e sem dados reais;
+- [x] a matriz de leitura passa para os casos marcados como verificados;
+- [x] o hash do arquivo de origem permanece inalterado em todos os testes;
+- [x] nenhum comando de escrita ou feature de serialização KDBX está habilitado;
+- [x] nenhum campo secreto aparece nos tipos serializáveis do IPC;
+- [x] erros são tipados, redigidos e cobertos por testes;
 - [ ] a sessão é descartada nos quatro gatilhos definidos;
-- [ ] interface e documentação mostram **Experimental / Somente leitura**;
-- [ ] `cargo test`, `npm run lint`, `npm run typecheck`, `npm run test` e `npm run build` passam;
-- [ ] dependências Rust e lockfile foram revisados e auditados;
-- [ ] o modelo de ameaças foi revisto após a implementação real.
+- [x] interface e documentação mostram **Experimental / Somente leitura**;
+- [x] `cargo test`, `npm run lint`, `npm run typecheck`, `npm run test` e `npm run build` passam;
+- [x] dependências npm/Rust e lockfiles foram revisados e auditados no CI;
+- [x] o modelo de ameaças foi revisto após a implementação real;
+- [ ] o fluxo completo foi validado manualmente no aplicativo Tauri para Windows.
+
+Os itens pendentes exigem a execução interativa da janela desktop. O CI já confirma o núcleo Rust e as fixtures em Linux e Windows, mas não substitui o seletor nativo, a navegação e os gatilhos reais de fechamento da janela.
 
 ## Definição de pronto
 

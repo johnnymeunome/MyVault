@@ -9,39 +9,40 @@
 - dados secretos devem atravessar o menor número possível de fronteiras;
 - a interface nunca promete uma proteção que o marco atual não entrega.
 
-## Estado atual — M0
+## Estado atual — M0 + M1 experimental
 
 ```mermaid
 flowchart LR
     UI["React UI"] --> Store["Zustand actions"]
     Store --> Domain["Domínio e contratos"]
     Domain --> Mock["Repositório mock em memória"]
+    Store --> Gateway["Gateway KDBX tipado"]
+    Gateway --> IPC["Comandos Tauri allowlisted"]
+    IPC --> Core["Serviço Rust somente leitura"]
 ```
 
 - `domain/` contém entidades portáveis, contratos e regras puras;
 - `features/` contém comportamento e UI por funcionalidade;
 - `stores/` coordena seleção, navegação e overlays da sessão;
-- `infrastructure/mocks/` é a única origem de entradas no M0;
-- `infrastructure/tauri/` reserva gateways para operações privilegiadas;
-- `src-tauri/` tem uma superfície mínima e ainda não processa KDBX.
+- `infrastructure/mocks/` continua sendo a origem do preview web do M0;
+- `infrastructure/tauri/` contém o gateway tipado para operações privilegiadas;
+- `src-tauri/` abre somente fixtures KDBX públicas em modo somente leitura e mantém a sessão no processo Rust.
 
 O store não usa middleware de persistência. Formulários, senhas geradas e alterações mockadas desaparecem ao recarregar.
 
-## Evolução do M1
+## Implementação do M1
 
 ```mermaid
 flowchart TB
     subgraph WebView["Frontend não privilegiado"]
       UI["React UI"] --> Session["Store de sessão"]
-      Session --> Repo["EntryRepository"]
-      Repo --> Mock["MockEntryRepository"]
-      Repo --> Gateway["KdbxGateway"]
+      Session --> Mock["Dados mock do preview"]
+      Session --> Gateway["Gateway KDBX"]
     end
 
     subgraph Native["Núcleo Tauri / Rust"]
       IPC["Comandos allowlisted"] --> Service["ReadOnlyVaultService"]
-      Service --> Adapter["KeepassAdapter"]
-      Adapter --> Parser["crate keepass = 0.13.17"]
+      Service --> Parser["crate keepass = 0.13.17"]
       Service --> Sessions["Mapa de sessões opacas"]
     end
 
@@ -62,7 +63,7 @@ flowchart TB
 
 ### Contratos
 
-O frontend dependerá de um gateway conceitual:
+O frontend depende de funções de gateway equivalentes a este contrato:
 
 ```ts
 interface KdbxGateway {
@@ -75,8 +76,8 @@ Os tipos do crate Rust não podem atravessar o IPC. `OpenKdbxResult` contém ape
 
 ### Estado e concorrência
 
-- uma sessão KDBX ativa por janela no M1;
-- abertura concorrente é rejeitada ou serializada;
+- uma sessão KDBX ativa por processo no M1;
+- a abertura mais recente concluída substitui a sessão anterior;
 - identificadores de entrada retornados são efêmeros;
 - nenhum estado KDBX é persistido pelo Zustand;
 - reload invalida a sessão anterior;
@@ -88,7 +89,7 @@ O adaptador converte erros da biblioteca em erros internos. O comando converte e
 
 ## Limite de permissões Tauri
 
-O WebView não receberá permissão genérica de leitura do filesystem. A seleção usa diálogo nativo e o acesso acontece dentro de comando próprio. Novas permissões exigem justificativa, teste e atualização do [modelo de ameaças](THREAT-MODEL.md).
+O WebView não recebe permissão genérica de leitura do filesystem. A seleção usa diálogo nativo e o acesso acontece dentro de comando próprio. Novas permissões exigem justificativa, teste e atualização do [modelo de ameaças](THREAT-MODEL.md).
 
 ## Sistema de apresentação
 

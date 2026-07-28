@@ -1,6 +1,6 @@
 # Contributing to MyVault
 
-Thanks for helping improve MyVault. M0 is complete and M1 is specified but not implemented. The project is **not safe for real credentials**.
+Thanks for helping improve MyVault. M0 is complete and M1 has an experimental read-only implementation under validation. The project is **not safe for real credentials**.
 
 ## Development
 
@@ -14,6 +14,9 @@ npm run lint
 npm run typecheck
 npm run test
 npm run build
+cargo fmt --manifest-path src-tauri/Cargo.toml -- --check
+cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
+cargo test --manifest-path src-tauri/Cargo.toml --lib
 ```
 
 ## Security-sensitive changes

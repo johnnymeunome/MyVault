@@ -2,9 +2,9 @@
 
 ## Postura atual
 
-O código atual é um product shell M0, não um cofre seguro. Ele contém senhas fictícias em texto puro no bundle, mantém alterações na memória JavaScript e não passou por auditoria. **Nunca informe uma senha real.**
+O código atual combina o product shell M0 com um núcleo KDBX M1 experimental e somente leitura. Os mocks ainda contêm senhas fictícias em texto puro no bundle, e o conjunto completo não passou por auditoria independente. **Nunca informe uma senha real.**
 
-O M1 está documentado, mas ainda não implementado. Quando existir, continuará limitado a fixtures públicas e descartáveis em modo somente leitura.
+O M1 abre exclusivamente fixtures públicas e descartáveis, retorna somente projeções não secretas e não oferece escrita. A validação automatizada passou em Linux e Windows; o aceite manual da janela desktop ainda está pendente.
 
 ## Proteções deliberadas do M0
 
@@ -20,9 +20,9 @@ O M1 está documentado, mas ainda não implementado. Quando existir, continuará
 
 O preview usa `navigator.clipboard.writeText`. Após a contagem regressiva, tenta substituir o valor por uma string vazia. O navegador ou sistema pode recusar a operação quando a janela perde foco, e outro aplicativo pode ter trocado o clipboard. Uma implementação nativa futura deverá conferir se o conteúdo ainda pertence ao MyVault, documentar garantias por sistema e evitar apagar dados de terceiros.
 
-## Baseline do M1
+## Baseline implementada do M1
 
-Antes de adicionar o primeiro parser, leia:
+Antes de alterar o parser ou ampliar capacidades, leia:
 
 - [especificação funcional e técnica](M1-SPEC.md);
 - [modelo de ameaças](THREAT-MODEL.md);
