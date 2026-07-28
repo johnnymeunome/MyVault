@@ -1,6 +1,7 @@
 import { Checkbox } from '@base-ui/react/checkbox';
 import { Field } from '@base-ui/react/field';
 import { Slider } from '@base-ui/react/slider';
+import { Check } from 'lucide-react';
 import type { ComponentPropsWithoutRef } from 'react';
 import { cn } from '../lib/utils';
 
@@ -67,7 +68,9 @@ export function DesignCheckbox({ label, description, ...props }: DesignCheckboxP
   return (
     <label className="ds-check-row">
       <Checkbox.Root className="ds-checkbox" {...props}>
-        <Checkbox.Indicator className="ds-checkbox__indicator">✓</Checkbox.Indicator>
+        <Checkbox.Indicator className="ds-checkbox__indicator">
+          <Check size={11} strokeWidth={2.4} aria-hidden="true" />
+        </Checkbox.Indicator>
       </Checkbox.Root>
       <span>
         <strong>{label}</strong>

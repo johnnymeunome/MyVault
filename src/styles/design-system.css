@@ -1,23 +1,28 @@
-.ds-preview {
-  --ds-canvas: #141515;
-  --ds-nav: #191b1c;
-  --ds-surface: #1d1f20;
-  --ds-surface-raised: #232627;
-  --ds-surface-hover: #282b2c;
-  --ds-line: #303436;
-  --ds-line-strong: #42484b;
-  --ds-text: #f0f2f2;
-  --ds-text-secondary: #b1b7b9;
-  --ds-text-muted: #777f82;
-  --ds-steel: #8cb2c4;
-  --ds-steel-soft: rgba(140, 178, 196, 0.13);
-  --ds-action: #e8ebeb;
-  --ds-action-text: #171819;
+:root {
+  --ds-canvas: #111212;
+  --ds-nav: #171818;
+  --ds-surface: #1c1d1d;
+  --ds-surface-raised: #232424;
+  --ds-surface-hover: #292a2a;
+  --ds-line: #2e3030;
+  --ds-line-strong: #484b4b;
+  --ds-text: #e5e8e8;
+  --ds-text-strong: #f4f5f5;
+  --ds-text-secondary: #b7bbbb;
+  --ds-text-muted: #7d8383;
+  --ds-steel: #718995;
+  --ds-steel-soft: rgba(113, 137, 149, 0.11);
+  --ds-soft-white: #d9dddd;
+  --ds-action: #d9dddd;
+  --ds-action-text: #171919;
   --ds-success: #54c985;
   --ds-warning: #d8ad61;
   --ds-danger: #e37076;
-  --ds-focus: #9ac2d4;
+  --ds-focus: #91a7b1;
   --ds-shadow: 0 18px 50px rgba(0, 0, 0, 0.42);
+}
+
+.ds-preview {
   position: fixed;
   inset: 0;
   z-index: 100;
@@ -29,25 +34,27 @@
   font-family: Inter, 'Segoe UI Variable', 'Segoe UI', sans-serif;
 }
 
-.ds-preview[data-theme='light'] {
-  --ds-canvas: #dfe2e3;
-  --ds-nav: #e6e9ea;
-  --ds-surface: #eceeef;
-  --ds-surface-raised: #f3f4f4;
-  --ds-surface-hover: #d9dddf;
-  --ds-line: #c5cbce;
-  --ds-line-strong: #aeb7bb;
-  --ds-text: #1a1d1e;
-  --ds-text-secondary: #4f575a;
-  --ds-text-muted: #727b7f;
-  --ds-steel: #416f85;
-  --ds-steel-soft: rgba(65, 111, 133, 0.12);
-  --ds-action: #202324;
+:root[data-theme='light'] {
+  --ds-canvas: #d8dada;
+  --ds-nav: #dfe1e1;
+  --ds-surface: #e7e9e9;
+  --ds-surface-raised: #f0f1f1;
+  --ds-surface-hover: #d1d4d4;
+  --ds-line: #bfc4c4;
+  --ds-line-strong: #a3aaaa;
+  --ds-text: #202323;
+  --ds-text-strong: #111313;
+  --ds-text-secondary: #505656;
+  --ds-text-muted: #717878;
+  --ds-steel: #526b76;
+  --ds-steel-soft: rgba(82, 107, 118, 0.1);
+  --ds-soft-white: #f7f8f8;
+  --ds-action: #262929;
   --ds-action-text: #f4f5f5;
   --ds-success: #15854c;
   --ds-warning: #95671d;
   --ds-danger: #bb3d45;
-  --ds-focus: #416f85;
+  --ds-focus: #526b76;
   --ds-shadow: 0 18px 44px rgba(37, 43, 46, 0.2);
 }
 
@@ -150,6 +157,12 @@
   line-height: 1.45;
 }
 
+.ds-preview-nav__footer > strong {
+  color: var(--ds-text-secondary);
+  font-size: 10.5px;
+  font-weight: 540;
+}
+
 .ds-preview-main {
   min-width: 0;
   min-height: 0;
@@ -172,17 +185,15 @@
   backdrop-filter: blur(14px);
 }
 
-.ds-eyebrow {
-  color: var(--ds-steel);
+.ds-context-label {
+  color: var(--ds-text-muted);
   font-size: 10px;
-  font-weight: 650;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-weight: 540;
 }
 
 .ds-preview-header h1 {
   margin: 7px 0 0;
-  color: var(--ds-text);
+  color: var(--ds-text-strong);
   font-size: clamp(20px, 2vw, 27px);
   font-weight: 610;
   letter-spacing: -0.035em;
@@ -212,28 +223,15 @@
 
 .ds-spec-section {
   scroll-margin-top: 114px;
-  padding: 42px 0 46px;
-  border-bottom: 1px solid var(--ds-line);
+  padding: 44px 0 54px;
 }
 
-.ds-spec-section:last-child {
-  border-bottom: 0;
+.ds-spec-section + .ds-spec-section {
+  padding-top: 18px;
 }
 
 .ds-spec-section > header {
-  display: grid;
-  grid-template-columns: 28px minmax(0, 1fr);
-  gap: 14px;
-  margin-bottom: 26px;
-}
-
-.ds-spec-section > header > span {
-  padding-top: 4px;
-  color: var(--ds-steel);
-  font:
-    10px/1.2 ui-monospace,
-    'Cascadia Code',
-    monospace;
+  margin-bottom: 24px;
 }
 
 .ds-spec-section h2,
@@ -243,7 +241,8 @@
 }
 
 .ds-spec-section h2 {
-  font-size: 16px;
+  color: var(--ds-text-strong);
+  font-size: 17px;
   font-weight: 620;
   letter-spacing: -0.015em;
 }
@@ -266,8 +265,9 @@
 
 .ds-type-sample h3 {
   margin-top: 9px;
+  color: var(--ds-text-strong);
   font-size: 30px;
-  font-weight: 590;
+  font-weight: 600;
   letter-spacing: -0.045em;
 }
 
@@ -305,6 +305,11 @@
   background: var(--ds-surface);
 }
 
+.ds-token-strip [data-token='soft-white'] {
+  color: #202323;
+  background: var(--ds-soft-white);
+}
+
 .ds-token-strip [data-token='line'] {
   background: var(--ds-line);
 }
@@ -312,11 +317,6 @@
 .ds-token-strip [data-token='steel'] {
   color: var(--ds-action-text);
   background: var(--ds-steel);
-}
-
-.ds-token-strip [data-token='success'] {
-  color: var(--ds-action-text);
-  background: var(--ds-success);
 }
 
 .ds-meta-sample {
@@ -343,14 +343,14 @@
 }
 
 .ds-button {
-  min-height: 34px;
+  min-height: 32px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 7px;
-  padding: 0 11px;
+  padding: 0 10px;
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: 4px;
   color: var(--ds-text);
   background: transparent;
   font-size: 12px;
@@ -379,8 +379,8 @@
 }
 
 .ds-button--secondary {
-  border-color: var(--ds-line-strong);
-  background: var(--ds-surface);
+  border-color: transparent;
+  background: var(--ds-surface-raised);
 }
 
 .ds-button--secondary:hover,
@@ -400,6 +400,13 @@
 .ds-button[data-disabled] {
   opacity: 0.38;
   cursor: not-allowed;
+}
+
+.ds-button:focus-visible,
+.ds-checkbox:focus-visible,
+.ds-slider__thumb:focus-visible {
+  outline: 2px solid var(--ds-focus);
+  outline-offset: 2px;
 }
 
 .ds-icon-button {
@@ -458,7 +465,7 @@
 .ds-field {
   display: grid;
   align-content: start;
-  gap: 7px;
+  gap: 6px;
 }
 
 .ds-field__label {
@@ -469,31 +476,36 @@
 
 .ds-field__control {
   width: 100%;
-  min-height: 36px;
-  padding: 0 10px;
-  border: 1px solid var(--ds-line-strong);
-  border-radius: 5px;
+  min-height: 38px;
+  padding: 0 1px;
+  border: 0;
+  border-bottom: 1px solid var(--ds-line-strong);
+  border-radius: 0;
   outline: 0;
   color: var(--ds-text);
-  background: var(--ds-surface);
+  background: transparent;
   font-size: 12px;
   transition:
     border-color 120ms ease,
     box-shadow 120ms ease;
 }
 
+.ds-field__control::placeholder {
+  color: var(--ds-text-muted);
+}
+
 .ds-field__control:hover {
-  border-color: color-mix(in srgb, var(--ds-line-strong) 65%, var(--ds-text-secondary));
+  border-color: var(--ds-text-secondary);
 }
 
 .ds-field__control:focus {
-  border-color: var(--ds-focus);
-  box-shadow: 0 0 0 1px var(--ds-focus);
+  border-color: var(--ds-text-strong);
+  box-shadow: 0 1px 0 var(--ds-text-strong);
 }
 
 .ds-field__textarea {
   min-height: 88px;
-  padding-block: 9px;
+  padding: 9px 1px;
   resize: vertical;
   line-height: 1.5;
 }
@@ -514,6 +526,7 @@
 
 .ds-field[data-invalid] .ds-field__control {
   border-color: var(--ds-danger);
+  box-shadow: 0 1px 0 var(--ds-danger);
 }
 
 .ds-selection-grid {
@@ -552,21 +565,21 @@
 }
 
 .ds-checkbox {
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
   display: grid;
   flex: 0 0 auto;
   place-items: center;
   margin-top: 1px;
   border: 1px solid var(--ds-line-strong);
-  border-radius: 3px;
+  border-radius: 2px;
   color: var(--ds-action-text);
   background: var(--ds-surface);
 }
 
 .ds-checkbox[data-checked] {
-  border-color: var(--ds-steel);
-  background: var(--ds-steel);
+  border-color: var(--ds-action);
+  background: var(--ds-action);
 }
 
 .ds-checkbox[data-disabled] {
@@ -615,7 +628,7 @@
 }
 
 .ds-slider__indicator {
-  background: var(--ds-steel);
+  background: var(--ds-action);
 }
 
 .ds-slider__thumb {
@@ -623,8 +636,8 @@
   height: 14px;
   border: 2px solid var(--ds-canvas);
   border-radius: 50%;
-  background: var(--ds-steel);
-  box-shadow: 0 0 0 1px var(--ds-steel);
+  background: var(--ds-action);
+  box-shadow: 0 0 0 1px var(--ds-line-strong);
 }
 
 .ds-menu-positioner,
@@ -639,7 +652,7 @@
   min-width: 210px;
   padding: 5px;
   border: 1px solid var(--ds-line-strong);
-  border-radius: 7px;
+  border-radius: 5px;
   color: var(--ds-text);
   background: var(--ds-surface-raised);
   box-shadow: var(--ds-shadow);
@@ -711,7 +724,7 @@
 .ds-dialog-popup {
   width: min(470px, 100%);
   border: 1px solid var(--ds-line-strong);
-  border-radius: 9px;
+  border-radius: 6px;
   color: var(--ds-text);
   background: var(--ds-surface-raised);
   box-shadow: var(--ds-shadow);

@@ -73,7 +73,7 @@ export function DesignSystemPreview({ theme, onToggleTheme, onClose }: DesignSys
         </nav>
 
         <div className="ds-preview-nav__footer">
-          <DesignStatus tone="info">Fase 1 · preview real</DesignStatus>
+          <strong>Fase 1 · preview real</strong>
           <span>Primitives isolados do dashboard atual.</span>
         </div>
       </aside>
@@ -81,7 +81,7 @@ export function DesignSystemPreview({ theme, onToggleTheme, onClose }: DesignSys
       <main className="ds-preview-main">
         <header className="ds-preview-header">
           <div>
-            <span className="ds-eyebrow">Design system · Gate 1</span>
+            <span className="ds-context-label">Design system · Gate 1</span>
             <h1>Uma fundação mais contida e específica</h1>
             <p>Revise comportamento, densidade, estados e temas antes da migração do dashboard.</p>
           </div>
@@ -102,24 +102,23 @@ export function DesignSystemPreview({ theme, onToggleTheme, onClose }: DesignSys
         <div className="ds-preview-content">
           <section id="foundation" className="ds-spec-section">
             <header>
-              <span>01</span>
               <div>
                 <h2>Fundação</h2>
-                <p>Superfícies discretas, azul-aço funcional e hierarquia tipográfica.</p>
+                <p>Neutros quentes, branco acinzentado e cor reservada para informação.</p>
               </div>
             </header>
             <div className="ds-foundation-grid">
               <div className="ds-type-sample">
-                <span className="ds-eyebrow">Cofre pessoal</span>
+                <span className="ds-context-label">Cofre pessoal</span>
                 <h3>GitHub</h3>
                 <p>joaovictor · atualizado hoje, 09:41</p>
               </div>
               <div className="ds-token-strip" aria-label="Cores principais">
                 <span data-token="canvas">Canvas</span>
                 <span data-token="surface">Surface</span>
+                <span data-token="soft-white">Soft white</span>
                 <span data-token="line">Line</span>
                 <span data-token="steel">Steel</span>
-                <span data-token="success">Success</span>
               </div>
               <div className="ds-meta-sample">
                 <span>Tags</span>
@@ -132,19 +131,19 @@ export function DesignSystemPreview({ theme, onToggleTheme, onClose }: DesignSys
 
           <section id="actions" className="ds-spec-section">
             <header>
-              <span>02</span>
               <div>
                 <h2>Ações</h2>
-                <p>Quatro níveis claros, sem transformar toda ação em destaque.</p>
+                <p>Uma ação principal; operações secundárias recuam ou migram para o menu.</p>
               </div>
             </header>
             <div className="ds-action-showcase">
               <DesignButton tone="primary">Salvar alterações</DesignButton>
-              <DesignButton>Duplicar</DesignButton>
+              <DesignButton tone="quiet">Duplicar</DesignButton>
               <DesignButton tone="quiet">Cancelar</DesignButton>
-              <DesignButton tone="danger">Excluir</DesignButton>
               <MoreActionsTooltip />
-              <DesignButton disabled>Indisponível</DesignButton>
+              <DesignButton tone="quiet" disabled>
+                Indisponível
+              </DesignButton>
             </div>
             <div className="ds-status-row">
               <DesignStatus>Local</DesignStatus>
@@ -157,7 +156,6 @@ export function DesignSystemPreview({ theme, onToggleTheme, onClose }: DesignSys
 
           <section id="forms" className="ds-spec-section">
             <header>
-              <span>03</span>
               <div>
                 <h2>Formulários</h2>
                 <p>Labels persistentes, ajuda próxima e erro associado ao campo.</p>
@@ -186,7 +184,6 @@ export function DesignSystemPreview({ theme, onToggleTheme, onClose }: DesignSys
 
           <section id="selection" className="ds-spec-section">
             <header>
-              <span>04</span>
               <div>
                 <h2>Seleção e valores</h2>
                 <p>Controles pequenos, legíveis e completamente operáveis por teclado.</p>
@@ -217,7 +214,6 @@ export function DesignSystemPreview({ theme, onToggleTheme, onClose }: DesignSys
 
           <section id="overlays" className="ds-spec-section">
             <header>
-              <span>05</span>
               <div>
                 <h2>Menus e diálogos</h2>
                 <p>Comportamento robusto da Base UI; anatomia visual específica do MyVault.</p>
@@ -231,7 +227,6 @@ export function DesignSystemPreview({ theme, onToggleTheme, onClose }: DesignSys
 
           <section id="motion" className="ds-spec-section ds-spec-section--motion">
             <header>
-              <span>06</span>
               <div>
                 <h2>Estudo de movimento</h2>
                 <p>Primeira direção para o gerador; a experiência completa pertence à Fase 5.</p>
