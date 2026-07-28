@@ -1,6 +1,6 @@
 # Plano de redesign da interface
 
-Status: **aguardando aprovação**
+Status: **Fase 1 implementada; aguardando Gate de aprovação 1**
 
 Escopo: interface desktop do MyVault após o M1 KDBX somente leitura
 

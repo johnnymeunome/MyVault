@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Toast } from '../components/common/toast';
 import { Sidebar } from '../components/layout/sidebar';
 import { StatusBar } from '../components/layout/status-bar';
@@ -16,6 +16,14 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from '../compon
 import { useVaultStore } from '../stores/vault-store';
 import { clearKdbxSessions } from '../infrastructure/tauri/kdbx-gateway';
 
+const DesignSystemPreview = import.meta.env.DEV
+  ? lazy(() =>
+      import('../design-system/design-system-preview').then((module) => ({
+        default: module.DesignSystemPreview,
+      })),
+    )
+  : null;
+
 export function App() {
   const isLocked = useVaultStore((state) => state.isLocked);
   const overlay = useVaultStore((state) => state.overlay);
@@ -25,6 +33,12 @@ export function App() {
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
+
+  useEffect(() => {
+    if (import.meta.env.DEV && import.meta.env.VITE_UI_LAB === '1') {
+      setOverlay('design-system');
+    }
+  }, [setOverlay]);
 
   useEffect(() => {
     void clearKdbxSessions().catch(() => undefined);
@@ -69,6 +83,15 @@ export function App() {
       {overlay === 'command' && <CommandPalette />}
       {overlay === 'settings' && <SettingsDialog />}
       {overlay === 'vault-open' && <KdbxOpenDialog />}
+      {DesignSystemPreview && overlay === 'design-system' && (
+        <Suspense fallback={null}>
+          <DesignSystemPreview
+            theme={theme}
+            onToggleTheme={() => useVaultStore.getState().toggleTheme()}
+            onClose={() => setOverlay(null)}
+          />
+        </Suspense>
+      )}
       {overlay === 'generator' && (
         <Dialog open onOpenChange={(open) => !open && setOverlay(null)}>
           <DialogContent>

@@ -1,4 +1,13 @@
-import { LockKeyhole, Moon, Plus, Search, Settings, Sparkles, Sun } from 'lucide-react';
+import {
+  LockKeyhole,
+  Moon,
+  PanelsTopLeft,
+  Plus,
+  Search,
+  Settings,
+  Sparkles,
+  Sun,
+} from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { EntryLogo } from '../../components/common/entry-logo';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '../../components/ui/dialog';
@@ -42,6 +51,16 @@ export function CommandPalette() {
         icon: Settings,
         run: () => setOverlay('settings'),
       },
+      ...(import.meta.env.DEV
+        ? [
+            {
+              label: 'Abrir laboratório visual',
+              hint: 'D',
+              icon: PanelsTopLeft,
+              run: () => setOverlay('design-system' as const),
+            },
+          ]
+        : []),
     ],
     [setLocked, setOverlay, theme, toggleTheme],
   );
