@@ -10,7 +10,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             commands::system::prototype_status,
             commands::vault::open_kdbx_read_only,
-            commands::vault::close_kdbx_session
+            commands::vault::close_kdbx_session,
+            commands::vault::clear_kdbx_sessions
         ])
         .run(tauri::generate_context!())
         .expect("failed to start MyVault");

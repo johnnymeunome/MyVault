@@ -116,7 +116,7 @@ Este modelo deve ser revisado quando houver:
 
 ## Revisão pós-implementação
 
-Em 2026-07-28, o contrato IPC, os limites do parser, as permissões Tauri, as projeções retornadas ao React e os testes de fixtures foram comparados com este modelo. Formatação, Clippy, testes Rust em Linux/Windows, testes frontend e auditorias npm/Rust passaram no PR do M1. A validação manual dos gatilhos de encerramento na janela Windows permanece como condição de aceite, e os riscos residuais acima continuam válidos.
+Em 2026-07-28, o contrato IPC, os limites do parser, as permissões Tauri, as projeções retornadas ao React e os testes de fixtures foram comparados com este modelo. Formatação, Clippy, testes Rust em Linux/Windows, testes frontend e auditorias npm/Rust passaram no PR do M1. O aceite manual confirmou abertura, projeção somente leitura, bloqueio e retorno ao modo mock no Windows; os demais gatilhos de descarte são cobertos por testes e os riscos residuais acima continuam válidos.
 
 ## Referências
 

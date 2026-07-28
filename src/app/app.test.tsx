@@ -24,6 +24,7 @@ describe('main application flows', () => {
     render(<App />);
     fireEvent.click(screen.getByRole('button', { name: 'Bloquear' }));
     expect(screen.getByTestId('lock-screen')).toBeInTheDocument();
+    expect(screen.getByText('M1 experimental')).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText('Senha mestra simulada'), { target: { value: 'demo' } });
     fireEvent.click(screen.getByRole('button', { name: 'Desbloquear protótipo' }));
     expect(screen.getByRole('heading', { name: 'Todos os itens' })).toBeInTheDocument();

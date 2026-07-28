@@ -4,7 +4,7 @@
 
 O código atual combina o product shell M0 com um núcleo KDBX M1 experimental e somente leitura. Os mocks ainda contêm senhas fictícias em texto puro no bundle, e o conjunto completo não passou por auditoria independente. **Nunca informe uma senha real.**
 
-O M1 abre exclusivamente fixtures públicas e descartáveis, retorna somente projeções não secretas e não oferece escrita. A validação automatizada passou em Linux e Windows; o aceite manual da janela desktop ainda está pendente.
+O M1 abre exclusivamente fixtures públicas e descartáveis, retorna somente projeções não secretas e não oferece escrita. A validação automatizada passou em Linux e Windows, e o fluxo desktop recebeu aceite manual em 2026-07-28.
 
 ## Proteções deliberadas do M0
 

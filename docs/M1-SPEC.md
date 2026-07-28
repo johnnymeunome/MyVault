@@ -1,13 +1,13 @@
 # M1 — Núcleo KDBX experimental
 
-- **Status:** implementação e validação automatizada concluídas; aceite manual desktop pendente
+- **Status:** concluído em modo experimental
 - **Data:** 2026-07-28
 - **Modo:** somente leitura
 - **Dados permitidos:** fixtures públicas e descartáveis
 
 ## Objetivo
 
-O M1 provará que o MyVault consegue abrir uma cópia de teste de um arquivo KDBX, validar sua integridade e apresentar uma visão não secreta do conteúdo no aplicativo desktop. O marco existe para reduzir risco técnico antes de persistência, edição ou uso com credenciais reais.
+O M1 prova que o MyVault consegue abrir uma cópia de teste de um arquivo KDBX, validar sua integridade e apresentar uma visão não secreta do conteúdo no aplicativo desktop. O marco reduz risco técnico antes de persistência, edição ou uso com credenciais reais.
 
 O M1 não transforma o MyVault em um gerenciador de senhas seguro. O aviso do M0 permanece visível em toda a experiência experimental.
 
@@ -226,14 +226,14 @@ Esses limites reduzem risco, mas não provam proteção completa contra arquivos
 - [x] nenhum comando de escrita ou feature de serialização KDBX está habilitado;
 - [x] nenhum campo secreto aparece nos tipos serializáveis do IPC;
 - [x] erros são tipados, redigidos e cobertos por testes;
-- [ ] a sessão é descartada nos quatro gatilhos definidos;
+- [x] a sessão é descartada nos quatro gatilhos definidos;
 - [x] interface e documentação mostram **Experimental / Somente leitura**;
 - [x] `cargo test`, `npm run lint`, `npm run typecheck`, `npm run test` e `npm run build` passam;
 - [x] dependências npm/Rust e lockfiles foram revisados e auditados no CI;
 - [x] o modelo de ameaças foi revisto após a implementação real;
-- [ ] o fluxo completo foi validado manualmente no aplicativo Tauri para Windows.
+- [x] o fluxo completo foi validado manualmente no aplicativo Tauri para Windows.
 
-Os itens pendentes exigem a execução interativa da janela desktop. O CI já confirma o núcleo Rust e as fixtures em Linux e Windows, mas não substitui o seletor nativo, a navegação e os gatilhos reais de fechamento da janela.
+O aceite manual de 2026-07-28 confirmou o seletor nativo, a abertura KDBX 4.1, a projeção sem campos protegidos, o bloqueio e o retorno ao cofre mockado. Testes automatizados cobrem bloqueio, troca de cofre, substituição, fechamento explícito, reload e limpeza do estado nativo; encerrar o processo descarta o estado Rust restante.
 
 ## Definição de pronto
 

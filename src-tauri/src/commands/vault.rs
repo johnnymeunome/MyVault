@@ -19,3 +19,8 @@ pub fn close_kdbx_session(
 ) -> Result<(), PublicVaultError> {
     state.close(&request.session_id).map_err(Into::into)
 }
+
+#[tauri::command]
+pub fn clear_kdbx_sessions(state: State<'_, VaultState>) -> Result<(), PublicVaultError> {
+    state.clear().map_err(Into::into)
+}

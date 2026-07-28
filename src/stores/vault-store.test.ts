@@ -4,6 +4,26 @@ import { mockGroups, mockVaults } from '../infrastructure/mocks/vaults';
 import type { OpenKdbxResult } from '../infrastructure/tauri/kdbx-gateway';
 import { useVaultStore } from './vault-store';
 
+const readOnlyResult = (sessionId = 'session-id'): OpenKdbxResult => ({
+  sessionId,
+  database: {
+    name: 'Fixture',
+    format: 'KDBX 4.1',
+    groups: [{ id: 'group-id', name: 'Logins', depth: 0 }],
+    entries: [
+      {
+        id: 'entry-id',
+        groupId: 'group-id',
+        title: 'Example service',
+        username: 'demo-user',
+        url: 'https://example.test',
+        favorite: false,
+      },
+    ],
+  },
+  capabilities: { read: true, write: false, revealSecrets: false },
+});
+
 describe('vault store', () => {
   beforeEach(() => {
     vi.stubGlobal('crypto', { randomUUID: () => 'generated-id' });
@@ -45,27 +65,7 @@ describe('vault store', () => {
   });
 
   it('activates a native read-only projection without secret fields or mutations', () => {
-    const result: OpenKdbxResult = {
-      sessionId: 'session-id',
-      database: {
-        name: 'Fixture',
-        format: 'KDBX 4.1',
-        groups: [{ id: 'group-id', name: 'Logins', depth: 0 }],
-        entries: [
-          {
-            id: 'entry-id',
-            groupId: 'group-id',
-            title: 'Example service',
-            username: 'demo-user',
-            url: 'https://example.test',
-            favorite: false,
-          },
-        ],
-      },
-      capabilities: { read: true, write: false, revealSecrets: false },
-    };
-
-    useVaultStore.getState().activateReadOnlyVault(result, 'fixture.kdbx');
+    useVaultStore.getState().activateReadOnlyVault(readOnlyResult(), 'fixture.kdbx');
     const activated = useVaultStore.getState();
     const entry = activated.entries[0];
 
@@ -78,5 +78,31 @@ describe('vault store', () => {
 
     expect(useVaultStore.getState().entries[0]?.favorite).toBe(false);
     expect(useVaultStore.getState().entries[0]?.trashedAt).toBeUndefined();
+  });
+
+  it('discards the read-only projection when locking or switching vaults', () => {
+    useVaultStore.getState().activateReadOnlyVault(readOnlyResult(), 'fixture.kdbx');
+    useVaultStore.getState().setLocked(true);
+
+    expect(useVaultStore.getState().readOnlySession).toBeNull();
+    expect(useVaultStore.getState().activeVaultId).toBe('personal');
+
+    useVaultStore.setState({ isLocked: false });
+    useVaultStore.getState().activateReadOnlyVault(readOnlyResult(), 'fixture.kdbx');
+    useVaultStore.getState().setActiveVault('work');
+
+    expect(useVaultStore.getState().readOnlySession).toBeNull();
+    expect(useVaultStore.getState().activeVaultId).toBe('work');
+  });
+
+  it('replaces or explicitly closes the previous read-only session', async () => {
+    useVaultStore.getState().activateReadOnlyVault(readOnlyResult('first-session'), 'first.kdbx');
+    useVaultStore.getState().activateReadOnlyVault(readOnlyResult('second-session'), 'second.kdbx');
+
+    expect(useVaultStore.getState().readOnlySession?.sessionId).toBe('second-session');
+
+    await useVaultStore.getState().closeReadOnlyVault();
+    expect(useVaultStore.getState().readOnlySession).toBeNull();
+    expect(useVaultStore.getState().activeVaultId).toBe('personal');
   });
 });

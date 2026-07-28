@@ -1,6 +1,6 @@
 # Contributing to MyVault
 
-Thanks for helping improve MyVault. M0 is complete and M1 has an experimental read-only implementation under validation. The project is **not safe for real credentials**.
+Thanks for helping improve MyVault. M0 and the experimental read-only M1 are complete. The project is **not safe for real credentials**.
 
 ## Development
 

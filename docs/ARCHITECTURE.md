@@ -80,7 +80,7 @@ Os tipos do crate Rust não podem atravessar o IPC. `OpenKdbxResult` contém ape
 - a abertura mais recente concluída substitui a sessão anterior;
 - identificadores de entrada retornados são efêmeros;
 - nenhum estado KDBX é persistido pelo Zustand;
-- reload invalida a sessão anterior;
+- montagem ou reload limpa sessões nativas órfãs por comando dedicado;
 - erro durante abertura não substitui a fonte de dados atual.
 
 ### Erros

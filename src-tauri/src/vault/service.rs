@@ -83,6 +83,12 @@ impl VaultState {
         sessions.remove(session_id);
         Ok(())
     }
+
+    pub fn clear(&self) -> Result<(), VaultError> {
+        let mut sessions = self.sessions.lock().map_err(|_| VaultError::Internal)?;
+        sessions.clear();
+        Ok(())
+    }
 }
 
 fn read_file_bounded(path: &Path, max_bytes: u64) -> Result<Vec<u8>, VaultError> {
@@ -455,6 +461,19 @@ mod tests {
             .expect("password and keyfile fixture should open");
 
         assert_eq!(result.database.format, "KDBX 4.0");
+    }
+
+    #[test]
+    fn clear_discards_every_open_session() {
+        let state = VaultState::default();
+        let database = fixture_path("kdbx41-aes-aeskdf-password.kdbx");
+        state
+            .open_read_only(request(&database, "demopass", None))
+            .expect("fixture should open");
+
+        assert_eq!(state.sessions.lock().expect("sessions lock").len(), 1);
+        state.clear().expect("sessions should clear");
+        assert!(state.sessions.lock().expect("sessions lock").is_empty());
     }
 
     #[test]

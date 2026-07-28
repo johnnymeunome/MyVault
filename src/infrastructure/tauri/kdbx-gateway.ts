@@ -104,6 +104,15 @@ export async function closeKdbxSession(sessionId: string): Promise<void> {
   }
 }
 
+export async function clearKdbxSessions(): Promise<void> {
+  if (!isDesktopRuntime()) return;
+  try {
+    await invoke('clear_kdbx_sessions');
+  } catch (error) {
+    throw normalizeError(error);
+  }
+}
+
 function ensureDesktop() {
   if (!isDesktopRuntime()) {
     throw new KdbxGatewayError(

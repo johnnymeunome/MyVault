@@ -10,7 +10,7 @@
 [![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
-**M0 concluído · M1 com validação automatizada** — leitura KDBX experimental e somente de fixtures; aceite manual desktop pendente.
+**M0 e M1 concluídos** — leitura KDBX experimental, somente de fixtures e validada manualmente no Windows.
 
 [Preview](#preview-do-produto) · [Visão geral](#visão-geral) · [Design](#sistema-de-design) · [Funcionalidades](#funcionalidades) · [Executar](#como-executar) · [Arquitetura](#arquitetura) · [Roadmap](#roadmap)
 
@@ -252,7 +252,7 @@ O M1 foi implementado com limites verificáveis e documentação de suporte:
 - [decisão sobre o parser Rust](docs/DECISIONS/004-keepass-rs-read-only-spike.md);
 - [política de fixtures descartáveis](src-tauri/tests/fixtures/kdbx/README.md).
 
-O M1 é desktop, experimental e somente leitura. A UI recebe apenas resumos não secretos; senha, TOTP, notas, histórico e anexos não atravessam o IPC. A implementação e a validação automatizada estão concluídas; o fluxo interativo do Tauri no Windows ainda precisa de aceite manual.
+O M1 é desktop, experimental e somente leitura. A UI recebe apenas resumos não secretos; senha, TOTP, notas, histórico e anexos não atravessam o IPC. A implementação, a validação automatizada e o fluxo interativo do Tauri no Windows foram concluídos em 2026-07-28.
 
 ## Segurança e privacidade
 
@@ -277,7 +277,6 @@ O que a implementação atual **não** garante:
 - escrita, recuperação ou backup de um cofre;
 - segurança para credenciais reais;
 - compatibilidade com todo arquivo produzido pelo ecossistema KDBX;
-- aceite manual completo do fluxo desktop no Windows;
 - auditoria de segurança independente.
 
 Leia [docs/SECURITY-NOTES.md](docs/SECURITY-NOTES.md) antes de trabalhar em qualquer funcionalidade sensível. Para reportar um problema de segurança, não publique credenciais ou detalhes exploráveis em uma issue pública; entre em contato com o mantenedor pelo [perfil no GitHub](https://github.com/johnnymeunome).
@@ -288,8 +287,8 @@ Leia [docs/SECURITY-NOTES.md](docs/SECURITY-NOTES.md) antes de trabalhar em qual
 M0  Product shell                      ✅ concluído
  │   interface, mocks, arquitetura e testes
  ▼
-M1  Núcleo KDBX experimental           ◐ automação concluída
- │   leitura de fixtures em modo somente leitura; aceite manual pendente
+M1  Núcleo KDBX experimental           ✅ concluído
+ │   leitura de fixtures em modo somente leitura, validada no Windows
  ▼
 M2  Escrita segura                     futuro
  │   gravação atômica, backups e compatibilidade

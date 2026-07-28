@@ -17,9 +17,9 @@ Entregas principais:
 - domínio e gateways preparados para substituição;
 - CI, README, documentação de produto e sistema de design.
 
-## M1 — Núcleo KDBX experimental ◀ aceite manual
+## M1 — Núcleo KDBX experimental ✅ concluído
 
-**Estado:** implementação e validação automatizada concluídas em 2026-07-28; validação manual da janela Windows pendente.
+**Estado:** implementação, validação automatizada e aceite manual no Windows concluídos em 2026-07-28.
 
 Abrir fixtures KDBX descartáveis no desktop e apresentar projeções não secretas em modo somente leitura. Nenhuma edição, revelação de segredo ou escrita será incluída.
 
@@ -31,7 +31,7 @@ Evidências:
 - [ADR da biblioteca Rust](DECISIONS/004-keepass-rs-read-only-spike.md);
 - [política de fixtures](../src-tauri/tests/fixtures/kdbx/README.md).
 
-O CI abre as fixtures em Linux e Windows, preserva seus hashes, valida limites e erros, impede a serialização de campos secretos e audita dependências. Antes de encerrar o marco, falta executar interativamente o seletor nativo, navegar pela projeção e confirmar os gatilhos de descarte da sessão no aplicativo Windows.
+O CI abre as fixtures em Linux e Windows, preserva seus hashes, valida limites e erros, impede a serialização de campos secretos e audita dependências. O aceite manual confirmou o seletor nativo, a projeção KDBX 4.1, o bloqueio e o retorno seguro ao modo mock; os demais gatilhos de descarte possuem cobertura automatizada.
 
 Gates de saída:
 
@@ -43,7 +43,7 @@ Gates de saída:
 
 ## M2 — Escrita segura
 
-**Estado:** futuro; bloqueado pelo aceite manual e merge do M1.
+**Estado:** futuro; bloqueado pelo merge do M1 e por ADR próprio.
 
 Criar, editar e salvar **cópias** com escrita atômica, backups, recuperação, testes de interoperabilidade e novo ADR. A feature de escrita da biblioteca não será herdada automaticamente.
 
