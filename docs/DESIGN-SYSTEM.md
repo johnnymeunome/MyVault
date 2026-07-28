@@ -7,7 +7,7 @@
 
 ## 1. Direção visual
 
-O MyVault deve parecer uma ferramenta desktop técnica, calma e confiável. A interface combina uma base neutra escura com superfícies levemente azuladas e usa um azul-aço frio como assinatura visual.
+O MyVault deve parecer uma ferramenta desktop técnica, calma e confiável. A interface combina bases neutras com um espectro frio — branco acinzentado, azul mineral e grafite — usado como assinatura visual controlada.
 
 A experiência do Codex foi usada como referência para densidade, hierarquia de painéis, sobriedade e temperatura de cor. O MyVault adapta esses princípios ao contexto de um cofre pessoal; não copia componentes, ícones, marcas ou ativos proprietários do Codex.
 
@@ -17,7 +17,7 @@ A experiência do Codex foi usada como referência para densidade, hierarquia de
 - **técnica:** hierarquia clara, dados compactos e controles previsíveis;
 - **honesta:** estados simulados e limitações de segurança permanecem visíveis;
 - **local:** o aplicativo comunica sessão, cofre e persistência sem linguagem de nuvem;
-- **própria:** o azul-aço e o símbolo de escudo formam a identidade do MyVault.
+- **própria:** o espectro frio e o símbolo do produto formam a identidade do MyVault.
 
 ## 2. Princípios
 
@@ -27,6 +27,8 @@ A experiência do Codex foi usada como referência para densidade, hierarquia de
 4. **Profundidade por superfícies.** Hierarquia vem principalmente de luminosidade, bordas e espaçamento, não de sombras fortes.
 5. **Texto antes de decoração.** Rótulos e mensagens devem explicar o estado sem depender apenas de cor ou ícone.
 6. **Consistência entre web e desktop.** O preview web e a janela Tauri compartilham tokens e componentes.
+
+O gradiente da marca não é uma superfície decorativa genérica. Ele aparece somente em amostras de identidade, feedback de foco e indicadores de progresso ou força relacionados ao produto.
 
 ## 3. Cores
 
@@ -58,7 +60,20 @@ A experiência do Codex foi usada como referência para densidade, hierarquia de
 
 O azul não substitui a ação primária. Botões principais continuam claros no tema escuro e escuros no tema claro para manter hierarquia forte e direta.
 
-### 3.3 Cores semânticas
+### 3.3 Espectro de marca
+
+O espectro MyVault progride de branco acinzentado para azul mineral e termina em grafite profundo. A implementação de referência é o token `--ds-brand-gradient` do laboratório visual.
+
+Usos permitidos:
+
+- linha de foco de campos;
+- indicador do gerador de senhas;
+- amostras e peças próprias de marca;
+- detalhes lineares de menus ou overlays.
+
+Não usar o espectro como preenchimento padrão de botões, painéis, cards ou fundos inteiros da aplicação.
+
+### 3.4 Cores semânticas
 
 | Token       | Significado                       | Exemplos                                |
 | ----------- | --------------------------------- | --------------------------------------- |
@@ -137,7 +152,7 @@ Em larguras menores, o trilho de utilitários é removido primeiro. O aplicativo
 
 ### Marca
 
-O escudo MyVault usa `brand-blue-soft` no fundo, `brand-blue-border` no contorno e `brand-blue-strong` no símbolo. A marca não usa gradientes.
+O símbolo atual continua provisório e será revisto em uma etapa própria. Até lá, o espectro MyVault pode acompanhar a marca em detalhes lineares e peças institucionais, sem ser aplicado dentro do escudo provisório.
 
 ### Botões
 
@@ -155,8 +170,8 @@ O escudo MyVault usa `brand-blue-soft` no fundo, `brand-blue-border` no contorno
 
 ### Inputs e busca
 
-- superfície profunda, borda visível e placeholder atenuado;
-- foco usa `--focus` com halo discreto;
+- superfície neutra discreta, base linear e placeholder atenuado;
+- foco remove o contorno nativo e usa o espectro MyVault na linha inferior, preservando contraste de teclado;
 - erro usa `--danger` e mensagem textual associada;
 - atalhos aparecem em `kbd` monoespaçado.
 

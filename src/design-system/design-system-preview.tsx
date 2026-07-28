@@ -120,6 +120,13 @@ export function DesignSystemPreview({ theme, onToggleTheme, onClose }: DesignSys
                 <span data-token="line">Line</span>
                 <span data-token="steel">Steel</span>
               </div>
+              <div className="ds-brand-spectrum">
+                <div>
+                  <span>Espectro MyVault</span>
+                  <small>Luz fria → azul mineral → grafite</small>
+                </div>
+                <i aria-hidden="true" />
+              </div>
               <div className="ds-meta-sample">
                 <span>Tags</span>
                 <p>

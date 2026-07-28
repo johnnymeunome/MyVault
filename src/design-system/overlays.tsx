@@ -1,28 +1,43 @@
 import { Dialog } from '@base-ui/react/dialog';
 import { Menu } from '@base-ui/react/menu';
 import { Tooltip } from '@base-ui/react/tooltip';
-import { Check, ChevronDown, Copy, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { Check, ChevronDown, MoreHorizontal } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { DesignButton, DesignIconButton } from './button';
 
 export function DesignMenuDemo() {
   return (
     <Menu.Root>
-      <Menu.Trigger className="ds-button ds-button--secondary ds-button--md">
+      <Menu.Trigger className="ds-button ds-button--secondary ds-button--md ds-menu-trigger">
         Ações <ChevronDown size={14} />
       </Menu.Trigger>
       <Menu.Portal>
         <Menu.Positioner className="ds-menu-positioner" sideOffset={6} align="start">
           <Menu.Popup className="ds-menu-popup">
+            <div className="ds-menu-context">
+              <strong>GitHub</strong>
+              <span>Entrada selecionada</span>
+            </div>
             <Menu.Item className="ds-menu-item">
-              <Pencil size={15} /> Editar <kbd>E</kbd>
+              <span>
+                <strong>Editar</strong>
+                <small>Alterar os campos</small>
+              </span>
+              <kbd>E</kbd>
             </Menu.Item>
             <Menu.Item className="ds-menu-item">
-              <Copy size={15} /> Duplicar <kbd>D</kbd>
+              <span>
+                <strong>Duplicar</strong>
+                <small>Criar uma cópia</small>
+              </span>
+              <kbd>D</kbd>
             </Menu.Item>
             <div className="ds-menu-separator" />
             <Menu.Item className="ds-menu-item ds-menu-item--danger">
-              <Trash2 size={15} /> Mover para a lixeira
+              <span>
+                <strong>Mover para a lixeira</strong>
+                <small>Disponível até ser esvaziada</small>
+              </span>
             </Menu.Item>
           </Menu.Popup>
         </Menu.Positioner>

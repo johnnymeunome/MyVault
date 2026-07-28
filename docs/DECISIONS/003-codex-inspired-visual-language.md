@@ -16,6 +16,7 @@ Adotar uma linguagem visual própria com:
 - superfícies principais neutras em cinza escuro;
 - laterais e estados ativos com temperatura azulada;
 - azul-aço como cor de identidade, navegação, foco e informação;
+- espectro frio do branco acinzentado ao azul mineral e grafite como assinatura linear de marca;
 - ação primária neutra de alto contraste;
 - verde, âmbar e vermelho reservados para estados semânticos;
 - layout desktop denso dividido em navegação, lista, detalhe e utilitários;
@@ -29,6 +30,7 @@ A inspiração no Codex acontece no nível de princípios visuais. O projeto nã
 - cores devem ser adicionadas primeiro como tokens semânticos;
 - mudanças relevantes de identidade exigem atualização do preview e deste ADR;
 - o azul não pode substituir cores de sucesso, alerta ou perigo;
+- o espectro de marca fica restrito a foco, progresso, força e peças próprias de identidade;
 - contribuições visuais devem ser verificadas nos temas escuro e claro;
 - o sistema de design passa a fazer parte dos critérios de aceite do produto.
 

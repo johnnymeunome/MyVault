@@ -15,6 +15,11 @@ describe('DesignSystemPreview', () => {
     expect(screen.getByRole('heading', { name: 'Formulários' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Estudo de movimento' })).toBeInTheDocument();
     expect(screen.getByText('Somente leitura')).toBeInTheDocument();
+    expect(screen.getByText('Espectro MyVault')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Ações' }));
+    expect(screen.getByText('Entrada selecionada')).toBeInTheDocument();
+    expect(screen.getByText('Alterar os campos')).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: 'Abrir diálogo' }));
     expect(screen.getByRole('dialog', { name: 'Confirmar alteração' })).toBeInTheDocument();
