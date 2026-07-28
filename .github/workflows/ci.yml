@@ -79,7 +79,8 @@ jobs:
       - name: Audit Rust dependencies
         uses: rustsec/audit-check@v2.0.0
         with:
-          lockfile: src-tauri/Cargo.lock
+          token: ${{ secrets.GITHUB_TOKEN }}
+          working-directory: src-tauri
 
   windows-core:
     name: Windows Rust smoke test
