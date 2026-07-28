@@ -67,7 +67,7 @@ O espectro MyVault progride de branco acinzentado para azul mineral e termina em
 Usos permitidos:
 
 - linha de foco de campos;
-- indicador do gerador de senhas;
+- indicador do gerador de senhas, com fluxo lento e contínuo;
 - amostras e peças próprias de marca;
 - detalhes lineares de menus ou overlays.
 

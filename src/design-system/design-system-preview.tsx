@@ -274,7 +274,11 @@ export function DesignSystemPreview({ theme, onToggleTheme, onClose }: DesignSys
                 <div className="ds-generator-strength">
                   <motion.i
                     animate={{ width: `${String(strength.score * 25)}%` }}
-                    transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.24 }}
+                    transition={
+                      shouldReduceMotion
+                        ? { duration: 0 }
+                        : { duration: 0.52, ease: [0.22, 1, 0.36, 1] }
+                    }
                   />
                 </div>
                 <p>

@@ -951,16 +951,31 @@
 }
 
 .ds-generator-strength {
-  height: 2px;
+  height: 3px;
   margin-top: 12px;
   overflow: hidden;
+  border-radius: 999px;
   background: var(--ds-line);
 }
 
 .ds-generator-strength i {
   display: block;
   height: 100%;
+  border-radius: inherit;
   background: var(--ds-brand-gradient);
+  background-size: 220% 100%;
+  box-shadow: 8px 0 14px var(--ds-brand-glow);
+  animation: ds-brand-gradient-flow 4.2s ease-in-out infinite alternate;
+}
+
+@keyframes ds-brand-gradient-flow {
+  from {
+    background-position: 0% 50%;
+  }
+
+  to {
+    background-position: 100% 50%;
+  }
 }
 
 .ds-generator-result > p {
