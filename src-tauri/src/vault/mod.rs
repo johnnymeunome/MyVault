@@ -1,3 +1,7 @@
-//! Reserved boundary for the future KDBX-compatible vault core.
-//!
-//! No KDBX parsing or persistence is implemented in M0.
+mod error;
+mod model;
+mod service;
+
+pub use error::PublicVaultError;
+pub use model::{CloseKdbxRequest, OpenKdbxRequest, OpenKdbxResult};
+pub use service::VaultState;

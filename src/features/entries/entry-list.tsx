@@ -29,6 +29,7 @@ export function EntryList() {
   const selectedEntryId = useVaultStore((state) => state.selectedEntryId);
   const setSelectedEntry = useVaultStore((state) => state.setSelectedEntry);
   const toggleFavorite = useVaultStore((state) => state.toggleFavorite);
+  const readOnlySession = useVaultStore((state) => state.readOnlySession);
   const visible = filterEntries(
     entries.filter((entry) => entry.vaultId === activeVaultId),
     query,
@@ -100,6 +101,8 @@ export function EntryList() {
                       event.stopPropagation();
                       toggleFavorite(entry.id);
                     }}
+                    disabled={Boolean(readOnlySession)}
+                    title={readOnlySession ? 'Favoritos não podem ser alterados no M1' : undefined}
                   >
                     <Star size={14} fill={entry.favorite ? 'currentColor' : 'none'} />
                   </button>

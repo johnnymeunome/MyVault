@@ -1,6 +1,6 @@
 # Contributing to MyVault
 
-Thanks for helping improve MyVault. The project is currently at M0: a product shell that is **not safe for real credentials**.
+Thanks for helping improve MyVault. M0 and the experimental read-only M1 are complete. The project is **not safe for real credentials**.
 
 ## Development
 
@@ -14,11 +14,18 @@ npm run lint
 npm run typecheck
 npm run test
 npm run build
+cargo fmt --manifest-path src-tauri/Cargo.toml -- --check
+cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
+cargo test --manifest-path src-tauri/Cargo.toml --lib
 ```
 
 ## Security-sensitive changes
 
 Do not add cryptography, KDBX write support, secret persistence or new Tauri permissions without an explicit architectural decision, threat analysis and compatibility tests. Never include real credentials in issues, fixtures, screenshots or logs.
+
+KDBX read work must follow [`docs/M1-SPEC.md`](docs/M1-SPEC.md), [`docs/THREAT-MODEL.md`](docs/THREAT-MODEL.md), the [compatibility matrix](docs/KDBX-COMPATIBILITY.md) and the [fixture policy](src-tauri/tests/fixtures/kdbx/README.md). A compatibility claim requires a versioned fixture, automated test and unchanged source hash.
+
+M1 pull requests must not enable KDBX writing or serialize passwords, TOTP, notes, custom fields, history or attachments to the frontend. Update the threat model in the same change whenever a trust boundary, native permission or exposed field changes.
 
 For security concerns, avoid opening a public issue containing sensitive details. Contact the maintainer privately through their GitHub profile until a dedicated security policy is published.
 

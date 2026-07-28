@@ -11,8 +11,10 @@ import { PasswordGenerator } from '../features/password-generator/password-gener
 import { CommandPalette } from '../features/search/command-palette';
 import { SettingsDialog } from '../features/settings/settings-dialog';
 import { LockScreen } from '../features/vault/lock-screen';
+import { KdbxOpenDialog } from '../features/vault/kdbx-open-dialog';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '../components/ui/dialog';
 import { useVaultStore } from '../stores/vault-store';
+import { clearKdbxSessions } from '../infrastructure/tauri/kdbx-gateway';
 
 export function App() {
   const isLocked = useVaultStore((state) => state.isLocked);
@@ -23,6 +25,13 @@ export function App() {
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
+
+  useEffect(() => {
+    void clearKdbxSessions().catch(() => undefined);
+    return () => {
+      void useVaultStore.getState().closeReadOnlyVault();
+    };
+  }, []);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -59,6 +68,7 @@ export function App() {
       {overlay === 'entry-edit' && <EntryDialog mode="edit" />}
       {overlay === 'command' && <CommandPalette />}
       {overlay === 'settings' && <SettingsDialog />}
+      {overlay === 'vault-open' && <KdbxOpenDialog />}
       {overlay === 'generator' && (
         <Dialog open onOpenChange={(open) => !open && setOverlay(null)}>
           <DialogContent>

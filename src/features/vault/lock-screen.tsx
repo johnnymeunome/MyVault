@@ -62,9 +62,10 @@ export function LockScreen() {
         <div className="prototype-warning">
           <ShieldAlert size={18} />
           <p>
-            <strong>Protótipo M0</strong>
+            <strong>M1 experimental</strong>
             <br />
-            Não armazene credenciais reais. Criptografia e KDBX ainda não foram implementados.
+            Não use credenciais reais. A leitura KDBX é limitada a fixtures públicas e acontece
+            somente em modo de leitura.
           </p>
         </div>
       </section>

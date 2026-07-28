@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title description">
+  <title id="title">MyVault app icon</title>
+  <desc id="description">Steel-blue shield with a check mark on a dark rounded square.</desc>
+  <rect x="24" y="24" width="464" height="464" rx="104" fill="#17191a" />
+  <rect
+    x="30"
+    y="30"
+    width="452"
+    height="452"
+    rx="98"
+    fill="none"
+    stroke="#496f82"
+    stroke-width="12"
+  />
+  <path
+    d="M256 94 382 141v92c0 87-50 154-126 189-76-35-126-102-126-189v-92L256 94Z"
+    fill="#82a9bc"
+    stroke="#a2c2d0"
+    stroke-width="10"
+    stroke-linejoin="round"
+  />
+  <path
+    d="m190 254 43 43 91-98"
+    fill="none"
+    stroke="#17191a"
+    stroke-width="28"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

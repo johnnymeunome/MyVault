@@ -17,6 +17,8 @@ MyVault is an original Tauri/React application, **not a fork of KeePassXC**. For
 4. Implement atomic writes to copies with backups.
 5. Audit before recommending real credentials.
 
+The read-only implementation choice and its constraints are recorded in [ADR 004](004-keepass-rs-read-only-spike.md).
+
 ## Consequences
 
 Domain entities remain independent from a particular parser. File access, unlock and serialization belong behind restricted Rust commands, with typed non-secret results crossing into the UI.
