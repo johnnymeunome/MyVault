@@ -8,12 +8,14 @@ export function StatusBar() {
       <span className="status-context">
         <i aria-hidden="true" />
         {readOnlySession
-          ? `${readOnlySession.format} · modo experimental`
+          ? `${readOnlySession.format} · fixture descartável`
           : 'Bloqueio automático simulado em 3 min'}
       </span>
       <span className="status-session">
         <i aria-hidden="true" />
-        {readOnlySession ? 'Somente leitura · sem persistência' : 'Sessão local · sem persistência'}
+        {readOnlySession
+          ? 'Leitura isolada · sem segredos no React'
+          : 'Sessão local · sem persistência'}
       </span>
     </footer>
   );

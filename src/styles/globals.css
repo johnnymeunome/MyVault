@@ -1284,7 +1284,10 @@ input[type='checkbox'] {
 .settings-section > header > span {
   padding-top: 2px;
   color: var(--brand-blue-strong);
-  font: 650 9px/1.3 ui-monospace, 'Cascadia Code', monospace;
+  font:
+    650 9px/1.3 ui-monospace,
+    'Cascadia Code',
+    monospace;
 }
 .editor-section h2,
 .settings-section h2 {
@@ -1420,7 +1423,10 @@ input[type='checkbox'] {
 .command-input-row > kbd,
 .command-footer kbd,
 .command-option > kbd {
-  font: 9px/1 ui-monospace, 'Cascadia Code', monospace;
+  font:
+    9px/1 ui-monospace,
+    'Cascadia Code',
+    monospace;
 }
 .command-input-row > kbd {
   padding: 4px 5px;
@@ -1751,7 +1757,10 @@ input[type='checkbox'] {
   flex: 1;
   overflow-wrap: anywhere;
   color: var(--text-primary);
-  font: 21px/1.45 ui-monospace, 'Cascadia Code', monospace;
+  font:
+    21px/1.45 ui-monospace,
+    'Cascadia Code',
+    monospace;
   letter-spacing: 0.012em;
 }
 .password-result-actions {
@@ -1856,7 +1865,10 @@ input[type='checkbox'] {
 }
 .separator-options code {
   color: inherit;
-  font: 13px/1 ui-monospace, 'Cascadia Code', monospace;
+  font:
+    13px/1 ui-monospace,
+    'Cascadia Code',
+    monospace;
   text-align: center;
 }
 .separator-options span {
@@ -2135,6 +2147,238 @@ input[type='checkbox'] {
   }
   .password-tool-footer > span {
     max-width: 170px;
+  }
+}
+
+/* Phase 6: lock and read-only KDBX */
+.lock-screen {
+  width: 100vw;
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  place-items: initial;
+  overflow: hidden;
+  padding: 28px 32px 22px;
+  background: var(--surface-base);
+}
+.lock-brand {
+  justify-self: start;
+}
+.lock-content {
+  width: min(370px, 100%);
+  align-self: center;
+  justify-self: center;
+  margin-top: -28px;
+}
+.lock-context {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--brand-blue-strong);
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.lock-content h1 {
+  margin: 0;
+  font-size: clamp(27px, 3vw, 34px);
+  font-weight: 660;
+  letter-spacing: -0.045em;
+}
+.lock-file-name {
+  margin: 8px 0 28px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.lock-form {
+  display: grid;
+  gap: 12px;
+}
+.lock-form .ds-button {
+  justify-content: center;
+  width: 100%;
+}
+.lock-vault-trigger {
+  width: 100%;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 15px;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  color: var(--text-secondary);
+  background: transparent;
+  font-size: 12px;
+  text-align: left;
+}
+.lock-vault-trigger:hover,
+.lock-vault-trigger[data-popup-open] {
+  color: var(--text-primary);
+  border-bottom-color: var(--border-strong);
+}
+.lock-vault-menu {
+  min-width: 270px;
+}
+.lock-experiment-note {
+  margin: 28px 0 0;
+  padding-top: 15px;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 10.5px;
+  line-height: 1.6;
+}
+.lock-experiment-note strong {
+  color: var(--text-secondary);
+  font-weight: 620;
+}
+.lock-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--text-muted);
+  font-size: 9.5px;
+}
+
+.kdbx-open-dialog {
+  width: min(680px, calc(100vw - 40px));
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+  color: var(--text-primary);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-window);
+}
+.kdbx-dialog-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px 26px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.kdbx-dialog-header h2 {
+  margin: 5px 0 6px;
+  font-size: 22px;
+  font-weight: 660;
+  letter-spacing: -0.035em;
+}
+.kdbx-dialog-header p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 11.5px;
+}
+.kdbx-dialog-content {
+  display: grid;
+  gap: 22px;
+  padding: 22px 26px 26px;
+}
+.kdbx-dialog-note {
+  margin: 0;
+  padding-left: 12px;
+  border-left: 2px solid var(--warning);
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.55;
+}
+.kdbx-file-list {
+  border-top: 1px solid var(--border);
+}
+.kdbx-file-row {
+  min-height: 66px;
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) max-content;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.kdbx-file-row > svg {
+  color: var(--text-muted);
+}
+.kdbx-file-copy {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+.kdbx-file-copy strong {
+  overflow: hidden;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 620;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.kdbx-file-copy em {
+  color: var(--text-muted);
+  font-size: 9.5px;
+  font-style: normal;
+  font-weight: 450;
+}
+.kdbx-file-copy small {
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 10.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.kdbx-runtime-note {
+  margin: -10px 0 0;
+  color: var(--text-muted);
+  font-size: 10px;
+}
+.kdbx-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 26px;
+  border-top: 1px solid var(--border);
+  background: var(--surface-deep);
+}
+.read-only-context {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 10px 12px;
+  border-left: 1px solid var(--border);
+  color: var(--text-muted);
+  background: var(--surface-deep);
+  font-size: 10.5px;
+}
+.read-only-context strong {
+  color: var(--text-secondary);
+  font-weight: 620;
+}
+
+@media (max-width: 620px) {
+  .lock-screen {
+    padding: 20px;
+  }
+  .lock-content {
+    margin-top: 0;
+  }
+  .lock-footer span:last-child {
+    display: none;
+  }
+  .phase-dialog-viewport {
+    padding: 12px;
+  }
+  .kdbx-open-dialog {
+    width: calc(100vw - 24px);
+  }
+  .kdbx-dialog-header,
+  .kdbx-dialog-content {
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+  .kdbx-file-row {
+    grid-template-columns: 20px minmax(0, 1fr);
+    padding: 10px 0;
+  }
+  .kdbx-file-row .ds-button {
+    grid-column: 2;
+    justify-self: start;
   }
 }
 

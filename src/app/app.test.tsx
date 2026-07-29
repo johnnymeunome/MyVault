@@ -3,7 +3,28 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { useVaultStore } from '../stores/vault-store';
 import { mockEntries } from '../infrastructure/mocks/entries';
 import { mockGroups, mockVaults } from '../infrastructure/mocks/vaults';
+import type { OpenKdbxResult } from '../infrastructure/tauri/kdbx-gateway';
 import { App } from './app';
+
+const readOnlyResult: OpenKdbxResult = {
+  sessionId: 'ui-session',
+  database: {
+    name: 'Fixture pública',
+    format: 'KDBX 4.1',
+    groups: [{ id: 'root', name: 'Passwords', depth: 0 }],
+    entries: [
+      {
+        id: 'fixture-entry',
+        groupId: 'root',
+        title: 'Fixture entry',
+        username: 'demo-user',
+        url: 'https://example.test',
+        favorite: false,
+      },
+    ],
+  },
+  capabilities: { read: true, write: false, revealSecrets: false },
+};
 
 describe('main application flows', () => {
   beforeEach(() => {
@@ -87,6 +108,26 @@ describe('main application flows', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Selecionar cofre' }));
     expect(screen.getByText('Cofres disponíveis')).toBeInTheDocument();
     expect(screen.getByText('Trabalho.kdbx')).toBeInTheDocument();
+  });
+
+  it('opens a task-specific dialog for public KDBX fixtures', () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Selecionar cofre' }));
+    fireEvent.click(screen.getByText(/Abrir fixture KDBX/));
+    expect(screen.getByRole('heading', { name: 'Abrir arquivo KDBX' })).toBeInTheDocument();
+    expect(screen.getByText('Arquivo KDBX')).toBeInTheDocument();
+    expect(screen.getByText(/Arquivo-chave/)).toBeInTheDocument();
+    expect(screen.getByLabelText('Senha pública da fixture')).toBeInTheDocument();
+  });
+
+  it('summarizes the read-only boundary without repeated safety cards', () => {
+    useVaultStore.getState().activateReadOnlyVault(readOnlyResult, 'fixture.kdbx');
+    render(<App />);
+    expect(screen.getByText('Somente leitura')).toBeInTheDocument();
+    expect(screen.getByText('Leitura isolada · sem segredos no React')).toBeInTheDocument();
+    expect(screen.getByText(/permaneceram no núcleo Rust/)).toBeInTheDocument();
+    expect(screen.queryByText('Capacidades fechadas')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Novo item' })).toBeDisabled();
   });
 
   it('keeps the theme switch visible in the top bar', () => {

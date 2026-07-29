@@ -1,6 +1,6 @@
 # Plano de redesign da interface
 
-Status: **Fase 5 concluída e aprovada; próxima etapa: Fase 6**
+Status: **Fase 6 concluída e aprovada; próxima etapa: Fase 7**
 
 Escopo: interface desktop do MyVault após o M1 KDBX somente leitura
 
