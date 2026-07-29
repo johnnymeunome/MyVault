@@ -560,6 +560,12 @@ kbd {
 .entry-logo--command.entry-logo--inter b {
   font-size: 8px;
 }
+.entry-logo--mercado-livre {
+  color: #ffe600;
+}
+:root[data-theme='light'] .entry-logo--mercado-livre {
+  color: #2d3277;
+}
 .entry-logo--stripe {
   color: #635bff;
 }
@@ -567,11 +573,13 @@ kbd {
   width: 84%;
   height: 84%;
 }
-.entry-logo--monogram {
+.entry-logo--generic {
   color: color-mix(in srgb, var(--entry-accent) 56%, var(--text-primary));
-  font-size: 10px;
-  font-weight: 680;
-  letter-spacing: 0.02em;
+}
+.entry-logo--generic svg {
+  width: 62%;
+  height: 62%;
+  stroke-width: 1.65;
 }
 .entry-row-copy {
   min-width: 0;
