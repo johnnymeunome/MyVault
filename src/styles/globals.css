@@ -1647,6 +1647,286 @@ input[type='checkbox'] {
   font-size: 10px;
 }
 
+/* Phase 5: password generator ------------------------------------------- */
+.password-tool-view,
+.password-tool-embedded {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: hidden;
+  color: var(--text-primary);
+  background: var(--surface-base);
+}
+.password-tool-view {
+  grid-column: 2 / -1;
+}
+.password-tool-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 27px clamp(30px, 5vw, 70px) 23px;
+  border-bottom: 1px solid var(--border);
+}
+.password-tool-context {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--brand-blue-strong);
+  font-size: 9.5px;
+  font-weight: 650;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+.password-tool-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 630;
+  letter-spacing: -0.035em;
+}
+.password-tool-header p {
+  margin: 7px 0 0;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+.password-tool-body {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(420px, 1.35fr) minmax(300px, 0.65fr);
+  overflow: auto;
+}
+.password-tool-primary {
+  min-width: 0;
+  padding: 34px clamp(30px, 5vw, 70px);
+}
+.password-mode-switch {
+  display: flex;
+  gap: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.password-mode-switch button {
+  position: relative;
+  min-height: 38px;
+  padding: 0;
+  border: 0;
+  color: var(--text-muted);
+  background: transparent;
+  font-size: 11px;
+  font-weight: 560;
+}
+.password-mode-switch button:hover,
+.password-mode-switch button.is-active {
+  color: var(--text-primary);
+}
+.password-mode-switch button.is-active::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: var(--brand-blue-strong);
+  content: '';
+}
+.password-result {
+  margin-top: 42px;
+}
+.password-result > span,
+.generator-control-section > span {
+  display: block;
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 620;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.password-result-line {
+  min-height: 82px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--border-strong);
+}
+.password-result-line code {
+  min-width: 0;
+  flex: 1;
+  overflow-wrap: anywhere;
+  color: var(--text-primary);
+  font: 21px/1.45 ui-monospace, 'Cascadia Code', monospace;
+  letter-spacing: 0.012em;
+}
+.password-result-actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 2px;
+}
+.password-strength-track {
+  position: relative;
+  height: 3px;
+  margin-top: 13px;
+  overflow: hidden;
+  background: var(--border);
+}
+.password-strength-track i {
+  display: block;
+  height: 100%;
+  background: var(--ds-brand-gradient);
+  background-size: 220% 100%;
+  box-shadow: 8px 0 16px var(--ds-brand-glow);
+  animation: ds-brand-gradient-flow 4.2s ease-in-out infinite alternate;
+}
+.password-strength-copy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: 9px;
+  font-size: 10px;
+}
+.password-strength-copy strong {
+  color: var(--brand-blue-strong);
+  font-weight: 600;
+}
+.password-strength-copy span {
+  color: var(--text-muted);
+}
+.password-privacy-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 34px;
+  color: var(--text-muted);
+  font-size: 10px;
+}
+.password-privacy-note i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--success);
+}
+.password-tool-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 34px clamp(24px, 3vw, 42px);
+  border-left: 1px solid var(--border);
+  background: var(--surface-deep);
+}
+.generator-control-section {
+  display: grid;
+  gap: 19px;
+  padding: 0 0 26px;
+}
+.generator-control-section + .generator-control-section {
+  padding-top: 25px;
+  border-top: 1px solid var(--border);
+}
+.generator-check-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px 20px;
+}
+.separator-options {
+  display: grid;
+  border-top: 1px solid var(--border);
+}
+.separator-options button {
+  min-height: 40px;
+  display: grid;
+  grid-template-columns: 30px 1fr 14px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+  background: transparent;
+  text-align: left;
+}
+.separator-options button:hover,
+.separator-options button.is-selected {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+}
+.separator-options button.is-selected::after {
+  width: 5px;
+  height: 5px;
+  justify-self: center;
+  border-radius: 50%;
+  background: var(--brand-blue-strong);
+  content: '';
+}
+.separator-options code {
+  color: inherit;
+  font: 13px/1 ui-monospace, 'Cascadia Code', monospace;
+  text-align: center;
+}
+.separator-options span {
+  font-size: 10.5px;
+}
+.password-tool-footer {
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 9px clamp(30px, 5vw, 70px);
+  border-top: 1px solid var(--border);
+  background: var(--surface-deep);
+}
+.password-tool-footer > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--text-muted);
+  font-size: 10px;
+}
+.password-tool-footer > div {
+  display: flex;
+  gap: 4px;
+}
+.password-tool-embedded {
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--surface-deep);
+}
+.password-tool-embedded .password-tool-header {
+  padding: 16px 18px 14px;
+}
+.password-tool-embedded .password-tool-header h1 {
+  font-size: 15px;
+  letter-spacing: -0.015em;
+}
+.password-tool-embedded .password-tool-header p {
+  font-size: 10px;
+}
+.password-tool-embedded .password-tool-body {
+  grid-template-columns: minmax(300px, 1.2fr) minmax(230px, 0.8fr);
+  max-height: 360px;
+}
+.password-tool-embedded .password-tool-primary,
+.password-tool-embedded .password-tool-controls {
+  padding: 18px;
+}
+.password-tool-embedded .password-result {
+  margin-top: 20px;
+}
+.password-tool-embedded .password-result-line {
+  min-height: 62px;
+}
+.password-tool-embedded .password-result-line code {
+  font-size: 14px;
+}
+.password-tool-embedded .password-privacy-note {
+  margin-top: 18px;
+}
+.password-tool-embedded .password-tool-footer {
+  min-height: 50px;
+  padding: 8px 18px;
+}
+.editor-embedded-generator {
+  grid-column: 2;
+  min-width: 0;
+}
+
 .lock-screen {
   min-height: 100vh;
   display: grid;
@@ -1791,12 +2071,26 @@ input[type='checkbox'] {
   .settings-view {
     grid-column: 1 / -1;
   }
+  .password-tool-view {
+    grid-column: 1 / -1;
+  }
+  .password-tool-body,
+  .password-tool-embedded .password-tool-body {
+    grid-template-columns: 1fr;
+  }
+  .password-tool-controls {
+    border-top: 1px solid var(--border);
+    border-left: 0;
+  }
   .editor-section,
   .settings-section {
     grid-template-columns: 1fr;
     gap: 18px;
   }
   .editor-favorite-row {
+    grid-column: 1;
+  }
+  .editor-embedded-generator {
     grid-column: 1;
   }
 }
@@ -1829,6 +2123,18 @@ input[type='checkbox'] {
   .settings-facts > div {
     grid-template-columns: 1fr;
     gap: 5px;
+  }
+  .password-tool-header,
+  .password-tool-primary,
+  .password-tool-controls,
+  .password-tool-footer {
+    padding-inline: 18px;
+  }
+  .password-tool-footer {
+    align-items: flex-end;
+  }
+  .password-tool-footer > span {
+    max-width: 170px;
   }
 }
 

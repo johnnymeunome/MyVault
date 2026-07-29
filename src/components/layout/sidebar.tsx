@@ -8,6 +8,7 @@ import {
   KeyRound,
   Plus,
   Settings,
+  Sparkles,
   Trash2,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -113,6 +114,14 @@ export function Sidebar() {
       )}
 
       <div className="sidebar-spacer" />
+      <button
+        className={cn('nav-row sidebar-tool-link', overlay === 'generator' && 'is-active')}
+        onClick={() => setOverlay('generator')}
+        aria-current={overlay === 'generator' ? 'page' : undefined}
+      >
+        <Sparkles size={15} strokeWidth={1.75} aria-hidden="true" />
+        <span className="nav-label">Gerador de senhas</span>
+      </button>
       <button
         className={cn('nav-row sidebar-settings', overlay === 'settings' && 'is-active')}
         onClick={() => setOverlay('settings')}

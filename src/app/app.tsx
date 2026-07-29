@@ -9,11 +9,10 @@ import { EntryList } from '../features/entries/entry-list';
 import { PasswordGenerator } from '../features/password-generator/password-generator';
 import { CommandPalette } from '../features/search/command-palette';
 import { SettingsView } from '../features/settings/settings-dialog';
-import { LockScreen } from '../features/vault/lock-screen';
 import { KdbxOpenDialog } from '../features/vault/kdbx-open-dialog';
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '../components/ui/dialog';
-import { useVaultStore } from '../stores/vault-store';
+import { LockScreen } from '../features/vault/lock-screen';
 import { clearKdbxSessions } from '../infrastructure/tauri/kdbx-gateway';
+import { useVaultStore } from '../stores/vault-store';
 
 const DesignSystemPreview = import.meta.env.DEV
   ? lazy(() =>
@@ -52,7 +51,7 @@ export function App() {
         event.preventDefault();
         if (!isLocked) setOverlay('command');
       }
-      if (event.key === 'Escape' && overlay === 'settings') {
+      if (event.key === 'Escape' && (overlay === 'settings' || overlay === 'generator')) {
         event.preventDefault();
         setOverlay(null);
       }
@@ -61,13 +60,14 @@ export function App() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [isLocked, overlay, setOverlay]);
 
-  if (isLocked)
+  if (isLocked) {
     return (
       <>
         <LockScreen />
         <Toast />
       </>
     );
+  }
 
   return (
     <main className="app-viewport">
@@ -77,6 +77,8 @@ export function App() {
           <Sidebar />
           {overlay === 'settings' ? (
             <SettingsView />
+          ) : overlay === 'generator' ? (
+            <PasswordGenerator onClose={() => setOverlay(null)} />
           ) : (
             <>
               <EntryList />
@@ -98,19 +100,6 @@ export function App() {
             onClose={() => setOverlay(null)}
           />
         </Suspense>
-      )}
-      {overlay === 'generator' && (
-        <Dialog open onOpenChange={(open) => !open && setOverlay(null)}>
-          <DialogContent>
-            <DialogTitle>Gerador de senhas</DialogTitle>
-            <DialogDescription>
-              Gere valores demonstrativos localmente. Nada é persistido.
-            </DialogDescription>
-            <div className="mt-5">
-              <PasswordGenerator />
-            </div>
-          </DialogContent>
-        </Dialog>
       )}
       <Toast />
     </main>

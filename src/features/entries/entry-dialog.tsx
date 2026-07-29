@@ -4,8 +4,8 @@ import { useMemo, useState, type SyntheticEvent } from 'react';
 import { DesignButton, DesignIconButton } from '../../design-system/button';
 import { DesignCheckbox, DesignField, DesignTextArea } from '../../design-system/form-controls';
 import type { LoginEntry, LoginEntryInput } from '../../domain/entities/entry';
-import { generatePassword } from '../../domain/services/password';
 import { useVaultStore } from '../../stores/vault-store';
+import { PasswordGenerator } from '../password-generator/password-generator';
 
 const emptyInput: LoginEntryInput = {
   title: '',
@@ -44,6 +44,7 @@ export function EntryDialog({ mode }: { mode: 'create' | 'edit' }) {
   );
   const [tagText, setTagText] = useState(() => input.tags.join(', '));
   const [revealed, setRevealed] = useState(false);
+  const [generatorOpen, setGeneratorOpen] = useState(false);
   const canSubmit = useMemo(
     () => Boolean(input.title.trim() && input.username.trim() && input.password),
     [input],
@@ -51,19 +52,6 @@ export function EntryDialog({ mode }: { mode: 'create' | 'edit' }) {
 
   const update = <K extends keyof LoginEntryInput>(key: K, value: LoginEntryInput[K]) =>
     setInput((current) => ({ ...current, [key]: value }));
-
-  const generate = () => {
-    const values = new Uint32Array(20);
-    crypto.getRandomValues(values);
-    update(
-      'password',
-      generatePassword(
-        { length: 20, uppercase: true, lowercase: true, numbers: true, symbols: true },
-        values,
-      ),
-    );
-    setRevealed(true);
-  };
 
   const submit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -172,13 +160,32 @@ export function EntryDialog({ mode }: { mode: 'create' | 'edit' }) {
                         >
                           {revealed ? <EyeOff size={15} /> : <Eye size={15} />}
                         </DesignIconButton>
-                        <DesignButton type="button" tone="quiet" size="sm" onClick={generate}>
+                        <DesignButton
+                          type="button"
+                          tone="quiet"
+                          size="sm"
+                          onClick={() => setGeneratorOpen((open) => !open)}
+                          aria-expanded={generatorOpen}
+                        >
                           <Sparkles size={14} aria-hidden="true" />
                           Gerar
                         </DesignButton>
                       </div>
                     </label>
                   </div>
+                  {generatorOpen && (
+                    <div className="editor-embedded-generator">
+                      <PasswordGenerator
+                        variant="embedded"
+                        onClose={() => setGeneratorOpen(false)}
+                        onUse={(generatedValue) => {
+                          update('password', generatedValue);
+                          setRevealed(true);
+                          setGeneratorOpen(false);
+                        }}
+                      />
+                    </div>
+                  )}
                 </section>
 
                 <section className="editor-section" aria-labelledby="organization-heading">

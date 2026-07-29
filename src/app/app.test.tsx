@@ -55,6 +55,23 @@ describe('main application flows', () => {
     expect(screen.getByRole('heading', { name: 'Conta de teste' })).toBeInTheDocument();
   });
 
+  it('opens the generator as a dedicated tool with password and passphrase modes', () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Gerador de senhas' }));
+    expect(screen.getByRole('heading', { name: 'Gerador de senhas' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('tab', { name: 'Frase secreta' }));
+    expect(screen.getByText('Palavras')).toBeInTheDocument();
+    expect(screen.getByRole('radiogroup', { name: 'Separador da frase' })).toBeInTheDocument();
+  });
+
+  it('applies a generated value directly inside the entry editor', () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Novo item' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Gerar' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Usar este valor' }));
+    expect(screen.getByLabelText('Senha de demonstração')).not.toHaveValue('');
+  });
+
   it('opens settings as a dedicated view and applies the theme directly', () => {
     render(<App />);
     fireEvent.click(screen.getByRole('button', { name: 'Configurações' }));
