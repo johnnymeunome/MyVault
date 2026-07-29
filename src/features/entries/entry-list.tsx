@@ -1,4 +1,4 @@
-import { ListFilter, SearchX, SlidersHorizontal, Star } from 'lucide-react';
+import { ArrowDown, SearchX, Star } from 'lucide-react';
 import { EntryLogo } from '../../components/common/entry-logo';
 import { filterEntries } from '../../domain/services/entry-search';
 import { cn, formatRelativeDate } from '../../lib/utils';
@@ -36,6 +36,15 @@ export function EntryList() {
     filter,
   );
 
+  const focusRelativeEntry = (index: number, offset: -1 | 1) => {
+    const next = visible[index + offset];
+    if (!next) return;
+    setSelectedEntry(next.id);
+    window.requestAnimationFrame(() => {
+      document.getElementById(`entry-select-${next.id}`)?.focus();
+    });
+  };
+
   return (
     <section className="entry-list-panel" aria-labelledby="entry-list-title">
       <div className="panel-heading">
@@ -45,75 +54,77 @@ export function EntryList() {
             {visible.length} {visible.length === 1 ? 'item' : 'itens'}
           </p>
         </div>
-        <div className="flex gap-1">
-          <button
-            className="icon-button"
-            aria-label="Filtrar lista"
-            title="Filtros ativos na barra lateral"
-          >
-            <ListFilter size={16} />
-          </button>
-          <button
-            className="icon-button"
-            aria-label="Ordenar lista"
-            title="Ordenado por atualização"
-          >
-            <SlidersHorizontal size={16} />
-          </button>
+        <div className="list-order" aria-label="Ordenado pelos mais recentes">
+          <span>Recentes</span>
+          <ArrowDown size={12} strokeWidth={1.7} aria-hidden="true" />
         </div>
       </div>
 
-      <div className="entry-scroll" role="listbox" aria-label="Itens do cofre">
+      <div className="entry-scroll" role="list" aria-label="Itens do cofre">
         {visible.length === 0 ? (
           <div className="empty-state">
-            <SearchX size={24} />
+            <SearchX size={22} strokeWidth={1.5} />
             <strong>Nenhum item encontrado</strong>
             <span>Tente outro termo ou categoria.</span>
           </div>
         ) : (
-          visible.map((entry) => (
-            <div
-              key={entry.id}
-              className={cn('entry-row', selectedEntryId === entry.id && 'is-selected')}
-              onClick={() => setSelectedEntry(entry.id)}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                  event.preventDefault();
-                  setSelectedEntry(entry.id);
-                }
-              }}
-              role="option"
-              aria-selected={selectedEntryId === entry.id}
-              tabIndex={0}
-            >
-              <EntryLogo entry={entry} />
-              <span className="entry-row-copy">
-                <span className="entry-title-line">
-                  <strong>{entry.title}</strong>
-                  <button
-                    className={cn('favorite-button', entry.favorite && 'is-favorite')}
-                    aria-label={
-                      entry.favorite
-                        ? `Remover ${entry.title} dos favoritos`
-                        : `Favoritar ${entry.title}`
+          visible.map((entry, index) => {
+            const selected = selectedEntryId === entry.id;
+            return (
+              <div
+                key={entry.id}
+                className={cn('entry-row', selected && 'is-selected')}
+                role="listitem"
+              >
+                <button
+                  id={`entry-select-${entry.id}`}
+                  className="entry-row-select"
+                  onClick={() => setSelectedEntry(entry.id)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'ArrowDown') {
+                      event.preventDefault();
+                      focusRelativeEntry(index, 1);
                     }
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      toggleFavorite(entry.id);
-                    }}
-                    disabled={Boolean(readOnlySession)}
-                    title={readOnlySession ? 'Favoritos não podem ser alterados no M1' : undefined}
-                  >
-                    <Star size={14} fill={entry.favorite ? 'currentColor' : 'none'} />
-                  </button>
-                </span>
-                <span className="entry-meta-line">
-                  <span className="truncate">{entrySubtitle(entry)}</span>
-                  <time>{formatRelativeDate(entry.updatedAt)}</time>
-                </span>
-              </span>
-            </div>
-          ))
+                    if (event.key === 'ArrowUp') {
+                      event.preventDefault();
+                      focusRelativeEntry(index, -1);
+                    }
+                  }}
+                  aria-current={selected ? 'true' : undefined}
+                  title={`${entry.title} — ${entrySubtitle(entry)}`}
+                  type="button"
+                >
+                  <EntryLogo entry={entry} />
+                  <span className="entry-row-copy">
+                    <strong>{entry.title}</strong>
+                    <span className="entry-meta-line">
+                      <span className="truncate">{entrySubtitle(entry)}</span>
+                      <time>{formatRelativeDate(entry.updatedAt)}</time>
+                    </span>
+                  </span>
+                </button>
+                <button
+                  className={cn('favorite-button', entry.favorite && 'is-favorite')}
+                  aria-label={
+                    entry.favorite
+                      ? `Remover ${entry.title} dos favoritos`
+                      : `Favoritar ${entry.title}`
+                  }
+                  onClick={() => toggleFavorite(entry.id)}
+                  disabled={Boolean(readOnlySession)}
+                  title={readOnlySession ? 'Favoritos não podem ser alterados no M1' : undefined}
+                  type="button"
+                >
+                  <Star
+                    size={13}
+                    strokeWidth={1.7}
+                    fill={entry.favorite ? 'currentColor' : 'none'}
+                    aria-hidden="true"
+                  />
+                </button>
+              </div>
+            );
+          })
         )}
       </div>
     </section>

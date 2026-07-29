@@ -49,4 +49,20 @@ describe('main application flows', () => {
     expect(useVaultStore.getState().theme).toBe('light');
     expect(screen.getByRole('button', { name: 'Usar tema escuro' })).toBeInTheDocument();
   });
+
+  it('moves through the continuous entry list with arrow keys', () => {
+    render(<App />);
+    const github = screen.getByTitle('GitHub — joaovictor');
+    fireEvent.keyDown(github, { key: 'ArrowDown' });
+    expect(useVaultStore.getState().selectedEntryId).toBe('google');
+    expect(screen.getByRole('heading', { name: 'Google' })).toBeInTheDocument();
+  });
+
+  it('renders the work vault with its own list and detail content', () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Trabalho' }));
+    expect(screen.getAllByRole('listitem')).toHaveLength(3);
+    expect(screen.getByRole('heading', { name: 'AWS' })).toBeInTheDocument();
+    expect(screen.getByText('Ambiente fictício de desenvolvimento.')).toBeInTheDocument();
+  });
 });

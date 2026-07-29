@@ -1,8 +1,8 @@
 import { Check, Copy } from 'lucide-react';
 import { useState } from 'react';
 import { useClipboardStore } from '../../features/clipboard/clipboard-store';
+import { cn } from '../../lib/utils';
 import { useVaultStore } from '../../stores/vault-store';
-import { Button } from '../ui/button';
 
 export function CopyButton({
   value,
@@ -32,15 +32,15 @@ export function CopyButton({
   };
 
   return (
-    <Button
-      variant="ghost"
-      size={compact ? 'icon' : 'sm'}
-      className={compact ? 'size-7 min-h-7' : undefined}
+    <button
+      className={cn('copy-action', compact && 'copy-action--compact', copied && 'is-copied')}
       onClick={handleCopy}
       aria-label={`Copiar ${label.toLocaleLowerCase('pt-BR')}`}
+      title={copied ? `${label} copiado` : `Copiar ${label.toLocaleLowerCase('pt-BR')}`}
+      type="button"
     >
-      {copied ? <Check size={14} className="text-[var(--success)]" /> : <Copy size={14} />}
-      {!compact && (copied ? 'Copiado' : 'Copiar')}
-    </Button>
+      {copied ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
+      {!compact && <span>{copied ? 'Copiado' : 'Copiar'}</span>}
+    </button>
   );
 }
