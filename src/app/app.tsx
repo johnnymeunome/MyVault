@@ -1,20 +1,26 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Toast } from '../components/common/toast';
 import { Sidebar } from '../components/layout/sidebar';
 import { StatusBar } from '../components/layout/status-bar';
 import { TopBar } from '../components/layout/top-bar';
-import { UtilityRail } from '../components/layout/utility-rail';
 import { EntryDetail } from '../features/entries/entry-detail';
 import { EntryDialog } from '../features/entries/entry-dialog';
 import { EntryList } from '../features/entries/entry-list';
 import { PasswordGenerator } from '../features/password-generator/password-generator';
 import { CommandPalette } from '../features/search/command-palette';
-import { SettingsDialog } from '../features/settings/settings-dialog';
-import { LockScreen } from '../features/vault/lock-screen';
+import { SettingsView } from '../features/settings/settings-dialog';
 import { KdbxOpenDialog } from '../features/vault/kdbx-open-dialog';
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '../components/ui/dialog';
-import { useVaultStore } from '../stores/vault-store';
+import { LockScreen } from '../features/vault/lock-screen';
 import { clearKdbxSessions } from '../infrastructure/tauri/kdbx-gateway';
+import { useVaultStore } from '../stores/vault-store';
+
+const DesignSystemPreview = import.meta.env.DEV
+  ? lazy(() =>
+      import('../design-system/design-system-preview').then((module) => ({
+        default: module.DesignSystemPreview,
+      })),
+    )
+  : null;
 
 export function App() {
   const isLocked = useVaultStore((state) => state.isLocked);
@@ -25,6 +31,12 @@ export function App() {
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
+
+  useEffect(() => {
+    if (import.meta.env.DEV && import.meta.env.VITE_UI_LAB === '1') {
+      setOverlay('design-system');
+    }
+  }, [setOverlay]);
 
   useEffect(() => {
     void clearKdbxSessions().catch(() => undefined);
@@ -39,18 +51,23 @@ export function App() {
         event.preventDefault();
         if (!isLocked) setOverlay('command');
       }
+      if (event.key === 'Escape' && (overlay === 'settings' || overlay === 'generator')) {
+        event.preventDefault();
+        setOverlay(null);
+      }
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [isLocked, setOverlay]);
+  }, [isLocked, overlay, setOverlay]);
 
-  if (isLocked)
+  if (isLocked) {
     return (
       <>
         <LockScreen />
         <Toast />
       </>
     );
+  }
 
   return (
     <main className="app-viewport">
@@ -58,29 +75,31 @@ export function App() {
         <TopBar />
         <div className="workspace-grid">
           <Sidebar />
-          <EntryList />
-          <EntryDetail />
-          <UtilityRail />
+          {overlay === 'settings' ? (
+            <SettingsView />
+          ) : overlay === 'generator' ? (
+            <PasswordGenerator onClose={() => setOverlay(null)} />
+          ) : (
+            <>
+              <EntryList />
+              <EntryDetail />
+            </>
+          )}
         </div>
         <StatusBar />
       </div>
       {overlay === 'entry-create' && <EntryDialog mode="create" />}
       {overlay === 'entry-edit' && <EntryDialog mode="edit" />}
       {overlay === 'command' && <CommandPalette />}
-      {overlay === 'settings' && <SettingsDialog />}
       {overlay === 'vault-open' && <KdbxOpenDialog />}
-      {overlay === 'generator' && (
-        <Dialog open onOpenChange={(open) => !open && setOverlay(null)}>
-          <DialogContent>
-            <DialogTitle>Gerador de senhas</DialogTitle>
-            <DialogDescription>
-              Gere valores demonstrativos localmente. Nada é persistido.
-            </DialogDescription>
-            <div className="mt-5">
-              <PasswordGenerator />
-            </div>
-          </DialogContent>
-        </Dialog>
+      {DesignSystemPreview && overlay === 'design-system' && (
+        <Suspense fallback={null}>
+          <DesignSystemPreview
+            theme={theme}
+            onToggleTheme={() => useVaultStore.getState().toggleTheme()}
+            onClose={() => setOverlay(null)}
+          />
+        </Suspense>
       )}
       <Toast />
     </main>

@@ -1,7 +1,8 @@
-import { FileKey2, FolderOpen, KeyRound, LoaderCircle, ShieldAlert } from 'lucide-react';
+import { Dialog } from '@base-ui/react/dialog';
+import { FileKey2, FolderOpen, LoaderCircle, X } from 'lucide-react';
 import { useState, type SyntheticEvent } from 'react';
-import { Button } from '../../components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '../../components/ui/dialog';
+import { DesignButton, DesignIconButton } from '../../design-system/button';
+import { DesignField } from '../../design-system/form-controls';
 import {
   isDesktopRuntime,
   KdbxGatewayError,
@@ -23,10 +24,15 @@ export function KdbxOpenDialog() {
   const [isOpening, setIsOpening] = useState(false);
   const desktop = isDesktopRuntime();
 
+  const close = () => setOverlay(null);
+
   const chooseDatabase = async () => {
     try {
       const selected = await selectKdbxFile();
-      if (selected) setPath(selected);
+      if (selected) {
+        setPath(selected);
+        setError('');
+      }
     } catch (selectionError) {
       setError(messageFor(selectionError));
     }
@@ -71,95 +77,104 @@ export function KdbxOpenDialog() {
   };
 
   return (
-    <Dialog open onOpenChange={(open) => !open && setOverlay(null)}>
-      <DialogContent>
-        <DialogTitle>Abrir fixture KDBX</DialogTitle>
-        <DialogDescription>
-          Experimento desktop somente leitura. Campos protegidos não serão enviados à interface.
-        </DialogDescription>
+    <Dialog.Root open onOpenChange={(open) => !open && close()}>
+      <Dialog.Portal>
+        <Dialog.Backdrop className="phase-dialog-backdrop" />
+        <Dialog.Viewport className="phase-dialog-viewport">
+          <Dialog.Popup className="kdbx-open-dialog">
+            <form onSubmit={openFixture}>
+              <header className="kdbx-dialog-header">
+                <div>
+                  <span className="editor-context">Fixture pública</span>
+                  <Dialog.Title>Abrir arquivo KDBX</Dialog.Title>
+                  <Dialog.Description>
+                    O núcleo Rust lê metadados; campos protegidos não entram na interface.
+                  </Dialog.Description>
+                </div>
+                <Dialog.Close render={<DesignIconButton label="Fechar" tone="quiet" />}>
+                  <X size={17} aria-hidden="true" />
+                </Dialog.Close>
+              </header>
 
-        <div className="experimental-banner" role="note">
-          <ShieldAlert size={18} />
-          <p>
-            Use apenas as fixtures públicas do projeto. Credenciais reais continuam proibidas no M1.
-          </p>
-        </div>
+              <div className="kdbx-dialog-content">
+                <p className="kdbx-dialog-note" role="note">
+                  M1 experimental — use apenas as fixtures públicas do projeto, nunca credenciais
+                  reais.
+                </p>
 
-        <form className="mt-5 space-y-4" onSubmit={openFixture}>
-          <label className="form-field">
-            <span>Arquivo KDBX</span>
-            <div className="file-picker-row">
-              <span title={path}>
-                {path ? fileNameFromPath(path) : 'Nenhum arquivo selecionado'}
-              </span>
-              <Button type="button" size="sm" onClick={chooseDatabase} disabled={!desktop}>
-                <FolderOpen size={15} />
-                Selecionar
-              </Button>
-            </div>
-          </label>
+                <div className="kdbx-file-list" aria-label="Arquivos da fixture">
+                  <div className="kdbx-file-row">
+                    <FolderOpen size={17} aria-hidden="true" />
+                    <span className="kdbx-file-copy" title={path}>
+                      <strong>Arquivo KDBX</strong>
+                      <small>{path ? fileNameFromPath(path) : 'Nenhum arquivo selecionado'}</small>
+                    </span>
+                    <DesignButton
+                      type="button"
+                      size="sm"
+                      onClick={chooseDatabase}
+                      disabled={!desktop}
+                    >
+                      Selecionar
+                    </DesignButton>
+                  </div>
 
-          <label className="form-field">
-            <span>
-              Arquivo-chave <small>opcional</small>
-            </span>
-            <div className="file-picker-row">
-              <span title={keyFilePath}>
-                {keyFilePath ? fileNameFromPath(keyFilePath) : 'Não utilizado'}
-              </span>
-              <Button type="button" size="sm" onClick={chooseKeyFile} disabled={!desktop}>
-                <FileKey2 size={15} />
-                Selecionar
-              </Button>
-            </div>
-          </label>
+                  <div className="kdbx-file-row">
+                    <FileKey2 size={17} aria-hidden="true" />
+                    <span className="kdbx-file-copy" title={keyFilePath}>
+                      <strong>
+                        Arquivo-chave <em>opcional</em>
+                      </strong>
+                      <small>{keyFilePath ? fileNameFromPath(keyFilePath) : 'Não utilizado'}</small>
+                    </span>
+                    <DesignButton
+                      type="button"
+                      size="sm"
+                      onClick={chooseKeyFile}
+                      disabled={!desktop}
+                    >
+                      Selecionar
+                    </DesignButton>
+                  </div>
+                </div>
 
-          <label className="form-field">
-            <span>Senha pública da fixture</span>
-            <div className="input-actions">
-              <input
-                type="password"
-                value={password}
-                onChange={(event) => {
-                  setPassword(event.target.value);
-                  setError('');
-                }}
-                autoComplete="off"
-                spellCheck={false}
-                disabled={!desktop || isOpening}
-                aria-invalid={Boolean(error)}
-              />
-              <KeyRound size={15} className="mr-3 text-[var(--text-muted)]" />
-            </div>
-          </label>
+                <DesignField
+                  label="Senha pública da fixture"
+                  type="password"
+                  value={password}
+                  onChange={(event) => {
+                    setPassword(event.target.value);
+                    setError('');
+                  }}
+                  autoComplete="off"
+                  spellCheck={false}
+                  disabled={!desktop || isOpening}
+                  error={error}
+                />
 
-          {!desktop && (
-            <p className="form-error" role="status">
-              Abertura KDBX disponível somente ao executar o aplicativo Tauri desktop.
-            </p>
-          )}
-          {error && (
-            <p className="form-error" role="alert">
-              {error}
-            </p>
-          )}
+                {!desktop && (
+                  <p className="kdbx-runtime-note" role="status">
+                    A seleção de arquivos fica disponível no aplicativo desktop.
+                  </p>
+                )}
+              </div>
 
-          <div className="flex justify-end gap-2 pt-2">
-            <Button type="button" variant="ghost" onClick={() => setOverlay(null)}>
-              Cancelar
-            </Button>
-            <Button type="submit" variant="primary" disabled={!desktop || isOpening}>
-              {isOpening ? (
-                <LoaderCircle size={15} className="animate-spin" />
-              ) : (
-                <KeyRound size={15} />
-              )}
-              {isOpening ? 'Validando…' : 'Abrir somente leitura'}
-            </Button>
-          </div>
-        </form>
-      </DialogContent>
-    </Dialog>
+              <footer className="kdbx-dialog-footer">
+                <DesignButton type="button" tone="quiet" onClick={close}>
+                  Cancelar
+                </DesignButton>
+                <DesignButton type="submit" tone="primary" disabled={!desktop || isOpening}>
+                  {isOpening && (
+                    <LoaderCircle size={15} className="animate-spin" aria-hidden="true" />
+                  )}
+                  {isOpening ? 'Validando…' : 'Abrir somente leitura'}
+                </DesignButton>
+              </footer>
+            </form>
+          </Dialog.Popup>
+        </Dialog.Viewport>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }
 

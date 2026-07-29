@@ -1,10 +1,11 @@
-import { Eye, EyeOff, Sparkles, Star } from 'lucide-react';
+import { Dialog } from '@base-ui/react/dialog';
+import { Eye, EyeOff, Sparkles, Star, X } from 'lucide-react';
 import { useMemo, useState, type SyntheticEvent } from 'react';
+import { DesignButton, DesignIconButton } from '../../design-system/button';
+import { DesignCheckbox, DesignField, DesignTextArea } from '../../design-system/form-controls';
 import type { LoginEntry, LoginEntryInput } from '../../domain/entities/entry';
-import { generatePassword } from '../../domain/services/password';
-import { Button } from '../../components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '../../components/ui/dialog';
 import { useVaultStore } from '../../stores/vault-store';
+import { PasswordGenerator } from '../password-generator/password-generator';
 
 const emptyInput: LoginEntryInput = {
   title: '',
@@ -43,26 +44,14 @@ export function EntryDialog({ mode }: { mode: 'create' | 'edit' }) {
   );
   const [tagText, setTagText] = useState(() => input.tags.join(', '));
   const [revealed, setRevealed] = useState(false);
+  const [generatorOpen, setGeneratorOpen] = useState(false);
   const canSubmit = useMemo(
-    () => input.title.trim() && input.username.trim() && input.password,
+    () => Boolean(input.title.trim() && input.username.trim() && input.password),
     [input],
   );
 
   const update = <K extends keyof LoginEntryInput>(key: K, value: LoginEntryInput[K]) =>
     setInput((current) => ({ ...current, [key]: value }));
-
-  const generate = () => {
-    const values = new Uint32Array(20);
-    crypto.getRandomValues(values);
-    update(
-      'password',
-      generatePassword(
-        { length: 20, uppercase: true, lowercase: true, numbers: true, symbols: true },
-        values,
-      ),
-    );
-    setRevealed(true);
-  };
 
   const submit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -81,105 +70,182 @@ export function EntryDialog({ mode }: { mode: 'create' | 'edit' }) {
     else createLogin(finalInput);
   };
 
+  const close = () => setOverlay(null);
+
   return (
-    <Dialog open onOpenChange={(open) => !open && setOverlay(null)}>
-      <DialogContent>
-        <DialogTitle>{mode === 'create' ? 'Novo login' : 'Editar login'}</DialogTitle>
-        <DialogDescription>
-          {mode === 'create'
-            ? 'Crie um item apenas para esta sessão de demonstração.'
-            : 'As alterações não serão salvas no disco.'}
-        </DialogDescription>
-        <form className="mt-5 space-y-4" onSubmit={submit}>
-          <label className="form-field">
-            <span>Título</span>
-            <input
-              autoFocus
-              required
-              value={input.title}
-              onChange={(event) => update('title', event.target.value)}
-              placeholder="Ex.: GitHub"
-            />
-          </label>
-          <label className="form-field">
-            <span>Usuário</span>
-            <input
-              required
-              value={input.username}
-              onChange={(event) => update('username', event.target.value)}
-              placeholder="nome@example.test"
-              autoComplete="off"
-            />
-          </label>
-          <div className="form-field">
-            <span>Senha de demonstração</span>
-            <div className="input-actions">
-              <input
-                required
-                type={revealed ? 'text' : 'password'}
-                value={input.password}
-                onChange={(event) => update('password', event.target.value)}
-                autoComplete="new-password"
-              />
-              <button
-                type="button"
-                onClick={() => setRevealed((value) => !value)}
-                aria-label={revealed ? 'Ocultar senha' : 'Mostrar senha'}
-              >
-                {revealed ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
-              <button type="button" onClick={generate} aria-label="Gerar senha">
-                <Sparkles size={16} />
-              </button>
-            </div>
-          </div>
-          <label className="form-field">
-            <span>URL</span>
-            <input
-              type="url"
-              value={input.url}
-              onChange={(event) => update('url', event.target.value)}
-              placeholder="https://example.test"
-            />
-          </label>
-          <label className="form-field">
-            <span>
-              Tags <small>separadas por vírgula</small>
-            </span>
-            <input
-              value={tagText}
-              onChange={(event) => setTagText(event.target.value)}
-              placeholder="dev, pessoal"
-            />
-          </label>
-          <label className="form-field">
-            <span>Notas</span>
-            <textarea
-              rows={3}
-              value={input.notes}
-              onChange={(event) => update('notes', event.target.value)}
-              placeholder="Contexto útil, sem dados reais."
-            />
-          </label>
-          <label className="favorite-toggle">
-            <input
-              type="checkbox"
-              checked={input.favorite}
-              onChange={(event) => update('favorite', event.target.checked)}
-            />
-            <Star size={16} fill={input.favorite ? 'currentColor' : 'none'} />
-            Adicionar aos favoritos
-          </label>
-          <div className="flex justify-end gap-2 pt-2">
-            <Button type="button" variant="ghost" onClick={() => setOverlay(null)}>
-              Cancelar
-            </Button>
-            <Button type="submit" variant="primary" disabled={!canSubmit}>
-              {mode === 'create' ? 'Criar item' : 'Salvar alterações'}
-            </Button>
-          </div>
-        </form>
-      </DialogContent>
-    </Dialog>
+    <Dialog.Root open onOpenChange={(open) => !open && close()}>
+      <Dialog.Portal>
+        <Dialog.Backdrop className="phase-dialog-backdrop" />
+        <Dialog.Viewport className="phase-dialog-viewport">
+          <Dialog.Popup className="entry-editor-dialog">
+            <form className="entry-editor-form" onSubmit={submit}>
+              <header className="entry-editor-header">
+                <div>
+                  <span className="editor-context">
+                    {mode === 'create' ? 'Nova entrada' : 'Entrada selecionada'}
+                  </span>
+                  <Dialog.Title>
+                    {mode === 'create' ? 'Criar login' : `Editar ${selected?.title ?? 'login'}`}
+                  </Dialog.Title>
+                  <Dialog.Description>
+                    {mode === 'create'
+                      ? 'Adicione uma credencial a esta sessão local de demonstração.'
+                      : 'Revise os campos sem gravar qualquer dado no disco.'}
+                  </Dialog.Description>
+                </div>
+                <Dialog.Close render={<DesignIconButton label="Fechar editor" tone="quiet" />}>
+                  <X size={17} aria-hidden="true" />
+                </Dialog.Close>
+              </header>
+
+              <div className="entry-editor-content">
+                <section className="editor-section" aria-labelledby="identity-heading">
+                  <header>
+                    <span>01</span>
+                    <div>
+                      <h2 id="identity-heading">Identidade</h2>
+                      <p>Nome e endereço usados para reconhecer esta conta.</p>
+                    </div>
+                  </header>
+                  <div className="editor-field-grid">
+                    <DesignField
+                      label="Título"
+                      autoFocus
+                      required
+                      value={input.title}
+                      onChange={(event) => update('title', event.target.value)}
+                      placeholder="Ex.: GitHub"
+                      description="Nome visível na lista do cofre."
+                    />
+                    <DesignField
+                      label="URL"
+                      type="url"
+                      value={input.url}
+                      onChange={(event) => update('url', event.target.value)}
+                      placeholder="https://example.test"
+                    />
+                  </div>
+                </section>
+
+                <section className="editor-section" aria-labelledby="credential-heading">
+                  <header>
+                    <span>02</span>
+                    <div>
+                      <h2 id="credential-heading">Credencial</h2>
+                      <p>O valor permanece somente na memória durante esta demonstração.</p>
+                    </div>
+                  </header>
+                  <div className="editor-field-grid">
+                    <DesignField
+                      label="Usuário"
+                      required
+                      value={input.username}
+                      onChange={(event) => update('username', event.target.value)}
+                      placeholder="nome@example.test"
+                      autoComplete="off"
+                    />
+                    <label className="editor-password-field">
+                      <span>Senha de demonstração</span>
+                      <div className="editor-password-control">
+                        <input
+                          required
+                          type={revealed ? 'text' : 'password'}
+                          value={input.password}
+                          onChange={(event) => update('password', event.target.value)}
+                          autoComplete="new-password"
+                        />
+                        <DesignIconButton
+                          type="button"
+                          tone="quiet"
+                          label={revealed ? 'Ocultar senha' : 'Mostrar senha'}
+                          onClick={() => setRevealed((value) => !value)}
+                        >
+                          {revealed ? <EyeOff size={15} /> : <Eye size={15} />}
+                        </DesignIconButton>
+                        <DesignButton
+                          type="button"
+                          tone="quiet"
+                          size="sm"
+                          onClick={() => setGeneratorOpen((open) => !open)}
+                          aria-expanded={generatorOpen}
+                        >
+                          <Sparkles size={14} aria-hidden="true" />
+                          Gerar
+                        </DesignButton>
+                      </div>
+                    </label>
+                  </div>
+                  {generatorOpen && (
+                    <div className="editor-embedded-generator">
+                      <PasswordGenerator
+                        variant="embedded"
+                        onClose={() => setGeneratorOpen(false)}
+                        onUse={(generatedValue) => {
+                          update('password', generatedValue);
+                          setRevealed(true);
+                          setGeneratorOpen(false);
+                        }}
+                      />
+                    </div>
+                  )}
+                </section>
+
+                <section className="editor-section" aria-labelledby="organization-heading">
+                  <header>
+                    <span>03</span>
+                    <div>
+                      <h2 id="organization-heading">Organização</h2>
+                      <p>Metadados opcionais para recuperar o item mais tarde.</p>
+                    </div>
+                  </header>
+                  <div className="editor-field-grid editor-field-grid--notes">
+                    <DesignField
+                      label="Tags"
+                      value={tagText}
+                      onChange={(event) => setTagText(event.target.value)}
+                      placeholder="dev, pessoal"
+                      description="Separe os termos por vírgula."
+                    />
+                    <DesignTextArea
+                      label="Notas"
+                      rows={4}
+                      value={input.notes}
+                      onChange={(event) => update('notes', event.target.value)}
+                      placeholder="Contexto útil, sem dados reais."
+                    />
+                  </div>
+                  <div className="editor-favorite-row">
+                    <DesignCheckbox
+                      label="Adicionar aos favoritos"
+                      checked={input.favorite}
+                      onCheckedChange={(checked) => update('favorite', checked)}
+                    />
+                    <Star
+                      size={15}
+                      fill={input.favorite ? 'currentColor' : 'none'}
+                      aria-hidden="true"
+                    />
+                  </div>
+                </section>
+              </div>
+
+              <footer className="entry-editor-footer">
+                <p>
+                  <i aria-hidden="true" /> Alterações locais · sem persistência
+                </p>
+                <div>
+                  <DesignButton type="button" tone="quiet" onClick={close}>
+                    Cancelar
+                  </DesignButton>
+                  <DesignButton type="submit" tone="primary" disabled={!canSubmit}>
+                    {mode === 'create' ? 'Criar item' : 'Salvar alterações'}
+                  </DesignButton>
+                </div>
+              </footer>
+            </form>
+          </Dialog.Popup>
+        </Dialog.Viewport>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }

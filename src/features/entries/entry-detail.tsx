@@ -1,26 +1,14 @@
-import {
-  CreditCard,
-  ExternalLink,
-  Eye,
-  EyeOff,
-  FileText,
-  IdCard,
-  KeyRound,
-  Pencil,
-  RotateCw,
-  Star,
-  Trash2,
-} from 'lucide-react';
-import { useState } from 'react';
+import { ExternalLink, Eye, EyeOff, Star } from 'lucide-react';
+import { useState, type ReactNode } from 'react';
+import { CopyButton } from '../../components/common/copy-button';
 import { EntryLogo } from '../../components/common/entry-logo';
+import { DesignButton } from '../../design-system/button';
 import type { VaultEntry } from '../../domain/entities/entry';
 import { evaluatePasswordStrength } from '../../domain/services/password';
 import { cn } from '../../lib/utils';
 import { useVaultStore } from '../../stores/vault-store';
-import { CopyButton } from '../../components/common/copy-button';
-import { Button } from '../../components/ui/button';
 
-function DetailRow({ label, children }: { label: string; children: React.ReactNode }) {
+function DetailRow({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="detail-row">
       <dt>{label}</dt>
@@ -29,12 +17,11 @@ function DetailRow({ label, children }: { label: string; children: React.ReactNo
   );
 }
 
-const renderTypeIcon = (entry: VaultEntry) => {
-  const props = { size: 15, className: 'text-[var(--text-muted)]' };
-  if (entry.type === 'card') return <CreditCard {...props} />;
-  if (entry.type === 'identity') return <IdCard {...props} />;
-  if (entry.type === 'secure-note') return <FileText {...props} />;
-  return <KeyRound {...props} />;
+const typeLabelFor = (entry: VaultEntry) => {
+  if (entry.type === 'card') return 'Cartão';
+  if (entry.type === 'identity') return 'Identidade';
+  if (entry.type === 'secure-note') return 'Nota segura';
+  return 'Login';
 };
 
 export function EntryDetail() {
@@ -51,61 +38,55 @@ export function EntryDetail() {
   if (!entry) {
     return (
       <section className="detail-panel empty-detail">
-        <KeyRound size={28} />
-        <p>Selecione um item para ver os detalhes.</p>
+        <strong>Nenhum item selecionado</strong>
+        <p>Escolha uma linha para consultar seus detalhes.</p>
       </section>
     );
   }
 
   const revealed = revealedEntryId === entry.id;
   const safeUrl = entry.type === 'login' && /^https?:\/\//i.test(entry.url) ? entry.url : null;
+  const passwordStrength =
+    entry.type === 'login' && !readOnlySession ? evaluatePasswordStrength(entry.password) : null;
 
   return (
     <section className="detail-panel" aria-labelledby="entry-detail-title">
       <div className="detail-heading">
         <EntryLogo entry={entry} size="detail" />
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            {renderTypeIcon(entry)}
-            <h2 id="entry-detail-title" className="truncate">
-              {entry.title}
-            </h2>
-          </div>
-          <p>
-            {entry.type === 'login'
-              ? 'Login'
-              : entry.type === 'card'
-                ? 'Cartão'
-                : entry.type === 'identity'
-                  ? 'Identidade'
-                  : 'Nota segura'}
-          </p>
+        <div className="detail-heading-copy">
+          <h2 id="entry-detail-title" title={entry.title}>
+            {entry.title}
+          </h2>
+          <p>{typeLabelFor(entry)}</p>
         </div>
         {!readOnlySession && (
           <button
-            className={cn('icon-button', entry.favorite && 'is-favorite')}
+            className={cn('detail-favorite-action', entry.favorite && 'is-favorite')}
             aria-label={entry.favorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
             onClick={() => toggleFavorite(entry.id)}
+            type="button"
           >
-            <Star size={17} fill={entry.favorite ? 'currentColor' : 'none'} />
+            <Star
+              size={16}
+              strokeWidth={1.7}
+              fill={entry.favorite ? 'currentColor' : 'none'}
+              aria-hidden="true"
+            />
           </button>
         )}
       </div>
 
       <dl className="detail-body">
-        <DetailRow label="Título">
-          <span>{entry.title}</span>
-        </DetailRow>
         {entry.type === 'login' && (
           <>
             <DetailRow label="URL">
               {safeUrl ? (
                 <a className="detail-link" href={safeUrl} target="_blank" rel="noreferrer">
-                  {entry.url}
-                  <ExternalLink size={13} />
+                  <span>{entry.url}</span>
+                  <ExternalLink size={12} strokeWidth={1.7} aria-hidden="true" />
                 </a>
               ) : (
-                <span className="text-[var(--text-muted)]">Não informada</span>
+                <span className="detail-empty-value">Não informada</span>
               )}
             </DetailRow>
             <DetailRow label="Usuário">
@@ -116,33 +97,32 @@ export function EntryDetail() {
             </DetailRow>
             {!readOnlySession && (
               <DetailRow label="Senha">
-                <div className="space-y-2">
+                <div className="password-block">
                   <span className="value-with-action">
-                    <code className="tracking-[0.16em]">
-                      {revealed ? entry.password : '••••••••••••'}
-                    </code>
-                    <span className="flex gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="size-7 min-h-7"
+                    <code>{revealed ? entry.password : '••••••••••••'}</code>
+                    <span className="detail-value-actions">
+                      <button
+                        className="detail-value-action"
                         onClick={() => setRevealedEntryId(revealed ? null : entry.id)}
                         aria-label={revealed ? 'Ocultar senha' : 'Mostrar senha'}
+                        title={revealed ? 'Ocultar senha' : 'Mostrar senha'}
+                        type="button"
                       >
-                        {revealed ? <EyeOff size={14} /> : <Eye size={14} />}
-                      </Button>
+                        {revealed ? (
+                          <EyeOff size={14} aria-hidden="true" />
+                        ) : (
+                          <Eye size={14} aria-hidden="true" />
+                        )}
+                      </button>
                       <CopyButton value={entry.password} label="Senha" compact />
                     </span>
                   </span>
-                  <span className="strength-meter">
-                    {[1, 2, 3, 4].map((segment) => (
-                      <i
-                        key={segment}
-                        data-active={segment <= evaluatePasswordStrength(entry.password).score}
-                      />
-                    ))}
-                    <small>{evaluatePasswordStrength(entry.password).label}</small>
-                  </span>
+                  {passwordStrength && (
+                    <span className="password-strength" data-level={passwordStrength.level}>
+                      <i aria-hidden="true" />
+                      Força {passwordStrength.label.toLocaleLowerCase('pt-BR')}
+                    </span>
+                  )}
                 </div>
               </DetailRow>
             )}
@@ -150,7 +130,7 @@ export function EntryDetail() {
               <DetailRow label="Código 2FA">
                 <span className="totp-value">
                   <strong>{entry.totp.mockCode}</strong>
-                  <span aria-label="18 segundos restantes">18</span>
+                  <small>atualiza em 18 s</small>
                   <CopyButton
                     value={entry.totp.mockCode.replace(' ', '')}
                     label="Código 2FA"
@@ -161,6 +141,7 @@ export function EntryDetail() {
             )}
           </>
         )}
+
         {entry.type === 'card' && (
           <>
             <DetailRow label="Titular">
@@ -174,6 +155,7 @@ export function EntryDetail() {
             </DetailRow>
           </>
         )}
+
         {entry.type === 'identity' && (
           <>
             <DetailRow label="Nome">
@@ -181,25 +163,29 @@ export function EntryDetail() {
             </DetailRow>
             <DetailRow label="E-mail">
               <span className="value-with-action">
-                {entry.email}
+                <span className="truncate">{entry.email}</span>
                 <CopyButton value={entry.email} label="E-mail" compact />
               </span>
             </DetailRow>
           </>
         )}
+
         {entry.type === 'secure-note' && (
           <DetailRow label="Conteúdo">
-            <p className="leading-6">{entry.content}</p>
+            <p className="detail-long-copy">{entry.content}</p>
           </DetailRow>
         )}
+
         {readOnlySession && (
           <DetailRow label="Proteção">
-            <div className="read-only-notice">
-              Senha, TOTP, notas, histórico e anexos permaneceram no núcleo Rust.
-            </div>
+            <span className="read-only-notice">
+              <strong>Segredos isolados</strong>
+              <span>Senha, TOTP, notas, histórico e anexos permaneceram no núcleo Rust.</span>
+            </span>
           </DetailRow>
         )}
-        {!readOnlySession && (
+
+        {!readOnlySession && entry.tags.length > 0 && (
           <DetailRow label="Tags">
             <span className="tag-list">
               {entry.tags.map((tag) => (
@@ -208,11 +194,13 @@ export function EntryDetail() {
             </span>
           </DetailRow>
         )}
+
         {!readOnlySession && (
           <DetailRow label="Notas">
             <p className="detail-note">{entry.notes || 'Nenhuma nota.'}</p>
           </DetailRow>
         )}
+
         <DetailRow label="Atualizado">
           <time>
             {new Date(entry.updatedAt).toLocaleString('pt-BR', {
@@ -224,23 +212,24 @@ export function EntryDetail() {
       </dl>
 
       {!readOnlySession && (
-        <div className="detail-actions">
-          <Button
-            variant="secondary"
+        <div className="detail-actions" aria-label="Ações do item">
+          <DesignButton
+            tone="secondary"
             disabled={entry.type !== 'login'}
             onClick={() => setOverlay('entry-edit')}
           >
-            <Pencil size={15} />
             Editar
-          </Button>
-          <Button variant="secondary" onClick={() => duplicateEntry(entry.id)}>
-            <RotateCw size={15} />
+          </DesignButton>
+          <DesignButton tone="quiet" onClick={() => duplicateEntry(entry.id)}>
             Duplicar
-          </Button>
-          <Button variant="danger" onClick={() => trashEntry(entry.id)}>
-            <Trash2 size={15} />
-            Excluir
-          </Button>
+          </DesignButton>
+          <DesignButton
+            tone="quiet"
+            className="detail-delete-action"
+            onClick={() => trashEntry(entry.id)}
+          >
+            Mover para a lixeira
+          </DesignButton>
         </div>
       )}
     </section>

@@ -3,7 +3,28 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { useVaultStore } from '../stores/vault-store';
 import { mockEntries } from '../infrastructure/mocks/entries';
 import { mockGroups, mockVaults } from '../infrastructure/mocks/vaults';
+import type { OpenKdbxResult } from '../infrastructure/tauri/kdbx-gateway';
 import { App } from './app';
+
+const readOnlyResult: OpenKdbxResult = {
+  sessionId: 'ui-session',
+  database: {
+    name: 'Fixture pública',
+    format: 'KDBX 4.1',
+    groups: [{ id: 'root', name: 'Passwords', depth: 0 }],
+    entries: [
+      {
+        id: 'fixture-entry',
+        groupId: 'root',
+        title: 'Fixture entry',
+        username: 'demo-user',
+        url: 'https://example.test',
+        favorite: false,
+      },
+    ],
+  },
+  capabilities: { read: true, write: false, revealSecrets: false },
+};
 
 describe('main application flows', () => {
   beforeEach(() => {
@@ -34,5 +55,101 @@ describe('main application flows', () => {
     render(<App />);
     fireEvent.keyDown(window, { key: 'k', ctrlKey: true });
     expect(screen.getByPlaceholderText('Buscar item ou executar ação…')).toBeInTheDocument();
+  });
+
+  it('keeps the password generator visible among the first command actions', () => {
+    render(<App />);
+    fireEvent.keyDown(window, { key: 'k', ctrlKey: true });
+    expect(screen.getByText('Abrir gerador de senha')).toBeInTheDocument();
+  });
+
+  it('creates a login through the structured task dialog', () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Novo item' }));
+    expect(screen.getByRole('heading', { name: 'Criar login' })).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText('Título'), { target: { value: 'Conta de teste' } });
+    fireEvent.change(screen.getByLabelText('Usuário'), { target: { value: 'joao@example.test' } });
+    fireEvent.change(screen.getByLabelText('Senha de demonstração'), {
+      target: { value: 'local-only-password' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Criar item' }));
+    expect(screen.getByRole('heading', { name: 'Conta de teste' })).toBeInTheDocument();
+  });
+
+  it('opens the generator as a dedicated tool with password and passphrase modes', () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Gerador de senhas' }));
+    expect(screen.getByRole('heading', { name: 'Gerador de senhas' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('tab', { name: 'Frase secreta' }));
+    expect(screen.getByText('Palavras')).toBeInTheDocument();
+    expect(screen.getByRole('radiogroup', { name: 'Separador da frase' })).toBeInTheDocument();
+  });
+
+  it('applies a generated value directly inside the entry editor', () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Novo item' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Gerar' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Usar este valor' }));
+    expect(screen.getByLabelText('Senha de demonstração')).not.toHaveValue('');
+  });
+
+  it('opens settings as a dedicated view and applies the theme directly', () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Configurações' }));
+    expect(screen.getByRole('heading', { name: 'Configurações' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('radio', { name: /Claro/ }));
+    expect(useVaultStore.getState().theme).toBe('light');
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(screen.getByRole('heading', { name: 'Todos os itens' })).toBeInTheDocument();
+  });
+
+  it('opens the vault selector from the integrated top bar', () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Selecionar cofre' }));
+    expect(screen.getByText('Cofres disponíveis')).toBeInTheDocument();
+    expect(screen.getByText('Trabalho.kdbx')).toBeInTheDocument();
+  });
+
+  it('opens a task-specific dialog for public KDBX fixtures', () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Selecionar cofre' }));
+    fireEvent.click(screen.getByText(/Abrir fixture KDBX/));
+    expect(screen.getByRole('heading', { name: 'Abrir arquivo KDBX' })).toBeInTheDocument();
+    expect(screen.getByText('Arquivo KDBX')).toBeInTheDocument();
+    expect(screen.getByText(/Arquivo-chave/)).toBeInTheDocument();
+    expect(screen.getByLabelText('Senha pública da fixture')).toBeInTheDocument();
+  });
+
+  it('summarizes the read-only boundary without repeated safety cards', () => {
+    useVaultStore.getState().activateReadOnlyVault(readOnlyResult, 'fixture.kdbx');
+    render(<App />);
+    expect(screen.getByText('Somente leitura')).toBeInTheDocument();
+    expect(screen.getByText('Leitura isolada · sem segredos no React')).toBeInTheDocument();
+    expect(screen.getByText(/permaneceram no núcleo Rust/)).toBeInTheDocument();
+    expect(screen.queryByText('Capacidades fechadas')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Novo item' })).toBeDisabled();
+  });
+
+  it('keeps the theme switch visible in the top bar', () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Usar tema claro' }));
+    expect(useVaultStore.getState().theme).toBe('light');
+    expect(screen.getByRole('button', { name: 'Usar tema escuro' })).toBeInTheDocument();
+  });
+
+  it('moves through the continuous entry list with arrow keys', () => {
+    render(<App />);
+    const github = screen.getByTitle('GitHub — joaovictor');
+    fireEvent.keyDown(github, { key: 'ArrowDown' });
+    expect(useVaultStore.getState().selectedEntryId).toBe('google');
+    expect(screen.getByRole('heading', { name: 'Google' })).toBeInTheDocument();
+  });
+
+  it('renders the work vault with its own list and detail content', () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Trabalho' }));
+    expect(screen.getAllByRole('listitem')).toHaveLength(3);
+    expect(screen.getByRole('heading', { name: 'AWS' })).toBeInTheDocument();
+    expect(screen.getByText('Ambiente fictício de desenvolvimento.')).toBeInTheDocument();
   });
 });

@@ -1,15 +1,22 @@
-import { Copy, RefreshCw, Sparkles } from 'lucide-react';
-import { useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { Check, Copy, RefreshCw, Sparkles, X } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { DesignButton, DesignIconButton } from '../../design-system/button';
+import { DesignCheckbox, DesignSlider } from '../../design-system/form-controls';
 import {
-  evaluatePasswordStrength,
+  estimatePassphraseEntropy,
+  estimatePasswordEntropy,
+  generatePassphrase,
   generatePassword,
+  type PassphraseOptions,
   type PasswordOptions,
 } from '../../domain/services/password';
-import { Button } from '../../components/ui/button';
 import { useVaultStore } from '../../stores/vault-store';
 import { useClipboardStore } from '../clipboard/clipboard-store';
 
-const defaultOptions: PasswordOptions = {
+type GeneratorMode = 'password' | 'passphrase';
+
+const defaultPasswordOptions: PasswordOptions = {
   length: 20,
   uppercase: true,
   lowercase: true,
@@ -17,37 +24,104 @@ const defaultOptions: PasswordOptions = {
   symbols: true,
 };
 
-function createGeneratedPassword(options: PasswordOptions): string {
+const defaultPassphraseOptions: PassphraseOptions = {
+  wordCount: 5,
+  separator: '-',
+  capitalize: false,
+  includeNumber: true,
+};
+
+const createPassword = (options: PasswordOptions) => {
   const values = new Uint32Array(options.length);
   crypto.getRandomValues(values);
   return generatePassword(options, values);
+};
+
+const createPassphrase = (options: PassphraseOptions) => {
+  const values = new Uint32Array(options.wordCount + (options.includeNumber ? 1 : 0));
+  crypto.getRandomValues(values);
+  return generatePassphrase(options, values);
+};
+
+const describeEntropy = (entropy: number) => {
+  if (entropy < 45) return 'Essencial';
+  if (entropy < 70) return 'Boa';
+  if (entropy < 100) return 'Forte';
+  return 'Muito forte';
+};
+
+interface PasswordGeneratorProps {
+  variant?: 'workspace' | 'embedded';
+  compact?: boolean;
+  onUse?: (value: string) => void;
+  onClose?: () => void;
 }
 
-export function PasswordGenerator({ compact = false }: { compact?: boolean }) {
-  const [options, setOptions] = useState(defaultOptions);
-  const [password, setPassword] = useState(() => createGeneratedPassword(defaultOptions));
+export function PasswordGenerator({
+  variant = 'workspace',
+  onUse,
+  onClose,
+}: PasswordGeneratorProps) {
+  const [mode, setMode] = useState<GeneratorMode>('password');
+  const [passwordOptions, setPasswordOptions] = useState(defaultPasswordOptions);
+  const [passphraseOptions, setPassphraseOptions] = useState(defaultPassphraseOptions);
+  const [value, setValue] = useState(() => createPassword(defaultPasswordOptions));
+  const [copied, setCopied] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
   const showToast = useVaultStore((state) => state.showToast);
   const copy = useClipboardStore((state) => state.copy);
-  const strength = evaluatePasswordStrength(password);
 
-  const regenerate = (nextOptions = options) => setPassword(createGeneratedPassword(nextOptions));
+  const entropy = useMemo(
+    () =>
+      mode === 'password'
+        ? estimatePasswordEntropy(passwordOptions)
+        : estimatePassphraseEntropy(passphraseOptions),
+    [mode, passphraseOptions, passwordOptions],
+  );
+  const strength = describeEntropy(entropy);
+  const meterWidth = Math.min(100, Math.max(12, (entropy / 128) * 100));
 
-  const updateOptions = (nextOptions: PasswordOptions) => {
-    setOptions(nextOptions);
-    regenerate(nextOptions);
+  const regenerate = (
+    nextMode = mode,
+    nextPasswordOptions = passwordOptions,
+    nextPassphraseOptions = passphraseOptions,
+  ) => {
+    setValue(
+      nextMode === 'password'
+        ? createPassword(nextPasswordOptions)
+        : createPassphrase(nextPassphraseOptions),
+    );
+    setCopied(false);
   };
 
-  const toggle = (key: keyof Omit<PasswordOptions, 'length'>) => {
-    const enabledCount = Object.entries(options).filter(
-      ([option, value]) => option !== 'length' && value,
+  const changeMode = (nextMode: GeneratorMode) => {
+    setMode(nextMode);
+    regenerate(nextMode);
+  };
+
+  const updatePasswordOptions = (nextOptions: PasswordOptions) => {
+    setPasswordOptions(nextOptions);
+    regenerate('password', nextOptions, passphraseOptions);
+  };
+
+  const updatePassphraseOptions = (nextOptions: PassphraseOptions) => {
+    setPassphraseOptions(nextOptions);
+    regenerate('passphrase', passwordOptions, nextOptions);
+  };
+
+  const togglePasswordSet = (key: keyof Omit<PasswordOptions, 'length'>) => {
+    const enabledCount = Object.entries(passwordOptions).filter(
+      ([option, enabled]) => option !== 'length' && enabled,
     ).length;
-    if (options[key] && enabledCount === 1) return;
-    updateOptions({ ...options, [key]: !options[key] });
+    if (passwordOptions[key] && enabledCount === 1) return;
+    updatePasswordOptions({ ...passwordOptions, [key]: !passwordOptions[key] });
   };
 
-  const copyPassword = async () => {
+  const copyValue = async () => {
     try {
-      await copy(password, 'Senha gerada');
+      await copy(value, mode === 'password' ? 'Senha gerada' : 'Frase secreta gerada');
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1500);
     } catch {
       showToast({
         title: 'Não foi possível copiar',
@@ -58,81 +132,217 @@ export function PasswordGenerator({ compact = false }: { compact?: boolean }) {
   };
 
   return (
-    <section className={compact ? 'utility-card' : 'space-y-4'} aria-labelledby="generator-title">
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <Sparkles size={16} className="text-[var(--brand-blue-strong)]" />
-          <h2 id="generator-title" className="text-sm font-medium">
-            Gerador de senhas
-          </h2>
-        </div>
-        <span className="text-xs font-medium text-[var(--success)]">{strength.label}</span>
-      </div>
-
-      <div className="mt-3 flex items-center gap-1 rounded-[var(--radius-md)] border border-[var(--border)] bg-[var(--surface-deep)] p-1 pl-2.5">
-        <code className="min-w-0 flex-1 truncate text-xs text-[var(--text-primary)]">
-          {password}
-        </code>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="size-7 min-h-7"
-          onClick={() => regenerate()}
-          aria-label="Gerar outra senha"
-        >
-          <RefreshCw size={14} />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="size-7 min-h-7"
-          onClick={copyPassword}
-          aria-label="Copiar senha gerada"
-        >
-          <Copy size={14} />
-        </Button>
-      </div>
-
-      <div className="mt-3 flex items-center justify-between text-xs text-[var(--text-muted)]">
-        <label htmlFor={`password-length-${compact ? 'compact' : 'dialog'}`}>Comprimento</label>
-        <output className="rounded bg-[var(--surface-active)] px-1.5 py-0.5 text-[var(--text-secondary)]">
-          {options.length}
-        </output>
-      </div>
-      <input
-        id={`password-length-${compact ? 'compact' : 'dialog'}`}
-        className="range mt-2 w-full"
-        type="range"
-        min="8"
-        max="40"
-        value={options.length}
-        onChange={(event) => updateOptions({ ...options, length: Number(event.target.value) })}
-      />
-
-      <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
-        {(
-          [
-            ['uppercase', 'A–Z'],
-            ['lowercase', 'a–z'],
-            ['numbers', '0–9'],
-            ['symbols', 'Símbolos'],
-          ] as const
-        ).map(([key, label]) => (
-          <label
-            key={key}
-            className="flex min-h-7 cursor-pointer items-center gap-2 text-[var(--text-secondary)]"
+    <section
+      className={variant === 'workspace' ? 'password-tool-view' : 'password-tool-embedded'}
+      aria-labelledby={
+        variant === 'workspace' ? 'generator-workspace-title' : 'generator-embedded-title'
+      }
+    >
+      <header className="password-tool-header">
+        <div>
+          <span className="password-tool-context">Ferramenta local</span>
+          <h1
+            id={variant === 'workspace' ? 'generator-workspace-title' : 'generator-embedded-title'}
           >
-            <input type="checkbox" checked={options[key]} onChange={() => toggle(key)} />
-            {label}
-          </label>
-        ))}
+            Gerador de senhas
+          </h1>
+          <p>Crie um valor forte sem histórico, persistência ou chamadas externas.</p>
+        </div>
+        {onClose && (
+          <DesignIconButton label="Fechar gerador" tone="quiet" onClick={onClose}>
+            <X size={17} aria-hidden="true" />
+          </DesignIconButton>
+        )}
+      </header>
+
+      <div className="password-tool-body">
+        <div className="password-tool-primary">
+          <div className="password-mode-switch" role="tablist" aria-label="Tipo de geração">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={mode === 'password'}
+              className={mode === 'password' ? 'is-active' : undefined}
+              onClick={() => changeMode('password')}
+            >
+              Senha
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={mode === 'passphrase'}
+              className={mode === 'passphrase' ? 'is-active' : undefined}
+              onClick={() => changeMode('passphrase')}
+            >
+              Frase secreta
+            </button>
+          </div>
+
+          <div className="password-result" aria-live="polite">
+            <span>Resultado</span>
+            <div className="password-result-line">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.code
+                  key={value}
+                  initial={shouldReduceMotion ? false : { opacity: 0, y: 5, filter: 'blur(3px)' }}
+                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                  exit={shouldReduceMotion ? undefined : { opacity: 0, y: -5, filter: 'blur(3px)' }}
+                  transition={{ duration: 0.18, ease: 'easeOut' }}
+                >
+                  {value}
+                </motion.code>
+              </AnimatePresence>
+              <div className="password-result-actions">
+                <DesignIconButton label="Gerar novamente" tone="quiet" onClick={() => regenerate()}>
+                  <RefreshCw size={16} aria-hidden="true" />
+                </DesignIconButton>
+                <DesignIconButton label="Copiar valor gerado" tone="quiet" onClick={copyValue}>
+                  {copied ? (
+                    <Check size={16} aria-hidden="true" />
+                  ) : (
+                    <Copy size={16} aria-hidden="true" />
+                  )}
+                </DesignIconButton>
+              </div>
+            </div>
+            <div className="password-strength-track" aria-hidden="true">
+              <motion.i
+                animate={{ width: `${String(meterWidth)}%` }}
+                transition={
+                  shouldReduceMotion
+                    ? { duration: 0 }
+                    : { duration: 0.48, ease: [0.22, 1, 0.36, 1] }
+                }
+              />
+            </div>
+            <div className="password-strength-copy">
+              <strong>{copied ? 'Copiado' : strength}</strong>
+              <span>{entropy} bits estimados · cálculo local</span>
+            </div>
+          </div>
+
+          <div className="password-privacy-note">
+            <i aria-hidden="true" />
+            <span>Nenhum valor gerado é armazenado pelo MyVault.</span>
+          </div>
+        </div>
+
+        <div className="password-tool-controls">
+          {mode === 'password' ? (
+            <>
+              <div className="generator-control-section">
+                <span>Composição</span>
+                <DesignSlider
+                  label="Comprimento"
+                  min={8}
+                  max={64}
+                  value={passwordOptions.length}
+                  onValueChange={(length) => updatePasswordOptions({ ...passwordOptions, length })}
+                />
+              </div>
+              <div className="generator-control-section generator-check-grid">
+                <DesignCheckbox
+                  label="Maiúsculas"
+                  checked={passwordOptions.uppercase}
+                  onCheckedChange={() => togglePasswordSet('uppercase')}
+                />
+                <DesignCheckbox
+                  label="Minúsculas"
+                  checked={passwordOptions.lowercase}
+                  onCheckedChange={() => togglePasswordSet('lowercase')}
+                />
+                <DesignCheckbox
+                  label="Números"
+                  checked={passwordOptions.numbers}
+                  onCheckedChange={() => togglePasswordSet('numbers')}
+                />
+                <DesignCheckbox
+                  label="Símbolos"
+                  checked={passwordOptions.symbols}
+                  onCheckedChange={() => togglePasswordSet('symbols')}
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="generator-control-section">
+                <span>Estrutura</span>
+                <DesignSlider
+                  label="Palavras"
+                  min={3}
+                  max={8}
+                  value={passphraseOptions.wordCount}
+                  onValueChange={(wordCount) =>
+                    updatePassphraseOptions({ ...passphraseOptions, wordCount })
+                  }
+                />
+              </div>
+              <div className="generator-control-section">
+                <span>Separador</span>
+                <div
+                  className="separator-options"
+                  role="radiogroup"
+                  aria-label="Separador da frase"
+                >
+                  {(
+                    [
+                      ['-', 'Hífen'],
+                      [' ', 'Espaço'],
+                      ['_', 'Sublinhado'],
+                    ] as const
+                  ).map(([separator, label]) => (
+                    <button
+                      type="button"
+                      role="radio"
+                      aria-checked={passphraseOptions.separator === separator}
+                      className={
+                        passphraseOptions.separator === separator ? 'is-selected' : undefined
+                      }
+                      key={label}
+                      onClick={() => updatePassphraseOptions({ ...passphraseOptions, separator })}
+                    >
+                      <code>{separator === ' ' ? '␠' : separator}</code>
+                      <span>{label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="generator-control-section generator-check-grid">
+                <DesignCheckbox
+                  label="Iniciais maiúsculas"
+                  checked={passphraseOptions.capitalize}
+                  onCheckedChange={(capitalize) =>
+                    updatePassphraseOptions({ ...passphraseOptions, capitalize })
+                  }
+                />
+                <DesignCheckbox
+                  label="Incluir número"
+                  checked={passphraseOptions.includeNumber}
+                  onCheckedChange={(includeNumber) =>
+                    updatePassphraseOptions({ ...passphraseOptions, includeNumber })
+                  }
+                />
+              </div>
+            </>
+          )}
+        </div>
       </div>
 
-      {!compact && (
-        <Button variant="primary" className="w-full" onClick={() => regenerate()}>
-          Gerar nova senha
-        </Button>
-      )}
+      <footer className="password-tool-footer">
+        <span>
+          <Sparkles size={14} aria-hidden="true" /> Aleatoriedade fornecida pela plataforma
+        </span>
+        <div>
+          <DesignButton tone="quiet" onClick={() => regenerate()}>
+            Gerar novamente
+          </DesignButton>
+          {onUse && (
+            <DesignButton tone="primary" onClick={() => onUse(value)}>
+              Usar este valor
+            </DesignButton>
+          )}
+        </div>
+      </footer>
     </section>
   );
 }

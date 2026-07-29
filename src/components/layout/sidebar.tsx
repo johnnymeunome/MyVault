@@ -1,16 +1,17 @@
 import {
-  Archive,
   CreditCard,
   FileText,
+  FolderClosed,
   Grid2X2,
   Heart,
   IdCard,
   KeyRound,
-  LockKeyhole,
   Plus,
+  Settings,
+  Sparkles,
   Trash2,
 } from 'lucide-react';
-import type { ComponentType } from 'react';
+import type { LucideIcon } from 'lucide-react';
 import type { EntryFilter } from '../../domain/services/entry-search';
 import { cn } from '../../lib/utils';
 import { useVaultStore } from '../../stores/vault-store';
@@ -18,7 +19,7 @@ import { useVaultStore } from '../../stores/vault-store';
 interface SidebarItem {
   label: string;
   filter: EntryFilter;
-  icon: ComponentType<{ size?: number }>;
+  icon: LucideIcon;
 }
 
 const items: SidebarItem[] = [
@@ -38,8 +39,10 @@ export function Sidebar() {
   const filter = useVaultStore((state) => state.filter);
   const groups = useVaultStore((state) => state.groups);
   const readOnlySession = useVaultStore((state) => state.readOnlySession);
+  const overlay = useVaultStore((state) => state.overlay);
   const setFilter = useVaultStore((state) => state.setFilter);
   const setActiveVault = useVaultStore((state) => state.setActiveVault);
+  const setOverlay = useVaultStore((state) => state.setOverlay);
   const vaultEntries = entries.filter((entry) => entry.vaultId === activeVaultId);
 
   const countFor = (entryFilter: EntryFilter) => {
@@ -52,16 +55,19 @@ export function Sidebar() {
 
   return (
     <aside className="sidebar" aria-label="Navegação do cofre">
-      <nav className="space-y-1">
+      <nav className="sidebar-navigation" aria-label="Categorias">
         {items.map(({ label, filter: itemFilter, icon: Icon }) => (
           <button
             key={itemFilter}
             className={cn('nav-row', filter === itemFilter && 'is-active')}
             onClick={() => setFilter(itemFilter)}
+            aria-current={filter === itemFilter ? 'page' : undefined}
           >
-            <Icon size={16} />
-            <span>{label}</span>
-            <span className="count-badge">{countFor(itemFilter)}</span>
+            <Icon size={15} strokeWidth={1.75} aria-hidden="true" />
+            <span className="nav-label">{label}</span>
+            <span className="nav-count" aria-label={`${String(countFor(itemFilter))} itens`}>
+              {countFor(itemFilter)}
+            </span>
           </button>
         ))}
       </nav>
@@ -72,17 +78,16 @@ export function Sidebar() {
           <Plus size={14} />
         </button>
       </div>
-      <div className="space-y-1">
+      <div className="sidebar-vaults">
         {vaults.map((vault) => (
           <button
             key={vault.id}
             className={cn('nav-row', vault.id === activeVaultId && 'is-active')}
             onClick={() => setActiveVault(vault.id)}
+            aria-current={vault.id === activeVaultId ? 'page' : undefined}
           >
-            <span className={cn('vault-icon', vault.color === 'emerald' && 'is-green')}>
-              <LockKeyhole size={14} />
-            </span>
-            <span className="truncate">{vault.name}</span>
+            <span className="vault-indicator" data-color={vault.color} aria-hidden="true" />
+            <span className="nav-label truncate">{vault.name}</span>
           </button>
         ))}
       </div>
@@ -100,7 +105,7 @@ export function Sidebar() {
                 style={{ paddingLeft: `${String(8 + Math.min(group.depth ?? 0, 4) * 12)}px` }}
                 title={group.name}
               >
-                <KeyRound size={13} />
+                <FolderClosed size={13} strokeWidth={1.7} aria-hidden="true" />
                 <span className="truncate">{group.name || 'Grupo sem nome'}</span>
               </div>
             ))}
@@ -109,11 +114,25 @@ export function Sidebar() {
       )}
 
       <div className="sidebar-spacer" />
-      <div className="prototype-chip">
-        <Archive size={14} />
-        <span>
-          {readOnlySession ? 'Fixture KDBX · sem campos protegidos' : 'Dados somente em memória'}
-        </span>
+      <button
+        className={cn('nav-row sidebar-tool-link', overlay === 'generator' && 'is-active')}
+        onClick={() => setOverlay('generator')}
+        aria-current={overlay === 'generator' ? 'page' : undefined}
+      >
+        <Sparkles size={15} strokeWidth={1.75} aria-hidden="true" />
+        <span className="nav-label">Gerador de senhas</span>
+      </button>
+      <button
+        className={cn('nav-row sidebar-settings', overlay === 'settings' && 'is-active')}
+        onClick={() => setOverlay('settings')}
+        aria-current={overlay === 'settings' ? 'page' : undefined}
+      >
+        <Settings size={15} strokeWidth={1.75} aria-hidden="true" />
+        <span className="nav-label">Configurações</span>
+      </button>
+      <div className="sidebar-context">
+        <i aria-hidden="true" />
+        <span>{readOnlySession ? 'Fixture descartável' : 'Sessão em memória'}</span>
       </div>
     </aside>
   );
