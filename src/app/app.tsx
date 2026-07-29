@@ -8,7 +8,7 @@ import { EntryDialog } from '../features/entries/entry-dialog';
 import { EntryList } from '../features/entries/entry-list';
 import { PasswordGenerator } from '../features/password-generator/password-generator';
 import { CommandPalette } from '../features/search/command-palette';
-import { SettingsDialog } from '../features/settings/settings-dialog';
+import { SettingsView } from '../features/settings/settings-dialog';
 import { LockScreen } from '../features/vault/lock-screen';
 import { KdbxOpenDialog } from '../features/vault/kdbx-open-dialog';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '../components/ui/dialog';
@@ -52,10 +52,14 @@ export function App() {
         event.preventDefault();
         if (!isLocked) setOverlay('command');
       }
+      if (event.key === 'Escape' && overlay === 'settings') {
+        event.preventDefault();
+        setOverlay(null);
+      }
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [isLocked, setOverlay]);
+  }, [isLocked, overlay, setOverlay]);
 
   if (isLocked)
     return (
@@ -71,15 +75,20 @@ export function App() {
         <TopBar />
         <div className="workspace-grid">
           <Sidebar />
-          <EntryList />
-          <EntryDetail />
+          {overlay === 'settings' ? (
+            <SettingsView />
+          ) : (
+            <>
+              <EntryList />
+              <EntryDetail />
+            </>
+          )}
         </div>
         <StatusBar />
       </div>
       {overlay === 'entry-create' && <EntryDialog mode="create" />}
       {overlay === 'entry-edit' && <EntryDialog mode="edit" />}
       {overlay === 'command' && <CommandPalette />}
-      {overlay === 'settings' && <SettingsDialog />}
       {overlay === 'vault-open' && <KdbxOpenDialog />}
       {DesignSystemPreview && overlay === 'design-system' && (
         <Suspense fallback={null}>

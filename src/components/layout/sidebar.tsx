@@ -7,6 +7,7 @@ import {
   IdCard,
   KeyRound,
   Plus,
+  Settings,
   Trash2,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -37,8 +38,10 @@ export function Sidebar() {
   const filter = useVaultStore((state) => state.filter);
   const groups = useVaultStore((state) => state.groups);
   const readOnlySession = useVaultStore((state) => state.readOnlySession);
+  const overlay = useVaultStore((state) => state.overlay);
   const setFilter = useVaultStore((state) => state.setFilter);
   const setActiveVault = useVaultStore((state) => state.setActiveVault);
+  const setOverlay = useVaultStore((state) => state.setOverlay);
   const vaultEntries = entries.filter((entry) => entry.vaultId === activeVaultId);
 
   const countFor = (entryFilter: EntryFilter) => {
@@ -110,6 +113,14 @@ export function Sidebar() {
       )}
 
       <div className="sidebar-spacer" />
+      <button
+        className={cn('nav-row sidebar-settings', overlay === 'settings' && 'is-active')}
+        onClick={() => setOverlay('settings')}
+        aria-current={overlay === 'settings' ? 'page' : undefined}
+      >
+        <Settings size={15} strokeWidth={1.75} aria-hidden="true" />
+        <span className="nav-label">Configurações</span>
+      </button>
       <div className="sidebar-context">
         <i aria-hidden="true" />
         <span>{readOnlySession ? 'Fixture descartável' : 'Sessão em memória'}</span>

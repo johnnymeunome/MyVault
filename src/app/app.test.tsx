@@ -36,6 +36,35 @@ describe('main application flows', () => {
     expect(screen.getByPlaceholderText('Buscar item ou executar ação…')).toBeInTheDocument();
   });
 
+  it('keeps the password generator visible among the first command actions', () => {
+    render(<App />);
+    fireEvent.keyDown(window, { key: 'k', ctrlKey: true });
+    expect(screen.getByText('Abrir gerador de senha')).toBeInTheDocument();
+  });
+
+  it('creates a login through the structured task dialog', () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Novo item' }));
+    expect(screen.getByRole('heading', { name: 'Criar login' })).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText('Título'), { target: { value: 'Conta de teste' } });
+    fireEvent.change(screen.getByLabelText('Usuário'), { target: { value: 'joao@example.test' } });
+    fireEvent.change(screen.getByLabelText('Senha de demonstração'), {
+      target: { value: 'local-only-password' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Criar item' }));
+    expect(screen.getByRole('heading', { name: 'Conta de teste' })).toBeInTheDocument();
+  });
+
+  it('opens settings as a dedicated view and applies the theme directly', () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Configurações' }));
+    expect(screen.getByRole('heading', { name: 'Configurações' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('radio', { name: /Claro/ }));
+    expect(useVaultStore.getState().theme).toBe('light');
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(screen.getByRole('heading', { name: 'Todos os itens' })).toBeInTheDocument();
+  });
+
   it('opens the vault selector from the integrated top bar', () => {
     render(<App />);
     fireEvent.click(screen.getByRole('button', { name: 'Selecionar cofre' }));
