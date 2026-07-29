@@ -1,0 +1,57 @@
+<svg width="1600" height="440" viewBox="0 0 1600 440" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="background" x1="84" y1="28" x2="1512" y2="416" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EAF3F5"/>
+      <stop offset="0.32" stop-color="#8CB8C5"/>
+      <stop offset="0.66" stop-color="#244757"/>
+      <stop offset="1" stop-color="#10161A"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(575 458) rotate(-26) scale(710 350)">
+      <stop stop-color="#D7EFF4" stop-opacity="0.95"/>
+      <stop offset="0.48" stop-color="#78B6C8" stop-opacity="0.38"/>
+      <stop offset="1" stop-color="#0D151B" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="line" x1="346" y1="0" x2="1234" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#CFE8ED" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#CFE8ED"/>
+      <stop offset="1" stop-color="#CFE8ED" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="noise" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="8" result="noise"/>
+      <feColorMatrix in="noise" type="saturate" values="0" result="mono"/>
+      <feComponentTransfer in="mono" result="faded">
+        <feFuncA type="table" tableValues="0 0.07"/>
+      </feComponentTransfer>
+      <feBlend in="SourceGraphic" in2="faded" mode="soft-light"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#noise)">
+    <rect width="1600" height="440" rx="28" fill="url(#background)"/>
+    <rect width="1600" height="440" rx="28" fill="url(#glow)"/>
+  </g>
+
+  <path d="M0 355C268 315 412 385 681 342C937 301 1190 160 1600 185V440H0V355Z" fill="#0A1014" fill-opacity="0.2"/>
+  <path d="M346 324H1254" stroke="url(#line)" stroke-width="1"/>
+
+  <g transform="translate(110 78)">
+    <path d="M32 0L60 10V34C60 54 48 71 32 80C16 71 4 54 4 34V10L32 0Z" stroke="#F5FAFB" stroke-width="4"/>
+    <path d="M23 38L29 44L42 29" stroke="#F5FAFB" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <text x="206" y="124" fill="#F7FAFA" font-family="Inter, Segoe UI, sans-serif" font-size="52" font-weight="700" letter-spacing="-1.8">MyVault</text>
+  <text x="112" y="218" fill="#F4F8F9" font-family="Inter, Segoe UI, sans-serif" font-size="34" font-weight="560" letter-spacing="-0.7">Your data. Your device. Your vault.</text>
+  <text x="112" y="264" fill="#D5E3E7" font-family="Inter, Segoe UI, sans-serif" font-size="18" font-weight="400">A local-first desktop experiment for interoperable credentials.</text>
+
+  <g transform="translate(112 354)" font-family="Inter, Segoe UI, sans-serif" font-size="14" font-weight="600" fill="#EAF3F5">
+    <text x="0" y="0">LOCAL-FIRST</text>
+    <circle cx="133" cy="-5" r="3" fill="#8FD1E2"/>
+    <text x="157" y="0">KDBX</text>
+    <circle cx="224" cy="-5" r="3" fill="#8FD1E2"/>
+    <text x="248" y="0">TAURI + RUST</text>
+    <circle cx="374" cy="-5" r="3" fill="#8FD1E2"/>
+    <text x="398" y="0">OPEN SOURCE</text>
+  </g>
+
+  <text x="1488" y="370" text-anchor="end" fill="#BED4DA" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="14">M0 / M1</text>
+</svg>
