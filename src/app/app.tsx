@@ -3,7 +3,6 @@ import { Toast } from '../components/common/toast';
 import { Sidebar } from '../components/layout/sidebar';
 import { StatusBar } from '../components/layout/status-bar';
 import { TopBar } from '../components/layout/top-bar';
-import { UtilityRail } from '../components/layout/utility-rail';
 import { EntryDetail } from '../features/entries/entry-detail';
 import { EntryDialog } from '../features/entries/entry-dialog';
 import { EntryList } from '../features/entries/entry-list';
@@ -74,7 +73,6 @@ export function App() {
           <Sidebar />
           <EntryList />
           <EntryDetail />
-          <UtilityRail />
         </div>
         <StatusBar />
       </div>

@@ -1,4 +1,3 @@
-import { CircleCheck, Clock3, FlaskConical } from 'lucide-react';
 import { useVaultStore } from '../../stores/vault-store';
 
 export function StatusBar() {
@@ -6,14 +5,14 @@ export function StatusBar() {
 
   return (
     <footer className="status-bar">
-      <span>
-        {readOnlySession ? <FlaskConical size={13} /> : <Clock3 size={13} />}
+      <span className="status-context">
+        <i aria-hidden="true" />
         {readOnlySession
           ? `${readOnlySession.format} · modo experimental`
           : 'Bloqueio automático simulado em 3 min'}
       </span>
-      <span className="ml-auto">
-        <CircleCheck size={13} className="text-[var(--success)]" />
+      <span className="status-session">
+        <i aria-hidden="true" />
         {readOnlySession ? 'Somente leitura · sem persistência' : 'Sessão local · sem persistência'}
       </span>
     </footer>

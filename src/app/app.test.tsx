@@ -35,4 +35,18 @@ describe('main application flows', () => {
     fireEvent.keyDown(window, { key: 'k', ctrlKey: true });
     expect(screen.getByPlaceholderText('Buscar item ou executar ação…')).toBeInTheDocument();
   });
+
+  it('opens the vault selector from the integrated top bar', () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Selecionar cofre' }));
+    expect(screen.getByText('Cofres disponíveis')).toBeInTheDocument();
+    expect(screen.getByText('Trabalho.kdbx')).toBeInTheDocument();
+  });
+
+  it('keeps the theme switch visible in the top bar', () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Usar tema claro' }));
+    expect(useVaultStore.getState().theme).toBe('light');
+    expect(screen.getByRole('button', { name: 'Usar tema escuro' })).toBeInTheDocument();
+  });
 });

@@ -1,7 +1,7 @@
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { ChevronDown, FolderOpen, LockKeyhole, Plus, Search } from 'lucide-react';
+import { Menu } from '@base-ui/react/menu';
+import { ChevronDown, FolderOpen, LockKeyhole, Moon, Plus, Search, Sun } from 'lucide-react';
 import { Brand } from '../common/brand';
-import { Button } from '../ui/button';
+import { DesignButton, DesignIconButton } from '../../design-system/button';
 import { useVaultStore } from '../../stores/vault-store';
 
 export function TopBar() {
@@ -12,6 +12,8 @@ export function TopBar() {
   const setQuery = useVaultStore((state) => state.setQuery);
   const setOverlay = useVaultStore((state) => state.setOverlay);
   const setLocked = useVaultStore((state) => state.setLocked);
+  const theme = useVaultStore((state) => state.theme);
+  const toggleTheme = useVaultStore((state) => state.toggleTheme);
   const readOnlySession = useVaultStore((state) => state.readOnlySession);
   const activeVault = vaults.find((vault) => vault.id === activeVaultId);
 
@@ -20,37 +22,39 @@ export function TopBar() {
       <div className="top-brand">
         <Brand compact />
       </div>
-      <DropdownMenu.Root>
-        <DropdownMenu.Trigger asChild>
-          <Button variant="secondary" className="vault-switcher" aria-label="Selecionar cofre">
-            <span className="vault-dot" data-color={activeVault?.color} />
-            <span className="truncate">{activeVault?.fileName}</span>
-            <ChevronDown size={14} className="ml-auto" />
-          </Button>
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Portal>
-          <DropdownMenu.Content className="dropdown-content" sideOffset={8} align="start">
-            {vaults.map((vault) => (
-              <DropdownMenu.Item
-                className="dropdown-item"
-                key={vault.id}
-                onSelect={() => setActiveVault(vault.id)}
-              >
-                <span className="vault-dot" data-color={vault.color} />
-                <span>{vault.fileName}</span>
-                {vault.id === activeVaultId && (
-                  <span className="ml-auto text-[var(--brand-blue-strong)]">Ativo</span>
-                )}
-              </DropdownMenu.Item>
-            ))}
-            <DropdownMenu.Separator className="my-1 h-px bg-[var(--border)]" />
-            <DropdownMenu.Item className="dropdown-item" onSelect={() => setOverlay('vault-open')}>
-              <FolderOpen size={15} />
-              <span>Abrir fixture KDBX…</span>
-            </DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu.Portal>
-      </DropdownMenu.Root>
+      <Menu.Root>
+        <Menu.Trigger className="top-vault-trigger" aria-label="Selecionar cofre">
+          <span className="vault-dot" data-color={activeVault?.color} />
+          <span className="truncate">{activeVault?.fileName}</span>
+          <ChevronDown size={13} aria-hidden="true" />
+        </Menu.Trigger>
+        <Menu.Portal>
+          <Menu.Positioner className="top-vault-positioner" sideOffset={6} align="start">
+            <Menu.Popup className="top-vault-menu">
+              <div className="top-vault-menu-label">Cofres disponíveis</div>
+              {vaults.map((vault) => (
+                <Menu.Item
+                  className="top-vault-option"
+                  key={vault.id}
+                  onClick={() => setActiveVault(vault.id)}
+                >
+                  <span className="vault-dot" data-color={vault.color} />
+                  <span className="top-vault-option-copy">
+                    <strong>{vault.name}</strong>
+                    <small>{vault.fileName}</small>
+                  </span>
+                  {vault.id === activeVaultId && <span className="top-vault-active">Atual</span>}
+                </Menu.Item>
+              ))}
+              <div className="top-vault-separator" />
+              <Menu.Item className="top-vault-open" onClick={() => setOverlay('vault-open')}>
+                <FolderOpen size={15} aria-hidden="true" />
+                <span>Abrir fixture KDBX…</span>
+              </Menu.Item>
+            </Menu.Popup>
+          </Menu.Positioner>
+        </Menu.Portal>
+      </Menu.Root>
 
       <label className="global-search">
         <Search size={16} aria-hidden="true" />
@@ -63,19 +67,37 @@ export function TopBar() {
         <kbd>Ctrl K</kbd>
       </label>
 
-      {readOnlySession && <span className="read-only-badge">Somente leitura</span>}
-      <Button
-        variant="primary"
+      {readOnlySession && (
+        <span className="top-session-status">
+          <i aria-hidden="true" />
+          Somente leitura
+        </span>
+      )}
+      <DesignButton
+        tone="primary"
         onClick={() => setOverlay('entry-create')}
         disabled={Boolean(readOnlySession)}
       >
-        <Plus size={16} />
+        <Plus size={15} aria-hidden="true" />
         Novo item
-      </Button>
-      <Button variant="ghost" onClick={() => setLocked(true)}>
-        <LockKeyhole size={16} />
+      </DesignButton>
+      <DesignIconButton
+        className="top-theme-toggle"
+        label={theme === 'dark' ? 'Usar tema claro' : 'Usar tema escuro'}
+        tone="quiet"
+        onClick={toggleTheme}
+        title={theme === 'dark' ? 'Usar tema claro' : 'Usar tema escuro'}
+      >
+        {theme === 'dark' ? (
+          <Sun size={15} aria-hidden="true" />
+        ) : (
+          <Moon size={15} aria-hidden="true" />
+        )}
+      </DesignIconButton>
+      <DesignButton tone="quiet" onClick={() => setLocked(true)}>
+        <LockKeyhole size={15} aria-hidden="true" />
         Bloquear
-      </Button>
+      </DesignButton>
     </header>
   );
 }
