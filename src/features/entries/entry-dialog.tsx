@@ -81,17 +81,19 @@ export function EntryDialog({ mode }: { mode: 'create' | 'edit' }) {
             <form className="entry-editor-form" onSubmit={submit}>
               <header className="entry-editor-header">
                 <div>
-                  <span className="editor-context">{mode === 'create' ? 'Nova entrada' : 'Entrada selecionada'}</span>
-                  <Dialog.Title>{mode === 'create' ? 'Criar login' : `Editar ${selected?.title ?? 'login'}`}</Dialog.Title>
+                  <span className="editor-context">
+                    {mode === 'create' ? 'Nova entrada' : 'Entrada selecionada'}
+                  </span>
+                  <Dialog.Title>
+                    {mode === 'create' ? 'Criar login' : `Editar ${selected?.title ?? 'login'}`}
+                  </Dialog.Title>
                   <Dialog.Description>
                     {mode === 'create'
                       ? 'Adicione uma credencial a esta sessão local de demonstração.'
                       : 'Revise os campos sem gravar qualquer dado no disco.'}
                   </Dialog.Description>
                 </div>
-                <Dialog.Close
-                  render={<DesignIconButton label="Fechar editor" tone="quiet" />}
-                >
+                <Dialog.Close render={<DesignIconButton label="Fechar editor" tone="quiet" />}>
                   <X size={17} aria-hidden="true" />
                 </Dialog.Close>
               </header>
@@ -228,7 +230,9 @@ export function EntryDialog({ mode }: { mode: 'create' | 'edit' }) {
               </div>
 
               <footer className="entry-editor-footer">
-                <p><i aria-hidden="true" /> Alterações locais · sem persistência</p>
+                <p>
+                  <i aria-hidden="true" /> Alterações locais · sem persistência
+                </p>
                 <div>
                   <DesignButton type="button" tone="quiet" onClick={close}>
                     Cancelar

@@ -134,12 +134,16 @@ export function PasswordGenerator({
   return (
     <section
       className={variant === 'workspace' ? 'password-tool-view' : 'password-tool-embedded'}
-      aria-labelledby={variant === 'workspace' ? 'generator-workspace-title' : 'generator-embedded-title'}
+      aria-labelledby={
+        variant === 'workspace' ? 'generator-workspace-title' : 'generator-embedded-title'
+      }
     >
       <header className="password-tool-header">
         <div>
           <span className="password-tool-context">Ferramenta local</span>
-          <h1 id={variant === 'workspace' ? 'generator-workspace-title' : 'generator-embedded-title'}>
+          <h1
+            id={variant === 'workspace' ? 'generator-workspace-title' : 'generator-embedded-title'}
+          >
             Gerador de senhas
           </h1>
           <p>Crie um valor forte sem histórico, persistência ou chamadas externas.</p>
@@ -193,7 +197,11 @@ export function PasswordGenerator({
                   <RefreshCw size={16} aria-hidden="true" />
                 </DesignIconButton>
                 <DesignIconButton label="Copiar valor gerado" tone="quiet" onClick={copyValue}>
-                  {copied ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
+                  {copied ? (
+                    <Check size={16} aria-hidden="true" />
+                  ) : (
+                    <Copy size={16} aria-hidden="true" />
+                  )}
                 </DesignIconButton>
               </div>
             </div>
@@ -271,17 +279,25 @@ export function PasswordGenerator({
               </div>
               <div className="generator-control-section">
                 <span>Separador</span>
-                <div className="separator-options" role="radiogroup" aria-label="Separador da frase">
-                  {([
-                    ['-', 'Hífen'],
-                    [' ', 'Espaço'],
-                    ['_', 'Sublinhado'],
-                  ] as const).map(([separator, label]) => (
+                <div
+                  className="separator-options"
+                  role="radiogroup"
+                  aria-label="Separador da frase"
+                >
+                  {(
+                    [
+                      ['-', 'Hífen'],
+                      [' ', 'Espaço'],
+                      ['_', 'Sublinhado'],
+                    ] as const
+                  ).map(([separator, label]) => (
                     <button
                       type="button"
                       role="radio"
                       aria-checked={passphraseOptions.separator === separator}
-                      className={passphraseOptions.separator === separator ? 'is-selected' : undefined}
+                      className={
+                        passphraseOptions.separator === separator ? 'is-selected' : undefined
+                      }
                       key={label}
                       onClick={() => updatePassphraseOptions({ ...passphraseOptions, separator })}
                     >
@@ -313,11 +329,17 @@ export function PasswordGenerator({
       </div>
 
       <footer className="password-tool-footer">
-        <span><Sparkles size={14} aria-hidden="true" /> Aleatoriedade fornecida pela plataforma</span>
+        <span>
+          <Sparkles size={14} aria-hidden="true" /> Aleatoriedade fornecida pela plataforma
+        </span>
         <div>
-          <DesignButton tone="quiet" onClick={() => regenerate()}>Gerar novamente</DesignButton>
+          <DesignButton tone="quiet" onClick={() => regenerate()}>
+            Gerar novamente
+          </DesignButton>
           {onUse && (
-            <DesignButton tone="primary" onClick={() => onUse(value)}>Usar este valor</DesignButton>
+            <DesignButton tone="primary" onClick={() => onUse(value)}>
+              Usar este valor
+            </DesignButton>
           )}
         </div>
       </footer>

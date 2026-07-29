@@ -12,20 +12,20 @@ Esses valores fazem parte do código-fonte e nunca podem ser reutilizados em uma
 
 ## Conjunto versionado
 
-| Arquivo | Cobertura |
-| --- | --- |
-| `kdbx31-aes-aeskdf-password.kdbx` | KDBX 3.1 com senha |
-| `kdbx40-aes-argon2d-password.kdbx` | KDBX 4.0, AES e Argon2d |
-| `kdbx40-aes-argon2id-password.kdbx` | KDBX 4.0, AES e Argon2id |
-| `kdbx40-chacha20-argon2id-password.kdbx` | KDBX 4.0, ChaCha20 e Argon2id |
-| `kdbx41-aes-aeskdf-password.kdbx` | KDBX 4.1, AES e AES-KDF |
-| `kdbx40-password-keyfile.kdbx` | KDBX 4.0 com senha e arquivo-chave |
-| `kdbx40-password-keyfile.keyx` | arquivo-chave público da fixture anterior |
-| `corrupt-header.kdbx` | assinatura deliberadamente inválida |
-| `corrupt-hmac.kdbx` | integridade deliberadamente inválida |
-| `truncated.kdbx` | fixture válida truncada de forma reproduzível |
-| `unsupported-version.kdbx` | versão sintética acima do limite aceito |
-| `random-data.kdbx` | bytes aleatórios que não formam um KDBX |
+| Arquivo                                  | Cobertura                                     |
+| ---------------------------------------- | --------------------------------------------- |
+| `kdbx31-aes-aeskdf-password.kdbx`        | KDBX 3.1 com senha                            |
+| `kdbx40-aes-argon2d-password.kdbx`       | KDBX 4.0, AES e Argon2d                       |
+| `kdbx40-aes-argon2id-password.kdbx`      | KDBX 4.0, AES e Argon2id                      |
+| `kdbx40-chacha20-argon2id-password.kdbx` | KDBX 4.0, ChaCha20 e Argon2id                 |
+| `kdbx41-aes-aeskdf-password.kdbx`        | KDBX 4.1, AES e AES-KDF                       |
+| `kdbx40-password-keyfile.kdbx`           | KDBX 4.0 com senha e arquivo-chave            |
+| `kdbx40-password-keyfile.keyx`           | arquivo-chave público da fixture anterior     |
+| `corrupt-header.kdbx`                    | assinatura deliberadamente inválida           |
+| `corrupt-hmac.kdbx`                      | integridade deliberadamente inválida          |
+| `truncated.kdbx`                         | fixture válida truncada de forma reproduzível |
+| `unsupported-version.kdbx`               | versão sintética acima do limite aceito       |
+| `random-data.kdbx`                       | bytes aleatórios que não formam um KDBX       |
 
 Casos grandes ou de exaustão são construídos em memória durante os testes e não são versionados.
 

@@ -120,7 +120,9 @@ export const generatePassphrase = (
   const words = Array.from({ length: options.wordCount }, (_, index) => {
     const randomValue = randomValues[index] ?? 0;
     const word = passphraseWords[randomValue % passphraseWords.length] ?? passphraseWords[0];
-    return options.capitalize ? `${word[0]?.toLocaleUpperCase('pt-BR') ?? ''}${word.slice(1)}` : word;
+    return options.capitalize
+      ? `${word[0]?.toLocaleUpperCase('pt-BR') ?? ''}${word.slice(1)}`
+      : word;
   });
 
   if (options.includeNumber) {
@@ -137,7 +139,9 @@ export const estimatePasswordEntropy = (options: PasswordOptions): number => {
 };
 
 export const estimatePassphraseEntropy = (options: PassphraseOptions): number =>
-  Math.round(options.wordCount * Math.log2(passphraseWords.length) + (options.includeNumber ? 6.64 : 0));
+  Math.round(
+    options.wordCount * Math.log2(passphraseWords.length) + (options.includeNumber ? 6.64 : 0),
+  );
 
 export const evaluatePasswordStrength = (password: string): PasswordStrength => {
   let score = 0;

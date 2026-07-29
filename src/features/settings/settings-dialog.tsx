@@ -19,7 +19,11 @@ export function SettingsView() {
           <h1 id="settings-title">Configurações</h1>
           <p>Controle a aparência e consulte os limites desta sessão local.</p>
         </div>
-        <DesignIconButton label="Fechar configurações" tone="quiet" onClick={() => setOverlay(null)}>
+        <DesignIconButton
+          label="Fechar configurações"
+          tone="quiet"
+          onClick={() => setOverlay(null)}
+        >
           <X size={17} aria-hidden="true" />
         </DesignIconButton>
       </header>
@@ -42,7 +46,10 @@ export function SettingsView() {
               onClick={() => setTheme('dark')}
             >
               <Moon size={17} aria-hidden="true" />
-              <span><strong>Escuro</strong><small>Grafite neutro e contraste contido.</small></span>
+              <span>
+                <strong>Escuro</strong>
+                <small>Grafite neutro e contraste contido.</small>
+              </span>
               {theme === 'dark' && <Check size={16} aria-hidden="true" />}
             </button>
             <button
@@ -53,7 +60,10 @@ export function SettingsView() {
               onClick={() => setTheme('light')}
             >
               <Sun size={17} aria-hidden="true" />
-              <span><strong>Claro</strong><small>Branco acinzentado com superfícies suaves.</small></span>
+              <span>
+                <strong>Claro</strong>
+                <small>Branco acinzentado com superfícies suaves.</small>
+              </span>
               {theme === 'light' && <Check size={16} aria-hidden="true" />}
             </button>
           </div>
@@ -88,8 +98,12 @@ export function SettingsView() {
       </div>
 
       <footer className="settings-footer">
-        <span><Monitor size={14} aria-hidden="true" /> Preferências aplicadas imediatamente</span>
-        <DesignButton tone="secondary" onClick={() => setOverlay(null)}>Voltar ao cofre</DesignButton>
+        <span>
+          <Monitor size={14} aria-hidden="true" /> Preferências aplicadas imediatamente
+        </span>
+        <DesignButton tone="secondary" onClick={() => setOverlay(null)}>
+          Voltar ao cofre
+        </DesignButton>
       </footer>
     </section>
   );

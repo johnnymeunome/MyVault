@@ -10,7 +10,7 @@
 [![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
-**M0 e M1 concluídos** — leitura KDBX experimental, somente de fixtures e validada manualmente no Windows.
+**M0 e M1 concluídos** — interface final validada no aplicativo real e leitura KDBX experimental somente de fixtures.
 
 [Preview](#preview-do-produto) · [Visão geral](#visão-geral) · [Design](#sistema-de-design) · [Funcionalidades](#funcionalidades) · [Executar](#como-executar) · [Arquitetura](#arquitetura) · [Roadmap](#roadmap)
 
@@ -19,13 +19,13 @@
 ## Preview do produto
 
 <p align="center">
-  <a href="docs/references/myvault-m0-preview.png">
-    <img src="docs/references/myvault-m0-preview.png" alt="Interface desktop do MyVault no marco M0" width="1440">
+  <a href="docs/references/myvault-m1-final.png">
+    <img src="docs/references/myvault-m1-final.png" alt="Interface desktop real do MyVault no marco M1" width="1440">
   </a>
 </p>
 
 <p align="center">
-  <sub>Base neutra, superfícies azuladas e azul-aço para navegação e foco — clique na imagem para ampliar.</sub>
+  <sub>Aplicativo Tauri real em 1440 × 900: base neutra, estrutura integral e azul-aço reservado para foco e identidade — clique para ampliar.</sub>
 </p>
 
 > [!WARNING]
@@ -51,7 +51,7 @@ MyVault é uma aplicação original em Tauri e React. **Não é um fork nem uma 
 
 | Área                      | Estado atual                                      |
 | ------------------------- | ------------------------------------------------- |
-| Interface desktop         | Implementada                                      |
+| Interface desktop         | Implementada e validada no aplicativo real        |
 | Dados de demonstração     | Somente em memória                                |
 | Busca e filtros           | Implementados                                     |
 | Criação e edição          | Simuladas apenas no modo mock                     |
@@ -72,7 +72,7 @@ MyVault é uma aplicação original em Tauri e React. **Não é um fork nem uma 
 - favoritos e lixeira;
 - busca por título, usuário, URL e tags;
 - seleção de item com painel detalhado;
-- layout adaptável para diferentes larguras desktop.
+- layout integral validado de 1040 × 680 a 1440 × 900.
 
 ### Entradas
 
@@ -107,25 +107,25 @@ MyVault é uma aplicação original em Tauri e React. **Não é um fork nem uma 
 
 - TypeScript em modo strict;
 - regras de senha implementadas como funções puras;
-- testes de domínio, estado e fluxos principais;
+- 28 testes frontend e 8 testes do núcleo Rust;
 - ESLint e Prettier;
 - pipeline público de CI;
 - auditorias npm e Cargo sem vulnerabilidades conhecidas no estado atual dos lockfiles.
 
 ## Stack
 
-| Camada        | Tecnologia                          |
-| ------------- | ----------------------------------- |
-| Shell desktop | Tauri 2                             |
-| Interface     | React 19 + TypeScript               |
-| Build         | Vite 7                              |
-| Estilos       | Tailwind CSS 4 + tokens CSS         |
-| Componentes   | Radix primitives + padrão shadcn/ui |
-| Ícones        | Lucide React + React Icons          |
-| Estado        | Zustand                             |
-| Testes        | Vitest + Testing Library            |
-| Qualidade     | ESLint + Prettier                   |
-| Núcleo nativo | Rust + `keepass` 0.13.17            |
+| Camada        | Tecnologia                  |
+| ------------- | --------------------------- |
+| Shell desktop | Tauri 2                     |
+| Interface     | React 19 + TypeScript       |
+| Build         | Vite 7                      |
+| Estilos       | Tailwind CSS 4 + tokens CSS |
+| Componentes   | Base UI + Motion for React  |
+| Ícones        | Lucide React + React Icons  |
+| Estado        | Zustand                     |
+| Testes        | Vitest + Testing Library    |
+| Qualidade     | ESLint + Prettier           |
+| Núcleo nativo | Rust + `keepass` 0.13.17    |
 
 ## Sistema de design
 
@@ -171,18 +171,19 @@ No aplicativo desktop, use **Abrir fixture KDBX** e selecione um arquivo de `src
 
 ## Comandos disponíveis
 
-| Comando                | Finalidade                                   |
-| ---------------------- | -------------------------------------------- |
-| `npm run dev`          | Inicia o Vite em modo de desenvolvimento     |
-| `npm run build`        | Executa o typecheck e gera o build web       |
-| `npm run preview`      | Serve localmente o build gerado              |
-| `npm run lint`         | Valida o código com ESLint                   |
-| `npm run typecheck`    | Verifica os tipos sem emitir arquivos        |
-| `npm run test`         | Executa todos os testes uma vez              |
-| `npm run test:watch`   | Executa os testes em modo interativo         |
-| `npm run format`       | Formata os arquivos com Prettier             |
-| `npm run format:check` | Verifica a formatação sem modificar arquivos |
-| `npm run tauri -- dev` | Abre o aplicativo no shell desktop           |
+| Comando                              | Finalidade                                   |
+| ------------------------------------ | -------------------------------------------- |
+| `npm run dev`                        | Inicia o Vite em modo de desenvolvimento     |
+| `npm run build`                      | Executa o typecheck e gera o build web       |
+| `npm run preview`                    | Serve localmente o build gerado              |
+| `npm run lint`                       | Valida o código com ESLint                   |
+| `npm run typecheck`                  | Verifica os tipos sem emitir arquivos        |
+| `npm run test`                       | Executa todos os testes uma vez              |
+| `npm run test:watch`                 | Executa os testes em modo interativo         |
+| `npm run format`                     | Formata os arquivos com Prettier             |
+| `npm run format:check`               | Verifica a formatação sem modificar arquivos |
+| `npm run tauri -- dev`               | Abre o aplicativo no shell desktop           |
+| `npm run tauri -- build --no-bundle` | Gera o executável desktop sem instalador     |
 
 Para reproduzir a mesma validação usada no CI:
 

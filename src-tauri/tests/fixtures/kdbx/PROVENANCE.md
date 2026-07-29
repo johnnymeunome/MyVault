@@ -6,16 +6,16 @@
 - **Licença da origem:** MIT; aviso preservado em [`THIRD-PARTY-NOTICE.md`](THIRD-PARTY-NOTICE.md)
 - **Senha pública usada pela origem:** `demopass`
 
-| Arquivo local | Caminho no commit de origem |
-| --- | --- |
-| `kdbx31-aes-aeskdf-password.kdbx` | `tests/resources/test_db_with_password.kdbx` |
-| `kdbx40-aes-argon2d-password.kdbx` | `tests/resources/test_db_kdbx4_with_password_argon2.kdbx` |
-| `kdbx40-aes-argon2id-password.kdbx` | `tests/resources/test_db_kdbx4_with_password_argon2id.kdbx` |
+| Arquivo local                            | Caminho no commit de origem                                          |
+| ---------------------------------------- | -------------------------------------------------------------------- |
+| `kdbx31-aes-aeskdf-password.kdbx`        | `tests/resources/test_db_with_password.kdbx`                         |
+| `kdbx40-aes-argon2d-password.kdbx`       | `tests/resources/test_db_kdbx4_with_password_argon2.kdbx`            |
+| `kdbx40-aes-argon2id-password.kdbx`      | `tests/resources/test_db_kdbx4_with_password_argon2id.kdbx`          |
 | `kdbx40-chacha20-argon2id-password.kdbx` | `tests/resources/test_db_kdbx4_with_password_argon2id_chacha20.kdbx` |
-| `kdbx41-aes-aeskdf-password.kdbx` | `tests/resources/test_db_kdbx4_with_password_aes.kdbx` |
-| `kdbx40-password-keyfile.kdbx` | `tests/resources/test_db_kdbx4_with_keyfile_v2.kdbx` |
-| `kdbx40-password-keyfile.keyx` | `tests/resources/test_db_kdbx4_with_keyfile_v2.keyx` |
-| `random-data.kdbx` | `tests/resources/broken_random_data.kdbx` |
+| `kdbx41-aes-aeskdf-password.kdbx`        | `tests/resources/test_db_kdbx4_with_password_aes.kdbx`               |
+| `kdbx40-password-keyfile.kdbx`           | `tests/resources/test_db_kdbx4_with_keyfile_v2.kdbx`                 |
+| `kdbx40-password-keyfile.keyx`           | `tests/resources/test_db_kdbx4_with_keyfile_v2.keyx`                 |
+| `random-data.kdbx`                       | `tests/resources/broken_random_data.kdbx`                            |
 
 ## Casos derivados localmente
 

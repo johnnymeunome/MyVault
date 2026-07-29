@@ -194,9 +194,16 @@ export function CommandPalette() {
               )}
             </Combobox.Root>
             <footer className="command-footer">
-              <span><kbd>↑</kbd><kbd>↓</kbd> navegar</span>
-              <span><kbd>Enter</kbd> abrir</span>
-              <span><kbd>Esc</kbd> fechar</span>
+              <span>
+                <kbd>↑</kbd>
+                <kbd>↓</kbd> navegar
+              </span>
+              <span>
+                <kbd>Enter</kbd> abrir
+              </span>
+              <span>
+                <kbd>Esc</kbd> fechar
+              </span>
             </footer>
           </Dialog.Popup>
         </Dialog.Viewport>
