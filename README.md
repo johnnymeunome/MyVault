@@ -25,7 +25,7 @@
 </p>
 
 <p align="center">
-  <sub>Aplicativo Tauri real em 1440 × 900: base neutra, estrutura integral e azul-aço reservado para foco e identidade — clique para ampliar.</sub>
+  <sub>Aplicativo Tauri real em 1440 × 900: base neutra, estrutura integral, iconografia contextual e azul-aço reservado para foco e identidade — clique para ampliar.</sub>
 </p>
 
 > [!WARNING]
@@ -72,6 +72,7 @@ MyVault é uma aplicação original em Tauri e React. **Não é um fork nem uma 
 - favoritos e lixeira;
 - busca por título, usuário, URL e tags;
 - seleção de item com painel detalhado;
+- logos reconhecíveis e ícones contextuais para identificar rapidamente cada entrada;
 - layout integral validado de 1040 × 680 a 1440 × 900.
 
 ### Entradas
