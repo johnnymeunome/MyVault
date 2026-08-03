@@ -59,4 +59,6 @@ Auto-lock real, clipboard nativo revisado, estratégia de memória, keychain, po
 
 Builds assinados, verificação multiplataforma, instalação/atualização, importação e recuperação, documentação pública de ameaças e processo de vulnerabilidades.
 
+Um release Linux permanece bloqueado pela [issue #15](https://github.com/johnnymeunome/MyVault/issues/15) enquanto o backend GTK do Tauri 2 resolver `glib 0.18.5`, afetado por RUSTSEC-2024-0429. O gate só pode ser removido após atualização ou migração compatível, desaparecimento do alerta sem supressão e nova validação Linux/Windows.
+
 Nenhum marco será chamado de pronto para produção antes de interoperabilidade de escrita, testes adversariais e auditoria independente.
