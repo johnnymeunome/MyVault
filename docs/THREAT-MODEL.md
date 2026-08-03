@@ -2,7 +2,7 @@
 
 - **Status:** revisado após a implementação e a validação automatizada
 - **Escopo:** marco M1
-- **Data:** 2026-07-28
+- **Data:** 2026-08-03
 
 ## Aviso
 
@@ -52,20 +52,20 @@ O preview web com mocks não abre KDBX e está fora do caminho nativo. No deskto
 
 ## Ameaças e controles
 
-| ID  | Ameaça                                                           | Impacto                           | Controles exigidos no M1                                                                                              | Risco residual                                                   |
-| --- | ---------------------------------------------------------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| T1  | KDBX malformado explora bug ou pânico no parser                  | crash ou execução indevida        | versão exata fixada; fixtures negativas; erros encapsulados; `cargo audit`; sem dados reais                           | conjunto completo não passou por auditoria independente          |
-| T2  | KDF, compressão ou cardinalidade exaure CPU/memória              | negação de serviço                | limites de arquivo, memória KDF, profundidade, grupos e entradas; uma abertura por vez                                | alocação pode ocorrer antes de todos os limites serem aplicáveis |
-| T3  | senha ou arquivo-chave vazam pelo IPC, store ou UI               | exposição de segredo              | estado efêmero; nenhum log; limpeza do formulário; Rust usa wrappers com limpeza best-effort; testes de serialização  | strings e cópias internas não têm limpeza garantida              |
-| T4  | conteúdo secreto retorna por engano ao React                     | exposição no WebView/devtools     | DTO allowlist sem senha, TOTP, notas, campos, histórico ou anexos; testes de contrato                                 | títulos, usuários e URLs ainda podem ser sensíveis em uso real   |
-| T5  | erro revela caminho, chave, cabeçalho ou stack trace             | vazamento local                   | códigos públicos fechados; mensagens redigidas; detalhes apenas internos e sem segredo                                | ferramentas externas de crash podem capturar estado              |
-| T6  | arquivo original é sobrescrito ou truncado                       | perda de dados                    | `File::open` somente leitura; nenhuma feature de escrita; hash antes/depois; fixtures em cópia                        | software externo pode modificar o arquivo simultaneamente        |
-| T7  | troca por link simbólico ou mudança entre seleção e leitura      | arquivo diferente é aberto        | abrir uma vez, operar pelo mesmo handle e apresentar nome reduzido; não seguir caminhos adicionais vindos do conteúdo | sem identidade forte multiplataforma do arquivo no M1            |
-| T8  | sessão antiga é reutilizada após fechar/bloquear                 | acesso além do esperado           | identificador aleatório opaco; sessão única; invalidação idempotente; descarte em todos os gatilhos                   | limpeza física de memória não é garantida                        |
-| T9  | permissões Tauri amplas permitem leitura arbitrária pelo WebView | expansão de privilégio            | seletor nativo e comando estreito; nenhuma permissão genérica de filesystem; validação no Rust                        | vulnerabilidade no shell ou plugin permanece possível            |
-| T10 | dependência comprometida ou vulnerável                           | comprometimento do núcleo         | versão exata e lockfile; licença e origem verificadas; `cargo audit`; revisão de mudanças antes de upgrades           | não existe auditoria independente do conjunto completo           |
-| T11 | UI sugere que o modo experimental é seguro/editável              | uso indevido e perda de confiança | badges persistentes; ações sensíveis desativadas; aviso antes da abertura; documentação explícita                     | a pessoa pode ignorar avisos                                     |
-| T12 | dados chegam ao clipboard ou rede                                | exfiltração                       | nenhum segredo retornado; nenhuma ação de cópia; nenhuma chamada de rede/telemetria                                   | extensões, OS e outras aplicações estão fora do controle         |
+| ID  | Ameaça                                                           | Impacto                           | Controles exigidos no M1                                                                                              | Risco residual                                                                    |
+| --- | ---------------------------------------------------------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| T1  | KDBX malformado explora bug ou pânico no parser                  | crash ou execução indevida        | versão exata fixada; fixtures negativas; erros encapsulados; `cargo audit`; sem dados reais                           | conjunto completo não passou por auditoria independente                           |
+| T2  | KDF, compressão ou cardinalidade exaure CPU/memória              | negação de serviço                | limites de arquivo, memória KDF, profundidade, grupos e entradas; uma abertura por vez                                | alocação pode ocorrer antes de todos os limites serem aplicáveis                  |
+| T3  | senha ou arquivo-chave vazam pelo IPC, store ou UI               | exposição de segredo              | estado efêmero; nenhum log; limpeza do formulário; Rust usa wrappers com limpeza best-effort; testes de serialização  | strings e cópias internas não têm limpeza garantida                               |
+| T4  | conteúdo secreto retorna por engano ao React                     | exposição no WebView/devtools     | DTO allowlist sem senha, TOTP, notas, campos, histórico ou anexos; testes de contrato                                 | títulos, usuários e URLs ainda podem ser sensíveis em uso real                    |
+| T5  | erro revela caminho, chave, cabeçalho ou stack trace             | vazamento local                   | códigos públicos fechados; mensagens redigidas; detalhes apenas internos e sem segredo                                | ferramentas externas de crash podem capturar estado                               |
+| T6  | arquivo original é sobrescrito ou truncado                       | perda de dados                    | `File::open` somente leitura; nenhuma feature de escrita; hash antes/depois; fixtures em cópia                        | software externo pode modificar o arquivo simultaneamente                         |
+| T7  | troca por link simbólico ou mudança entre seleção e leitura      | arquivo diferente é aberto        | abrir uma vez, operar pelo mesmo handle e apresentar nome reduzido; não seguir caminhos adicionais vindos do conteúdo | sem identidade forte multiplataforma do arquivo no M1                             |
+| T8  | sessão antiga é reutilizada após fechar/bloquear                 | acesso além do esperado           | identificador aleatório opaco; sessão única; invalidação idempotente; descarte em todos os gatilhos                   | limpeza física de memória não é garantida                                         |
+| T9  | permissões Tauri amplas permitem leitura arbitrária pelo WebView | expansão de privilégio            | seletor nativo e comando estreito; nenhuma permissão genérica de filesystem; validação no Rust                        | vulnerabilidade no shell ou plugin permanece possível                             |
+| T10 | dependência comprometida ou vulnerável                           | comprometimento do núcleo         | versão exata e lockfile; licença e origem verificadas; `cargo audit`; CodeQL; revisão de mudanças antes de upgrades   | `glib 0.18.5` afetado no grafo Linux; distribuição Linux bloqueada pela issue #15 |
+| T11 | UI sugere que o modo experimental é seguro/editável              | uso indevido e perda de confiança | badges persistentes; ações sensíveis desativadas; aviso antes da abertura; documentação explícita                     | a pessoa pode ignorar avisos                                                      |
+| T12 | dados chegam ao clipboard ou rede                                | exfiltração                       | nenhum segredo retornado; nenhuma ação de cópia; nenhuma chamada de rede/telemetria                                   | extensões, OS e outras aplicações estão fora do controle                          |
 
 ## Regras de logging e diagnóstico
 
@@ -101,6 +101,7 @@ O preview web com mocks não abre KDBX e está fora do caminho nativo. No deskto
 - compatibilidade ainda depende de fixtures limitadas;
 - não existe estratégia validada de memória bloqueada, crash dump ou swap;
 - M1 não oferece escrita, recuperação ou backups.
+- o backend Linux do Tauri 2 contém `glib 0.18.5`, afetado por RUSTSEC-2024-0429; nenhum release Linux é permitido enquanto a [issue #15](https://github.com/johnnymeunome/MyVault/issues/15) estiver aberta.
 
 ## Gatilhos de revisão
 
@@ -118,9 +119,13 @@ Este modelo deve ser revisado quando houver:
 
 Em 2026-07-28, o contrato IPC, os limites do parser, as permissões Tauri, as projeções retornadas ao React e os testes de fixtures foram comparados com este modelo. Formatação, Clippy, testes Rust em Linux/Windows, testes frontend e auditorias npm/Rust passaram no PR do M1. O aceite manual confirmou abertura, projeção somente leitura, bloqueio e retorno ao modo mock no Windows; os demais gatilhos de descarte são cobertos por testes e os riscos residuais acima continuam válidos.
 
+Em 2026-08-03, a primeira execução do CodeQL classificou quatro usos de `demopass` como valores criptográficos fixos. A inspeção confirmou que todos pertencem ao módulo `#[cfg(test)]` e às fixtures públicas documentadas; os alertas foram encerrados no GitHub como **used in tests**, com justificativa individual. A mesma revisão identificou RUSTSEC-2024-0429 em `glib 0.18.5`: a dependência não integra o alvo Windows, mas está no backend GTK do alvo Linux. O alerta permanece aberto e passou a bloquear explicitamente qualquer distribuição Linux.
+
 ## Referências
 
 - [Especificação oficial KDBX 4.1](https://keepass.info/help/kb/kdbx.html)
 - [Política de segurança do keepass-rs](https://github.com/sseemayer/keepass-rs/blob/master/SECURITY.md)
+- [RUSTSEC-2024-0429 / GHSA-wrw7-89jp-8q8g](https://github.com/advisories/GHSA-wrw7-89jp-8q8g)
+- [Acompanhamento do risco Linux — issue #15](https://github.com/johnnymeunome/MyVault/issues/15)
 - [Especificação funcional do M1](M1-SPEC.md)
 - [Política de fixtures](../src-tauri/tests/fixtures/kdbx/README.md)
