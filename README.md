@@ -321,6 +321,8 @@ Nenhuma versão será apresentada como pronta para produção antes de testes de
 | [Compatibilidade KDBX](docs/KDBX-COMPATIBILITY.md) | formatos, cifras, KDFs e fixtures           |
 | [Modelo de ameaças](docs/THREAT-MODEL.md)          | ativos, riscos e controles                  |
 | [Notas de segurança](docs/SECURITY-NOTES.md)       | garantias e limitações atuais               |
+| [Política de segurança](SECURITY.md)                | relato privado e divulgação responsável     |
+| [Revisão de contribuições](docs/MAINTAINER-SECURITY.md) | execução segura de código não confiável  |
 | [Decisões arquiteturais](docs/DECISIONS)           | ADRs do projeto                             |
 
 ## Contribuindo

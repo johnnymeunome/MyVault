@@ -1,0 +1,10 @@
+# The maintainer is automatically requested on every contribution.
+* @johnnymeunome
+
+# Security-sensitive surfaces are listed explicitly for visibility.
+/.github/ @johnnymeunome
+/src-tauri/ @johnnymeunome
+/SECURITY.md @johnnymeunome
+/docs/SECURITY-NOTES.md @johnnymeunome
+/docs/THREAT-MODEL.md @johnnymeunome
+/docs/DECISIONS/ @johnnymeunome
