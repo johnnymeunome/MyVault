@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { LoginEntry, LoginEntryInput, Tag, VaultEntry } from '../domain/entities/entry';
 import type { Vault, VaultGroup } from '../domain/entities/vault';
 import type { EntryFilter } from '../domain/services/entry-search';
+import { useClipboardStore } from '../features/clipboard/clipboard-store';
 import { mockEntries } from '../infrastructure/mocks/entries';
 import { mockGroups, mockVaults } from '../infrastructure/mocks/vaults';
 import { closeKdbxSession, type OpenKdbxResult } from '../infrastructure/tauri/kdbx-gateway';
@@ -76,6 +77,7 @@ export const useVaultStore = create<VaultState>((set, get) => ({
   theme: 'dark',
   toast: null,
   setActiveVault: (id) => {
+    useClipboardStore.getState().reset();
     const current = get();
     if (current.readOnlySession && id !== current.readOnlySession.vaultId) {
       closeNativeSession(current.readOnlySession);
@@ -87,6 +89,7 @@ export const useVaultStore = create<VaultState>((set, get) => ({
     set({ activeVaultId: id, selectedEntryId: first?.id ?? '', filter: 'all', query: '' });
   },
   activateReadOnlyVault: (result, fileName) => {
+    useClipboardStore.getState().reset();
     closeNativeSession(get().readOnlySession);
     const vaultId = `kdbx:${result.sessionId}`;
     const fallbackDate = '1970-01-01T00:00:00.000Z';
@@ -139,6 +142,7 @@ export const useVaultStore = create<VaultState>((set, get) => ({
     });
   },
   closeReadOnlyVault: async () => {
+    useClipboardStore.getState().reset();
     const session = get().readOnlySession;
     if (session) await closeKdbxSession(session.sessionId).catch(() => undefined);
     set(mockState());
@@ -147,7 +151,10 @@ export const useVaultStore = create<VaultState>((set, get) => ({
   setFilter: (filter) => set({ filter }),
   setQuery: (query) => set({ query }),
   setLocked: (isLocked) => {
-    if (isLocked) closeNativeSession(get().readOnlySession);
+    if (isLocked) {
+      useClipboardStore.getState().reset();
+      closeNativeSession(get().readOnlySession);
+    }
     set({ ...(isLocked && get().readOnlySession ? mockState() : {}), isLocked, overlay: null });
   },
   setOverlay: (overlay) => set({ overlay }),

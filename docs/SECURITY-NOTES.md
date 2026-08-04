@@ -27,9 +27,17 @@ O crate não aparece no grafo `x86_64-pc-windows-msvc`, portanto o fluxo Windows
 - clipboard isolado atrás de um gateway substituível;
 - avisos explícitos sobre dados mockados e limitações.
 
-## Limitação do clipboard
+## Política de clipboard do M1
 
-O preview usa `navigator.clipboard.writeText`. Após a contagem regressiva, tenta substituir o valor por uma string vazia. O navegador ou sistema pode recusar a operação quando a janela perde foco, e outro aplicativo pode ter trocado o clipboard. Uma implementação nativa futura deverá conferir se o conteúdo ainda pertence ao MyVault, documentar garantias por sistema e evitar apagar dados de terceiros.
+| Ambiente                      | Comportamento aceito                                                                                                                 | Limitação                                                        |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------- |
+| Windows com Tauri/WebView2    | copia via API do WebView; após 15 segundos, no bloqueio ou na troca de cofre, lê e limpa somente se o fingerprint ainda corresponder | leitura pode ser recusada; comparação e limpeza não são atômicas |
+| preview em navegador          | aplica a mesma comparação quando `navigator.clipboard.readText` está disponível                                                      | permissões e execução em segundo plano variam por navegador      |
+| fechamento da janela/processo | `pagehide` e desmontagem iniciam uma limpeza condicional de melhor esforço                                                           | o sistema pode encerrar o processo antes da conclusão assíncrona |
+
+Se a leitura falhar ou o conteúdo tiver mudado, o MyVault não escreve uma string vazia e preserva o clipboard atual. O recibo rastreado contém somente SHA-256 do valor, não uma segunda cópia em texto no store. Ainda existe uma janela de corrida entre a comparação e a limpeza porque a API do navegador não fornece compare-and-clear atômico.
+
+Campos protegidos de KDBX continuam ausentes do DTO enviado ao React e não possuem ação de cópia no M1. A política acima cobre apenas valores demonstrativos e o gerador experimental; não autoriza credenciais reais.
 
 ## Baseline implementada do M1
 
@@ -50,7 +58,7 @@ Ainda serão necessários, no mínimo:
 - interoperabilidade de leitura e escrita com clientes independentes;
 - escrita atômica, backups e recuperação testada;
 - estratégia revisada de memória, swap, hibernação e crash dumps;
-- clipboard nativo e auto-lock por plataforma;
+- clipboard nativo com comparação atômica quando disponível e auto-lock por plataforma;
 - política de keychain e arquivos recentes;
 - builds e atualizações assinados;
 - análise contínua da cadeia de dependências;

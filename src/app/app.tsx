@@ -6,6 +6,7 @@ import { TopBar } from '../components/layout/top-bar';
 import { EntryDetail } from '../features/entries/entry-detail';
 import { EntryDialog } from '../features/entries/entry-dialog';
 import { EntryList } from '../features/entries/entry-list';
+import { useClipboardStore } from '../features/clipboard/clipboard-store';
 import { PasswordGenerator } from '../features/password-generator/password-generator';
 import { CommandPalette } from '../features/search/command-palette';
 import { SettingsView } from '../features/settings/settings-dialog';
@@ -40,7 +41,11 @@ export function App() {
 
   useEffect(() => {
     void clearKdbxSessions().catch(() => undefined);
+    const clearClipboard = () => useClipboardStore.getState().reset();
+    window.addEventListener('pagehide', clearClipboard);
     return () => {
+      window.removeEventListener('pagehide', clearClipboard);
+      clearClipboard();
       void useVaultStore.getState().closeReadOnlyVault();
     };
   }, []);
