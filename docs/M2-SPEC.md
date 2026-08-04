@@ -1,6 +1,6 @@
 # M2 — escrita KDBX experimental e recuperável
 
-- **Status:** Gate 0 aprovado; nenhuma escrita implementada
+- **Status:** Gate 0 aprovado; laboratório Rust isolado em implementação
 - **Data:** 2026-08-03
 - **Plataforma inicial:** Windows
 - **Dados permitidos:** fixtures públicas, artificiais e descartáveis
@@ -26,10 +26,12 @@ A primeira entrega é um experimento de round-trip sem mutação. Edição, subs
 
 ### Gate 0 — decisão e laboratório
 
-- ADR, especificação e modelo de ameaças aprovados;
-- auditoria da feature `save_kdbx4` e de seu grafo de dependências;
-- proof of concept somente em teste Rust, sem comando Tauri;
-- nenhuma mudança de capacidade visível na UI.
+- [x] ADR, especificação e modelo de ameaças aprovados;
+- [x] auditoria da feature `save_kdbx4` e de seu grafo de dependências;
+- [x] proof of concept somente em teste Rust, sem comando Tauri;
+- [x] nenhuma mudança de capacidade visível na UI.
+
+A implementação e seus limites estão registrados em [M2A-LAB](M2A-LAB.md). Concluir o Gate 0 não autoriza automaticamente o Gate 1.
 
 ### Gate 1 — M2A: round-trip sem mutação
 
