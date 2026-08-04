@@ -27,6 +27,8 @@ KDBX read work must follow [`docs/M1-SPEC.md`](docs/M1-SPEC.md), [`docs/THREAT-M
 
 M1 pull requests must not enable KDBX writing or serialize passwords, TOTP, notes, custom fields, history or attachments to the frontend. Update the threat model in the same change whenever a trust boundary, native permission or exposed field changes.
 
+M2 is documentation-gated. Do not enable `save_kdbx4`, add a write command or modify KDBX capabilities unless the change is explicitly scoped by [`docs/M2-SPEC.md`](docs/M2-SPEC.md), [ADR 005](docs/DECISIONS/005-safe-kdbx-copy-on-write.md) and the [M2 threat-model delta](docs/M2-THREAT-MODEL.md). The first implementation gate writes only a new disposable copy and never replaces the source.
+
 For security concerns, do not open a public issue. Follow [`SECURITY.md`](SECURITY.md) and use GitHub private vulnerability reporting. Maintainers should review unknown contributions using [`docs/MAINTAINER-SECURITY.md`](docs/MAINTAINER-SECURITY.md).
 
 ## Pull requests

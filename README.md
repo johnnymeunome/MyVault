@@ -287,7 +287,7 @@ Estado validado: **28 testes frontend**, **8 testes Rust**, lint, tipos, formata
 | Ícones e marcas | Lucide React + React Icons |
 | Estado          | Zustand                    |
 | Testes          | Vitest + Testing Library   |
-| Núcleo nativo   | Rust + `keepass` 0.13.17   |
+| Núcleo nativo   | Rust + `keepass` 0.13.19   |
 
 ## Roadmap
 
@@ -298,8 +298,8 @@ M0  Produto e shell visual              ✅ concluído
 M1  Núcleo KDBX experimental            ✅ concluído
  │   leitura de fixtures em modo somente leitura
  ▼
-M2  Escrita segura                      futuro
- │   gravação atômica, backups e interoperabilidade
+M2  Escrita segura                      planejamento
+ │   cópia verificada antes de mutação ou substituição
  ▼
 M3  Proteções locais                    futuro
  │   auto-lock real, clipboard, memória, keychain e logs
@@ -308,22 +308,24 @@ M4  Release experimental                futuro
      builds assinados e validação multiplataforma
 ```
 
-Nenhuma versão será apresentada como pronta para produção antes de testes de interoperabilidade, modelagem de ameaças e auditoria independente. Veja [docs/ROADMAP.md](docs/ROADMAP.md).
+Nenhuma versão será apresentada como pronta para produção antes de testes de interoperabilidade, modelagem de ameaças e auditoria independente. O M2 já possui [especificação](docs/M2-SPEC.md), [ADR](docs/DECISIONS/005-safe-kdbx-copy-on-write.md) e [delta de ameaças](docs/M2-THREAT-MODEL.md), mas nenhuma escrita foi implementada. Veja [docs/ROADMAP.md](docs/ROADMAP.md).
 
 ## Documentação
 
-| Documento                                          | Conteúdo                                    |
-| -------------------------------------------------- | ------------------------------------------- |
-| [Produto](docs/PRODUCT.md)                         | visão, público, princípios e limites        |
-| [Arquitetura](docs/ARCHITECTURE.md)                | camadas, fronteiras e fluxo de dados        |
-| [Sistema de design](docs/DESIGN-SYSTEM.md)         | tokens, componentes, temas e acessibilidade |
-| [Especificação M1](docs/M1-SPEC.md)                | contratos e critérios de aceite             |
-| [Compatibilidade KDBX](docs/KDBX-COMPATIBILITY.md) | formatos, cifras, KDFs e fixtures           |
-| [Modelo de ameaças](docs/THREAT-MODEL.md)          | ativos, riscos e controles                  |
-| [Notas de segurança](docs/SECURITY-NOTES.md)       | garantias e limitações atuais               |
-| [Política de segurança](SECURITY.md)                | relato privado e divulgação responsável     |
-| [Revisão de contribuições](docs/MAINTAINER-SECURITY.md) | execução segura de código não confiável  |
-| [Decisões arquiteturais](docs/DECISIONS)           | ADRs do projeto                             |
+| Documento                                               | Conteúdo                                    |
+| ------------------------------------------------------- | ------------------------------------------- |
+| [Produto](docs/PRODUCT.md)                              | visão, público, princípios e limites        |
+| [Arquitetura](docs/ARCHITECTURE.md)                     | camadas, fronteiras e fluxo de dados        |
+| [Sistema de design](docs/DESIGN-SYSTEM.md)              | tokens, componentes, temas e acessibilidade |
+| [Especificação M1](docs/M1-SPEC.md)                     | contratos e critérios de aceite             |
+| [Especificação M2](docs/M2-SPEC.md)                     | gates de escrita em cópia e recuperação     |
+| [Compatibilidade KDBX](docs/KDBX-COMPATIBILITY.md)      | formatos, cifras, KDFs e fixtures           |
+| [Modelo de ameaças](docs/THREAT-MODEL.md)               | ativos, riscos e controles                  |
+| [Ameaças do M2](docs/M2-THREAT-MODEL.md)                | riscos adicionais de escrita e commit       |
+| [Notas de segurança](docs/SECURITY-NOTES.md)            | garantias e limitações atuais               |
+| [Política de segurança](SECURITY.md)                    | relato privado e divulgação responsável     |
+| [Revisão de contribuições](docs/MAINTAINER-SECURITY.md) | execução segura de código não confiável     |
+| [Decisões arquiteturais](docs/DECISIONS)                | ADRs do projeto                             |
 
 ## Contribuindo
 

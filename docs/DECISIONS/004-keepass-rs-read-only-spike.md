@@ -17,7 +17,7 @@ Usar o pacote Cargo [`keepass`](https://crates.io/crates/keepass), mantido no re
 Na implementação, a dependência será fixada exatamente em:
 
 ```toml
-keepass = { version = "=0.13.17", default-features = false }
+keepass = { version = "=0.13.19", default-features = false }
 ```
 
 Restrições obrigatórias:
@@ -35,7 +35,7 @@ O pacote requer Rust 1.85.1 ou superior em sua configuração atual. O toolchain
 
 ## Fundamentação
 
-- a [documentação da versão 0.13.17](https://docs.rs/keepass/0.13.17/keepass/) declara parsing de KDB, KDBX3 e KDBX4;
+- a [documentação da versão 0.13.19](https://docs.rs/keepass/0.13.19/keepass/) declara parsing de KDB, KDBX3 e KDBX4;
 - `Database::open` aceita um leitor, permitindo que o MyVault controle a abertura somente leitura;
 - `DatabaseKey` oferece senha e arquivo-chave para os casos previstos no M1;
 - o [manifesto oficial](https://github.com/sseemayer/keepass-rs/blob/master/Cargo.toml) mantém features de escrita separadas e usa dependências voltadas a segredos, como `secrecy` e `zeroize`;
@@ -76,3 +76,7 @@ Rejeitada no [ADR 002](002-kdbx-future-compatibility.md). O MyVault é uma aplic
 - compatibilidade só será divulgada por caso verificado;
 - falha em segurança, manutenção ou compatibilidade pode substituir o parser sem alterar o contrato da UI;
 - qualquer escrita exige novo ADR, modelo de ameaças atualizado e plano de interoperabilidade/recuperação.
+
+## Emenda de manutenção — 2026-08-03
+
+O pin foi atualizado de `0.13.17` para `0.13.19` no PR #7. O diff continha correções de preservação de campos vazios e documentação do Argon2; frontend, testes Rust em Linux/Windows, auditoria de dependências e CodeQL passaram. As features e todas as restrições deste ADR permaneceram inalteradas.
