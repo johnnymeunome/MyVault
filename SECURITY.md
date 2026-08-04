@@ -2,6 +2,12 @@
 
 MyVault is an experimental, pre-release credential manager. It is **not safe for real credentials** and has not received an independent security audit.
 
+## Independent audit status
+
+No commit or release of MyVault has been independently audited. The project has a versioned [audit plan](docs/AUDIT-PLAN.md) and [audit package templates](docs/audit), but their existence is not an audit, certification or security guarantee.
+
+A formal audit is a release gate after the write, recovery and platform-hardening milestones are frozen. Any future audit statement must identify the exact commit, auditor, scope, date, unresolved findings and retest status.
+
 ## Supported versions
 
 Only the latest commit on `main` receives security fixes. There is currently no production release or supported stable version.

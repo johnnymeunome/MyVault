@@ -325,6 +325,7 @@ Nenhuma versão será apresentada como pronta para produção antes de testes de
 | [Notas de segurança](docs/SECURITY-NOTES.md)            | garantias e limitações atuais               |
 | [Política de segurança](SECURITY.md)                    | relato privado e divulgação responsável     |
 | [Revisão de contribuições](docs/MAINTAINER-SECURITY.md) | execução segura de código não confiável     |
+| [Plano de auditoria](docs/AUDIT-PLAN.md)                | escopo, independência, evidências e gates   |
 | [Decisões arquiteturais](docs/DECISIONS)                | ADRs do projeto                             |
 
 ## Contribuindo
