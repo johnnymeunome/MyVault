@@ -52,7 +52,7 @@ impl VaultState {
 
         let mut key = DatabaseKey::new().with_password(password.as_str());
         if let Some(key_file_path) = request.key_file_path.filter(|value| !value.is_empty()) {
-            let key_data = read_file_bounded(Path::new(&key_file_path), MAX_KEY_FILE_BYTES)?;
+            let key_data = read_key_file_bounded(Path::new(&key_file_path))?;
             key = key
                 .with_keyfile(&mut key_data.as_slice())
                 .map_err(|_| VaultError::FileUnreadable)?;
@@ -109,6 +109,30 @@ fn read_file_bounded(path: &Path, max_bytes: u64) -> Result<Vec<u8>, VaultError>
         .map_err(|_| VaultError::FileUnreadable)?;
 
     if data.len() as u64 > max_bytes {
+        return Err(VaultError::ResourceLimitExceeded);
+    }
+
+    Ok(data)
+}
+
+fn read_key_file_bounded(path: &Path) -> Result<Zeroizing<Vec<u8>>, VaultError> {
+    let file = File::open(path).map_err(map_file_error)?;
+    let metadata = file.metadata().map_err(|_| VaultError::FileUnreadable)?;
+
+    if !metadata.is_file() {
+        return Err(VaultError::FileUnreadable);
+    }
+    if metadata.len() > MAX_KEY_FILE_BYTES {
+        return Err(VaultError::ResourceLimitExceeded);
+    }
+
+    let mut data = Zeroizing::new(Vec::with_capacity(metadata.len() as usize));
+    let mut reader: Take<File> = file.take(MAX_KEY_FILE_BYTES + 1);
+    reader
+        .read_to_end(&mut data)
+        .map_err(|_| VaultError::FileUnreadable)?;
+
+    if data.len() as u64 > MAX_KEY_FILE_BYTES {
         return Err(VaultError::ResourceLimitExceeded);
     }
 
@@ -354,8 +378,8 @@ mod tests {
 
     use super::{
         ensure_entry_capacity, ensure_group_capacity, inspect_variant_dictionary, project_database,
-        read_file_bounded, OpenKdbxRequest, VaultError, VaultState, MAX_ENTRIES, MAX_GROUPS,
-        MAX_GROUP_DEPTH, MAX_KDF_MEMORY_BYTES,
+        read_file_bounded, read_key_file_bounded, OpenKdbxRequest, VaultError, VaultState,
+        MAX_ENTRIES, MAX_GROUPS, MAX_GROUP_DEPTH, MAX_KDF_MEMORY_BYTES,
     };
 
     #[test]
@@ -456,6 +480,10 @@ mod tests {
     fn password_and_keyfile_fixture_opens() {
         let database = fixture_path("kdbx40-password-keyfile.kdbx");
         let keyfile = fixture_path("kdbx40-password-keyfile.keyx");
+        let key_data = read_key_file_bounded(&keyfile).expect("keyfile should be read");
+        let _: &zeroize::Zeroizing<Vec<u8>> = &key_data;
+        assert!(!key_data.is_empty());
+
         let result = VaultState::default()
             .open_read_only(request(&database, "demopass", Some(&keyfile)))
             .expect("password and keyfile fixture should open");
