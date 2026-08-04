@@ -11,6 +11,12 @@ Obter uma avaliação externa, reproduzível e ligada a um commit específico so
 
 Revisões internas, CodeQL, RustSec e testes de CI são pré-requisitos, não substitutos da independência.
 
+## Dois níveis de avaliação
+
+Enquanto o projeto tiver somente o mantenedor e assistência de IA, o processo executável é a [avaliação interna de segurança](INTERNAL-SECURITY-REVIEW.md). Ela congela um commit, registra evidências e achados, exige reteste e publica limitações, mas não usa os termos “auditoria independente”, “certificação” ou “aprovado por terceiros”.
+
+O processo deste documento permanece como gate futuro. Ele só é satisfeito quando uma pessoa ou organização sem autoria material do código executar a revisão e assumir a classificação dos achados.
+
 ## Quando contratar
 
 Revisões externas focadas podem ocorrer durante M2A e M2B. A auditoria formal começa somente quando:

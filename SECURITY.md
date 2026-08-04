@@ -8,6 +8,8 @@ No commit or release of MyVault has been independently audited. The project has 
 
 A formal audit is a release gate after the write, recovery and platform-hardening milestones are frozen. Any future audit statement must identify the exact commit, auditor, scope, date, unresolved findings and retest status.
 
+Until an external reviewer is available, milestones receive a documented [maintainer-led, AI-assisted internal security review](docs/INTERNAL-SECURITY-REVIEW.md). Published [review reports](docs/security-reviews) identify their exact commit, evidence, open findings and limitations. These reviews improve engineering assurance but are not independent audits.
+
 ## Supported versions
 
 Only the latest commit on `main` receives security fixes. There is currently no production release or supported stable version.

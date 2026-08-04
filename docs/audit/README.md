@@ -2,6 +2,8 @@
 
 Esta pasta contém os modelos usados para congelar e conduzir uma auditoria independente do MyVault. Eles não representam uma auditoria concluída.
 
+Enquanto não existe auditor externo, use o processo separado de [avaliação interna](../INTERNAL-SECURITY-REVIEW.md). Uma autoavaliação não deve preencher ou publicar estes modelos como se houvesse independência.
+
 ## Conteúdo
 
 - [`SCOPE-TEMPLATE.md`](SCOPE-TEMPLATE.md): contrato técnico e fronteiras do trabalho;
