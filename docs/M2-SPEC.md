@@ -1,6 +1,6 @@
 # M2 — escrita KDBX experimental e recuperável
 
-- **Status:** planejamento; nenhuma escrita implementada
+- **Status:** Gate 0 aprovado; nenhuma escrita implementada
 - **Data:** 2026-08-03
 - **Plataforma inicial:** Windows
 - **Dados permitidos:** fixtures públicas, artificiais e descartáveis

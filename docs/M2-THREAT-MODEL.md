@@ -1,6 +1,6 @@
 # Delta do modelo de ameaças — M2 escrita experimental
 
-- **Status:** proposta; revisão obrigatória antes do código
+- **Status:** baseline aprovado; revisão obrigatória antes de cada gate de código
 - **Data:** 2026-08-03
 - **Base:** [modelo de ameaças do M1](THREAT-MODEL.md)
 

@@ -1,6 +1,6 @@
 # ADR 005: escrita KDBX por cópia verificada antes de substituição
 
-- **Status:** proposta para aprovação
+- **Status:** aceita para planejamento; implementação permanece condicionada aos gates
 - **Data:** 2026-08-03
 - **Escopo:** planejamento do M2 experimental
 
@@ -109,6 +109,10 @@ Rejeitada. Fixtures públicas continuam obrigatórias durante todo o M2 experime
 - suporte a formatos e sistemas operacionais será declarado por matriz, não por inferência;
 - escrita em arquivos reais, sincronizados ou compartilhados continua fora de escopo;
 - a implementação não começa enquanto este ADR, a especificação e o delta do modelo de ameaças não forem aprovados.
+
+## Registro de aprovação
+
+O plano e seus gates foram aprovados pelo mantenedor em 2026-08-03. A aprovação autoriza somente o Gate 0 documental e o futuro laboratório Rust descrito no M2A; não autoriza escrita no arquivo de origem, comandos Tauri de mutação, dados reais ou avanço automático para M2B/M2C.
 
 ## Referências
 
