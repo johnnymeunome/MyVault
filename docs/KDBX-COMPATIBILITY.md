@@ -90,4 +90,4 @@ A feature experimental de escrita KDBX 4.1 da biblioteca escolhida não será ha
 
 A [especificação oficial KDBX 4.1](https://keepass.info/help/kb/kdbx.html) descreve AES-256 e ChaCha20, AES-KDF, Argon2d e Argon2id, compressão e o fluxo autenticado do formato. A [documentação oficial de mudanças do KDBX 4](https://keepass.info/help/kb/kdbx_4.html) complementa as diferenças de versão.
 
-O crate [`keepass` 0.13.17](https://docs.rs/keepass/0.13.17/keepass/) declara parsing de KDB, KDBX3 e KDBX4, mas sua escrita KDBX 4.1 é experimental. O MyVault usa essa declaração apenas para selecionar o spike; a compatibilidade pública depende dos testes acima.
+O crate [`keepass` 0.13.19](https://docs.rs/keepass/0.13.19/keepass/) declara parsing de KDB, KDBX3 e KDBX4, mas sua escrita KDBX 4.1 é experimental. O MyVault usa essa declaração apenas para selecionar o spike; a compatibilidade pública depende dos testes acima.

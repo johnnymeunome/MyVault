@@ -42,7 +42,7 @@ flowchart TB
 
     subgraph Native["Núcleo Tauri / Rust"]
       IPC["Comandos allowlisted"] --> Service["ReadOnlyVaultService"]
-      Service --> Parser["crate keepass = 0.13.17"]
+      Service --> Parser["crate keepass = 0.13.19"]
       Service --> Sessions["Mapa de sessões opacas"]
     end
 
@@ -105,4 +105,6 @@ O contrato visual completo está em [DESIGN-SYSTEM.md](DESIGN-SYSTEM.md) e no [A
 
 ## Caminho posterior
 
-M2 não será uma extensão automática do adaptador de leitura. Escrita exige serviço separado, salvamento em cópia, substituição atômica, backup, recuperação, interoperabilidade e decisão arquitetural própria. Até lá, nenhum método de mutação pertence aos contratos KDBX.
+M2 não será uma extensão automática do adaptador de leitura. O [ADR 005](DECISIONS/005-safe-kdbx-copy-on-write.md) separa o experimento em três gates: round-trip sem mutação para um destino novo, mutação controlada de uma cópia e commit transacional de uma cópia administrada.
+
+O [M2-SPEC.md](M2-SPEC.md) mantém o `ReadOnlyVaultService` imutável e propõe um serviço de laboratório separado. Escrita atômica, backup, recuperação e interoperabilidade só entram depois de evidência própria e revisão do [delta do modelo de ameaças](M2-THREAT-MODEL.md). Até lá, nenhum método de mutação pertence aos contratos KDBX públicos.

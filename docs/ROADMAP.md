@@ -43,9 +43,17 @@ Gates de saída:
 
 ## M2 — Escrita segura
 
-**Estado:** futuro; bloqueado pelo merge do M1 e por ADR próprio.
+**Estado:** planejamento; implementação bloqueada pelos gates documentais.
 
-Criar, editar e salvar **cópias** com escrita atômica, backups, recuperação, testes de interoperabilidade e novo ADR. A feature de escrita da biblioteca não será herdada automaticamente.
+O primeiro incremento será um round-trip sem mutação para uma **nova cópia descartável**. Ele não substitui a origem, não expõe segredos ao React e não autoriza dados reais. Edição controlada e commit transacional são gates posteriores.
+
+Documentos de entrada obrigatórios:
+
+- [especificação e critérios de aceite](M2-SPEC.md);
+- [ADR de cópia verificada e commit por gates](DECISIONS/005-safe-kdbx-copy-on-write.md);
+- [delta do modelo de ameaças](M2-THREAT-MODEL.md).
+
+A feature de escrita da biblioteca não será herdada automaticamente. Nenhum código M2 começa antes da aprovação explícita desses documentos.
 
 ## M3 — Proteções locais
 
