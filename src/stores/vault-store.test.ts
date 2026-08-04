@@ -1,8 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { useClipboardStore } from '../features/clipboard/clipboard-store';
 import { mockEntries } from '../infrastructure/mocks/entries';
 import { mockGroups, mockVaults } from '../infrastructure/mocks/vaults';
 import type { OpenKdbxResult } from '../infrastructure/tauri/kdbx-gateway';
 import { useVaultStore } from './vault-store';
+
+const resetClipboard = useClipboardStore.getState().reset;
 
 const readOnlyResult = (sessionId = 'session-id'): OpenKdbxResult => ({
   sessionId,
@@ -27,6 +30,7 @@ const readOnlyResult = (sessionId = 'session-id'): OpenKdbxResult => ({
 describe('vault store', () => {
   beforeEach(() => {
     vi.stubGlobal('crypto', { randomUUID: () => 'generated-id' });
+    useClipboardStore.setState({ reset: resetClipboard });
     useVaultStore.setState({
       entries: mockEntries,
       vaults: mockVaults,
@@ -35,10 +39,20 @@ describe('vault store', () => {
       activeVaultId: 'personal',
       filter: 'all',
       query: '',
+      isLocked: false,
       overlay: null,
       toast: null,
       readOnlySession: null,
     });
+  });
+
+  it('resets the tracked clipboard value when the vault locks', () => {
+    const reset = vi.fn();
+    useClipboardStore.setState({ reset });
+
+    useVaultStore.getState().setLocked(true);
+
+    expect(reset).toHaveBeenCalledOnce();
   });
 
   it('creates a login only in memory and selects it', () => {
