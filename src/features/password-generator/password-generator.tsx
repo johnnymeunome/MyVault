@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { DesignButton, DesignIconButton } from '../../design-system/button';
 import { DesignCheckbox, DesignSlider } from '../../design-system/form-controls';
 import {
+  createCryptoRandomSource,
   estimatePassphraseEntropy,
   estimatePasswordEntropy,
   generatePassphrase,
@@ -32,15 +33,11 @@ const defaultPassphraseOptions: PassphraseOptions = {
 };
 
 const createPassword = (options: PasswordOptions) => {
-  const values = new Uint32Array(options.length);
-  crypto.getRandomValues(values);
-  return generatePassword(options, values);
+  return generatePassword(options, createCryptoRandomSource());
 };
 
 const createPassphrase = (options: PassphraseOptions) => {
-  const values = new Uint32Array(options.wordCount + (options.includeNumber ? 1 : 0));
-  crypto.getRandomValues(values);
-  return generatePassphrase(options, values);
+  return generatePassphrase(options, createCryptoRandomSource());
 };
 
 const describeEntropy = (entropy: number) => {

@@ -15,6 +15,11 @@ export interface PassphraseOptions {
   includeNumber: boolean;
 }
 
+export type RandomSource = () => number;
+
+const UINT32_RANGE = 0x1_0000_0000;
+const UINT32_MAX = UINT32_RANGE - 1;
+
 const characterSets = {
   uppercase: 'ABCDEFGHJKLMNPQRSTUVWXYZ',
   lowercase: 'abcdefghijkmnopqrstuvwxyz',
@@ -89,45 +94,85 @@ export const buildCharacterPool = (options: PasswordOptions): string =>
     .map(([, value]) => value)
     .join('');
 
-export const generatePassword = (options: PasswordOptions, randomValues: Uint32Array): string => {
-  const pool = buildCharacterPool(options);
+export const createCryptoRandomSource = (): RandomSource => {
+  const values = new Uint32Array(32);
+  let offset = values.length;
+
+  return () => {
+    if (offset >= values.length) {
+      crypto.getRandomValues(values);
+      offset = 0;
+    }
+    const value = values[offset];
+    offset += 1;
+    if (value === undefined) throw new Error('Falha ao obter aleatoriedade da plataforma.');
+    return value;
+  };
+};
+
+export const randomIndex = (upperBound: number, source: RandomSource): number => {
+  if (!Number.isSafeInteger(upperBound) || upperBound < 1 || upperBound > UINT32_RANGE) {
+    throw new Error('Limite aleatório inválido.');
+  }
+
+  const acceptedRange = Math.floor(UINT32_RANGE / upperBound) * upperBound;
+  for (;;) {
+    const value = source();
+    if (!Number.isInteger(value) || value < 0 || value > UINT32_MAX) {
+      throw new Error('A fonte aleatória retornou um valor inválido.');
+    }
+    if (value < acceptedRange) return value % upperBound;
+  }
+};
+
+const shuffle = (characters: string[], source: RandomSource): void => {
+  for (let index = characters.length - 1; index > 0; index -= 1) {
+    const swapIndex = randomIndex(index + 1, source);
+    const current = characters[index] ?? '';
+    characters[index] = characters[swapIndex] ?? '';
+    characters[swapIndex] = current;
+  }
+};
+
+export const generatePassword = (
+  options: PasswordOptions,
+  source: RandomSource = createCryptoRandomSource(),
+): string => {
+  const enabledSets = Object.entries(characterSets)
+    .filter(([key]) => options[key as keyof typeof characterSets])
+    .map(([, value]) => value);
+  const pool = enabledSets.join('');
   if (!pool) throw new Error('Selecione ao menos um conjunto de caracteres.');
   if (options.length < 8 || options.length > 64) {
     throw new Error('O comprimento deve ficar entre 8 e 64 caracteres.');
   }
-  if (randomValues.length < options.length) {
-    throw new Error('Valores aleatórios insuficientes.');
-  }
 
-  return Array.from({ length: options.length }, (_, index) => {
-    const randomValue = randomValues[index] ?? 0;
-    return pool[randomValue % pool.length] ?? '';
-  }).join('');
+  const characters = enabledSets.map((set) => set[randomIndex(set.length, source)] ?? '');
+  while (characters.length < options.length) {
+    characters.push(pool[randomIndex(pool.length, source)] ?? '');
+  }
+  shuffle(characters, source);
+
+  return characters.join('');
 };
 
 export const generatePassphrase = (
   options: PassphraseOptions,
-  randomValues: Uint32Array,
+  source: RandomSource = createCryptoRandomSource(),
 ): string => {
   if (options.wordCount < 3 || options.wordCount > 8) {
     throw new Error('A frase deve ter entre 3 e 8 palavras.');
   }
-  const requiredValues = options.wordCount + (options.includeNumber ? 1 : 0);
-  if (randomValues.length < requiredValues) {
-    throw new Error('Valores aleatórios insuficientes.');
-  }
 
-  const words = Array.from({ length: options.wordCount }, (_, index) => {
-    const randomValue = randomValues[index] ?? 0;
-    const word = passphraseWords[randomValue % passphraseWords.length] ?? passphraseWords[0];
+  const words = Array.from({ length: options.wordCount }, () => {
+    const word = passphraseWords[randomIndex(passphraseWords.length, source)] ?? passphraseWords[0];
     return options.capitalize
       ? `${word[0]?.toLocaleUpperCase('pt-BR') ?? ''}${word.slice(1)}`
       : word;
   });
 
   if (options.includeNumber) {
-    const value = randomValues[options.wordCount] ?? 0;
-    words.push(String(value % 100).padStart(2, '0'));
+    words.push(String(randomIndex(100, source)).padStart(2, '0'));
   }
 
   return words.join(options.separator);

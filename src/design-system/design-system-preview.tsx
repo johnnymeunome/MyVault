@@ -1,7 +1,11 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { Check, Copy, Moon, RefreshCw, Sun, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { evaluatePasswordStrength, generatePassword } from '../domain/services/password';
+import {
+  createCryptoRandomSource,
+  evaluatePasswordStrength,
+  generatePassword,
+} from '../domain/services/password';
 import { DesignButton, DesignIconButton } from './button';
 import { DesignCheckbox, DesignField, DesignSlider, DesignTextArea } from './form-controls';
 import { DesignDialogDemo, DesignMenuDemo, MoreActionsTooltip } from './overlays';
@@ -17,11 +21,9 @@ const sections = [
 ] as const;
 
 function createPreviewPassword(length: number, symbols: boolean) {
-  const values = new Uint32Array(length);
-  crypto.getRandomValues(values);
   return generatePassword(
     { length, uppercase: true, lowercase: true, numbers: true, symbols },
-    values,
+    createCryptoRandomSource(),
   );
 }
 
