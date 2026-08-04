@@ -2,6 +2,7 @@ node_modules
 dist
 .vite
 coverage
+audit-artifacts
 src-tauri/target
 src-tauri/gen/schemas
 *.log

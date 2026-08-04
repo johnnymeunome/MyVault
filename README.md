@@ -308,7 +308,7 @@ M4  Release experimental                futuro
      builds assinados e validação multiplataforma
 ```
 
-Nenhuma versão será apresentada como pronta para produção antes de testes de interoperabilidade, modelagem de ameaças e auditoria independente. O M2 já possui [especificação](docs/M2-SPEC.md), [ADR](docs/DECISIONS/005-safe-kdbx-copy-on-write.md) e [delta de ameaças](docs/M2-THREAT-MODEL.md), mas nenhuma escrita foi implementada. Veja [docs/ROADMAP.md](docs/ROADMAP.md).
+Nenhuma versão será apresentada como pronta para produção antes de testes de interoperabilidade, modelagem de ameaças e avaliação de segurança adequada ao risco. Enquanto o projeto é mantido apenas pelo autor com assistência de IA, cada marco passa por uma [avaliação interna rastreável](docs/INTERNAL-SECURITY-REVIEW.md), que não substitui auditoria independente. O M2 já possui [especificação](docs/M2-SPEC.md), [ADR](docs/DECISIONS/005-safe-kdbx-copy-on-write.md) e [delta de ameaças](docs/M2-THREAT-MODEL.md). Veja [docs/ROADMAP.md](docs/ROADMAP.md).
 
 ## Documentação
 
@@ -325,6 +325,9 @@ Nenhuma versão será apresentada como pronta para produção antes de testes de
 | [Notas de segurança](docs/SECURITY-NOTES.md)            | garantias e limitações atuais               |
 | [Política de segurança](SECURITY.md)                    | relato privado e divulgação responsável     |
 | [Revisão de contribuições](docs/MAINTAINER-SECURITY.md) | execução segura de código não confiável     |
+| [Avaliação interna](docs/INTERNAL-SECURITY-REVIEW.md)   | gate executável, limitações e classificação |
+| [Revisões publicadas](docs/security-reviews)            | resultados ligados a commits específicos    |
+| [Plano de auditoria](docs/AUDIT-PLAN.md)                | escopo, independência, evidências e gates   |
 | [Decisões arquiteturais](docs/DECISIONS)                | ADRs do projeto                             |
 
 ## Contribuindo
