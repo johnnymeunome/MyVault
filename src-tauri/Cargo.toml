@@ -22,6 +22,7 @@ uuid = { version = "1", features = ["v4"] }
 zeroize = "1"
 
 [dev-dependencies]
+keepass = { version = "=0.13.19", default-features = false, features = ["save_kdbx4"] }
 sha2 = "0.11"
 
 [profile.release]
